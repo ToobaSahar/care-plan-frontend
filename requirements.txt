@@ -1,0 +1,50 @@
+# Frontend Dependencies for Care Plan Management System
+# This file lists all npm dependencies needed for the React/TypeScript frontend
+
+# Core React dependencies
+react==18.2.0
+react-dom==18.2.0
+react-router-dom==6.8.1
+react-hook-form==7.43.9
+
+# Form validation and schema
+@hookform/resolvers==3.1.0
+zod==3.21.4
+
+# Database and API
+@supabase/supabase-js==2.31.0
+
+# UI and styling
+lucide-react==0.263.1
+tailwindcss==3.2.7
+autoprefixer==10.4.14
+postcss==8.4.23
+
+# PDF generation
+jspdf==2.5.1
+
+# State management
+zustand==4.3.8
+
+# Utilities
+date-fns==2.30.0
+dotenv==17.2.1
+
+# Development dependencies
+@types/react==18.0.28
+@types/react-dom==18.0.11
+@typescript-eslint/eslint-plugin==5.57.1
+@typescript-eslint/parser==5.57.1
+@vitejs/plugin-react==3.1.0
+eslint==8.38.0
+eslint-plugin-react-hooks==4.6.0
+eslint-plugin-react-refresh==0.3.4
+tsx==3.12.7
+typescript==4.9.3
+vite==4.2.0
+
+# Installation Instructions:
+# 1. Navigate to the frontend directory: cd frontend
+# 2. Install dependencies: npm install
+# 3. Start development server: npm run dev
+# 4. Build for production: npm run build
