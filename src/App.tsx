@@ -64,7 +64,7 @@ const AssessmentsListPage: React.FC = () => {
           <div className="p-6">
             <div className="text-center py-12">
               <a
-                href="/assessment/1"
+                href="/assessment"
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 View Assessment
