@@ -138,6 +138,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/assessments" replace />} />
           <Route path="/assessments" element={<AssessmentsListPage />} />
+          <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/assessment/:id" element={<AssessmentPage />} />
           <Route path="/critical-information" element={<CriticalInformationPage />} />
         </Routes>
