@@ -1,8 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Paperclip, X as XIcon } from 'lucide-react';
 import { useAssessment } from '../../state/useAssessment';
-import { relevanceAI, type AgentMessage } from '../../lib/agents/relevance';
 import { Message } from './Message';
+
+// Simple mock AI response for chat functionality
+interface AgentMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  toolsUsed?: Record<string, unknown>;
+}
 
 interface ChatPanelProps {
   assessmentId: string;
@@ -14,7 +22,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
   const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -57,19 +65,15 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
     setIsLoading(true);
 
     try {
-      const response = await relevanceAI.sendMessage({
-        assessmentId,
-        text: userMessage.content,
-        stream: true
-      });
-
-      if (response instanceof ReadableStream) {
-        // Handle streaming response
-        handleStreamingResponse(response);
-      } else {
-        // Handle non-streaming response
-        setMessages(prev => [...prev, ...response.messages]);
-      }
+      // Mock AI response for now
+      const mockResponse = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: `I understand you said: "${userMessage.content}". This is a mock response as the AI functionality has been removed.`,
+        timestamp: new Date().toISOString()
+      };
+      
+      setMessages(prev => [...prev, mockResponse]);
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: AgentMessage = {
@@ -84,45 +88,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
     }
   };
 
-  const handleStreamingResponse = async (stream: ReadableStream) => {
-    setIsStreaming(true);
-    
-    const agentMessage: AgentMessage = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: '',
-      timestamp: new Date().toISOString()
-    };
 
-    setMessages(prev => [...prev, agentMessage]);
-
-    try {
-      const reader = stream.getReader();
-      const decoder = new TextDecoder();
-      let content = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        content += chunk;
-
-        // Update the message content
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === agentMessage.id 
-              ? { ...msg, content } 
-              : msg
-          )
-        );
-      }
-    } catch (error) {
-      console.error('Error reading stream:', error);
-    } finally {
-      setIsStreaming(false);
-    }
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
