@@ -226,6 +226,10 @@ export const AssessmentPage: React.FC = () => {
         // Generate care plan and show loader
         setIsGeneratingCarePlan(true);
         try {
+          if (!currentAssessment?.id) {
+            console.error('❌ No assessment ID available for care plan generation');
+            throw new Error('No assessment ID available');
+          }
           console.log('🔍 Generating care plan for assessment:', currentAssessment.id);
           const carePlanResponse = await carePlanAPI.generateCarePlanById(currentAssessment.id);
           
