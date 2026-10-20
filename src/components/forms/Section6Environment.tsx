@@ -16,7 +16,7 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: {},
   } = useForm<{ [k: string]: any }>({
     resolver: zodResolver(socialEmotionalSchema),
     defaultValues: data || {},
@@ -55,7 +55,7 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
       </h4>
       <div className="grid grid-cols-1 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Notes</label>
+          <label className="cf-label">Notes</label>
           <textarea
             {...register(notesField)}
             onChange={(e) => handleChange(notesField, e.target.value)}
@@ -63,7 +63,7 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
             disabled={isReadOnly}
             rows={3}
             placeholder={notesPlaceholder}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+            className="cf-input"
           />
         </div>
       </div>
@@ -76,13 +76,13 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
         <WellbeingArea 
           title="Family Involvement" 
           notesField="family_involvement_notes" 
-          icon={<Heart className="h-5 w-5 text-red-600" />}
+          icon={<Heart className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="Daughter visits 4x/week, very involved"
         />
         <WellbeingArea 
           title="Hobbies / Interests" 
           notesField="hobbies_interests_notes" 
-          icon={<Palette className="h-5 w-5 text-green-600" />}
+          icon={<Palette className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="Gardening, cricket on TV, word searches"
         />
         <WellbeingArea 
@@ -94,13 +94,13 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
         <WellbeingArea 
           title="Spiritual or Religious Support" 
           notesField="spiritual_religious_support_notes" 
-          icon={<Church className="h-5 w-5 text-purple-600" />}
+          icon={<Church className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="Watches televised Sunday service"
         />
         <WellbeingArea 
           title="Emotional / Mental Health Support Needs" 
           notesField="emotional_mental_health_support_needs_notes" 
-          icon={<Brain className="h-5 w-5 text-indigo-600" />}
+          icon={<Brain className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="Enjoys 1:1 conversation and music for mood regulation"
         />
       </div>
@@ -112,14 +112,14 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
       <WellbeingArea 
         title="Family Involvement" 
         notesField="family_involvement_notes" 
-        icon={<Heart className="h-5 w-5 text-red-600" />}
+        icon={<Heart className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="Daughter visits 4x/week, very involved"
       />
 
       <WellbeingArea 
         title="Hobbies / Interests" 
         notesField="hobbies_interests_notes" 
-        icon={<Palette className="h-5 w-5 text-green-600" />}
+        icon={<Palette className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="Gardening, cricket on TV, word searches"
       />
 
@@ -133,14 +133,14 @@ export const Section6SocialEmotionalWellbeing: React.FC<Section6SocialEmotionalW
       <WellbeingArea 
         title="Spiritual or Religious Support" 
         notesField="spiritual_religious_support_notes" 
-        icon={<Church className="h-5 w-5 text-purple-600" />}
+        icon={<Church className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="Watches televised Sunday service"
       />
 
       <WellbeingArea 
         title="Emotional / Mental Health Support Needs" 
         notesField="emotional_mental_health_support_needs_notes" 
-        icon={<Brain className="h-5 w-5 text-indigo-600" />}
+        icon={<Brain className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="Enjoys 1:1 conversation and music for mood regulation"
       />
 

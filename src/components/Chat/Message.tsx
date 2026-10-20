@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bot, User, CheckCircle, AlertCircle } from 'lucide-react';
-import type { AgentMessage } from '../../lib/agents/relevance';
+import type { AgentMessage } from './types';
 
 interface MessageProps {
   message: AgentMessage;
@@ -27,7 +27,7 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
           <span className="font-medium">Tools used:</span>
         </div>
         <div className="mt-1 space-y-1">
-          {Object.entries(message.toolsUsed).map(([tool, result]) => (
+          {Object.entries(message.toolsUsed ?? {}).map(([tool, result]) => (
             <div key={tool} className="text-xs text-blue-600">
               <span className="font-medium">{tool}:</span>{' '}
               {typeof result === 'string' ? result : JSON.stringify(result)}

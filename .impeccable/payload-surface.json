@@ -1,0 +1,51 @@
+{
+  "title": "Choose the assessment workspace structure",
+  "question": "The CareFrame palette and logo are locked — this chooses how the workspace is organised, not how it looks. Three structures from my ranked list; the dice picked which three you see.",
+  "options": [
+    {
+      "id": "evidence-column",
+      "kind": "assigned",
+      "kicker": "THE ROLL",
+      "label": "Evidence Column",
+      "lineage": "the assessor's own working method: claim on the left, proof on the right",
+      "thesis": "Nothing in a care record is asserted without the thing that evidences it, so the screen pairs every section with its proof.",
+      "palette": ["#78BDB5", "#2C6E6B", "#1F4A4C", "#8F5C72", "#FAF8F4"],
+      "materials": ["oat paper ground", "hairline rules", "one reserved risk ink"],
+      "viewport": "Slate-teal rail down the left carrying the eleven sections and their completion marks. Centre: one 720px column of fields for the current section. Right: a persistent evidence column scoped to that section — the risk flags it raised, the attachments pinned to it, the people named in it, and the assistant. The service user stays pinned across the top with name, NHS number and live risk level, so you never lose who this is about.",
+      "risk": "The evidence column turns into a junk drawer the moment anything that doesn't evidence the section gets a slot there.",
+      "raised": [
+        { "from": "orienteering map and legend", "raise": "Risk is a layer that rides over the record in one reserved ink and never edits the terrain beneath it — the fields stay neutral, the flags sit above them." },
+        { "from": "boarding pass and gate board", "raise": "A status that changes moves in place and stays lit until it has been seen, instead of vanishing and reappearing elsewhere." },
+        { "from": "centre-rail reference setting", "raise": "States are printed marks on a hairline rail — hairline at rest, filled when done, struck when skipped — not a row of filled pills." }
+      ],
+      "html": ".impeccable/sketches/evidence-column.html"
+    },
+    {
+      "id": "step-rail",
+      "kind": "dealt",
+      "label": "Step Rail",
+      "lineage": "the arrangement every assessor has already used",
+      "thesis": "The category standard, executed to a level nobody in this sector currently reaches.",
+      "palette": ["#78BDB5", "#2C6E6B", "#1F4A4C", "#8F5C72", "#FAF8F4"],
+      "materials": ["oat paper ground", "card surfaces", "teal accent"],
+      "viewport": "Sticky section rail down the left with per-section completion state. One centred 720px column of fields, generous spacing, a sticky save bar at the foot. The assistant is a collapsible panel that stays out of the way. Service user header sits above the column rather than pinned.",
+      "risk": "Correct and forgettable. It is the layout a procurement panel expects, which means it shows them nothing they haven't seen.",
+      "html": ".impeccable/sketches/step-rail.html"
+    },
+    {
+      "id": "caseload-workspace",
+      "kind": "dealt",
+      "label": "Caseload to Workspace",
+      "lineage": "the shift handover board, then the desk",
+      "thesis": "The app opens on who needs attention, not on a blank form — the caseload is the product's first argument.",
+      "palette": ["#78BDB5", "#2C6E6B", "#1F4A4C", "#8F5C72", "#FAF8F4"],
+      "materials": ["oat paper ground", "ranked rows", "mulberry for people"],
+      "viewport": "Home is a ranked caseload: every assessment as a row ordered by what needs attention, carrying status, risk level, completion and who it belongs to, with the counts across the top. Opening one swaps the shell entirely into a focused assessment workspace with its own section rail and a command bar. Two shells, one vocabulary.",
+      "risk": "Two shells to design and keep consistent, and the eleven section forms still need solving inside the second one.",
+      "html": ".impeccable/sketches/caseload-workspace.html"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": { "value": "code", "toggle": false }
+}

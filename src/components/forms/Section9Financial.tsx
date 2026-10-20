@@ -17,7 +17,6 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
     handleSubmit,
     setValue,
     formState: { errors, isDirty },
-    watch,
   } = useForm({
     resolver: zodResolver(optionalAreasSchema),
     defaultValues: data || {},
@@ -52,7 +51,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Financial Management Needs
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -61,7 +60,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any financial management needs or support required"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.financial_management_needs && (
               <p className="mt-1 text-sm text-red-600">{errors.financial_management_needs.message}</p>
@@ -76,7 +75,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Equality, Diversity, Inclusion (EDI) Considerations
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -85,7 +84,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any EDI considerations or needs"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.equality_diversity_inclusion_edi_considerations && (
               <p className="mt-1 text-sm text-red-600">{errors.equality_diversity_inclusion_edi_considerations.message}</p>
@@ -100,7 +99,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Assistive Technology / Equipment
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -109,7 +108,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any assistive technology or equipment needs"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.assistive_technology_equipment && (
               <p className="mt-1 text-sm text-red-600">{errors.assistive_technology_equipment.message}</p>
@@ -124,7 +123,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Legal Orders or Restrictions
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -133,7 +132,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any legal restrictions or court orders"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.legal_orders_or_restrictions && (
               <p className="mt-1 text-sm text-red-600">{errors.legal_orders_or_restrictions.message}</p>
@@ -148,7 +147,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Sexuality and Relationships
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -157,7 +156,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any sexuality or relationship support needs"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.sexuality_and_relationships && (
               <p className="mt-1 text-sm text-red-600">{errors.sexuality_and_relationships.message}</p>
@@ -172,7 +171,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
             Access to Advocacy Services
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Notes
             </label>
             <textarea
@@ -181,7 +180,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any advocacy needs or services required"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              className="cf-input"
             />
             {errors.access_to_advocacy_services && (
               <p className="mt-1 text-sm text-red-600">{errors.access_to_advocacy_services.message}</p>

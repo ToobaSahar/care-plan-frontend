@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:900px;background:#FAF8F4;font:14px/1.5 Inter,system-ui,sans-serif;color:#2E2C28;display:grid;grid-template-columns:232px 1fr 340px;overflow:hidden}
+
+/* left section rail */
+.rail{background:#1F4A4C;color:#fff;padding:20px 0;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:10px;padding:0 20px 22px}
+.mark{width:28px;height:28px;border-radius:7px;background:#78BDB5}
+.brandname{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.railhead{padding:0 20px 10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#78BDB5}
+.sec{display:flex;align-items:center;gap:11px;padding:9px 20px;font-size:13px;color:#B9D4D0}
+.sec .mk{width:9px;height:9px;border-radius:50%;border:1.5px solid #5E8C8B;flex:none}
+.sec.done .mk{background:#78BDB5;border-color:#78BDB5}
+.sec.on{background:#2C6E6B;color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #78BDB5}
+.sec.on .mk{border-color:#78BDB5}
+.railfoot{margin-top:auto;padding:16px 20px 0;border-top:1px solid #2C6E6B}
+.prog{height:5px;background:#143537;border-radius:99px;overflow:hidden;margin-top:8px}
+.prog i{display:block;width:64%;height:100%;background:#78BDB5}
+
+/* centre */
+.main{display:flex;flex-direction:column;min-width:0}
+.person{background:#fff;border-bottom:1px solid #E6E0D5;padding:14px 36px;display:flex;align-items:center;gap:16px}
+.ava{width:44px;height:44px;border-radius:50%;background:#8F5C72;flex:none}
+.pname{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.pmeta{font-size:12px;color:#6A6355;margin-top:2px}
+.flags{margin-left:auto;display:flex;gap:7px}
+.flag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid}
+.f-hi{color:#C2410C;background:#FFF7ED;border-color:#FED7AA}
+.f-ok{color:#6A6355;background:#FAF8F4;border-color:#D4CCBD}
+.scroll{padding:30px 36px;overflow:hidden}
+.h2{font-size:21px;font-weight:600;letter-spacing:-.015em;color:#1F4A4C}
+.sub{font-size:13px;color:#6A6355;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.fld label{display:block;font-size:12.5px;font-weight:500;margin-bottom:6px}
+.inp{height:42px;border:1px solid #D4CCBD;border-radius:7px;background:#fff}
+.inp.focus{border-color:#2C6E6B;box-shadow:0 0 0 3px rgba(44,110,107,.18)}
+.wide{grid-column:1/-1}
+.ta{height:92px;border:1px solid #D4CCBD;border-radius:7px;background:#fff}
+.hint{font-size:11.5px;color:#6A6355;margin-top:5px}
+.savebar{margin-top:auto;border-top:1px solid #E6E0D5;background:#fff;padding:14px 36px;display:flex;gap:10px;align-items:center}
+.btn{height:40px;padding:0 20px;border-radius:7px;display:flex;align-items:center;font-size:13.5px;font-weight:500}
+.pri{background:#2C6E6B;color:#fff}
+.sec2{border:1px solid #2C6E6B;color:#2C6E6B;background:#fff}
+.saved{margin-left:auto;font-size:12px;color:#2C6E6B}
+
+/* right evidence column */
+.ev{background:#F3EFE8;border-left:1px solid #E6E0D5;padding:20px;display:flex;flex-direction:column;gap:16px}
+.evh{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6A6355}
+.card{background:#fff;border:1px solid #E6E0D5;border-radius:9px;padding:13px}
+.riskline{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#C2410C}
+.dot{width:8px;height:8px;border-radius:50%;background:#C2410C;flex:none}
+.evtxt{font-size:12px;color:#6A6355;margin-top:7px;line-height:1.5}
+.ppl{border-left:3px solid #8F5C72;background:#F9F3F5;border-radius:0 8px 8px 0;padding:12px}
+.prow{display:flex;align-items:center;gap:9px;font-size:12.5px;margin-top:8px}
+.pav{width:24px;height:24px;border-radius:50%;background:#8F5C72;flex:none}
+.att{display:flex;align-items:center;gap:9px;font-size:12.5px;padding:8px 0;border-bottom:1px solid #F3EFE8}
+.sq{width:26px;height:26px;border-radius:6px;background:#E6E0D5;flex:none}
+.chat{margin-top:auto;background:#fff;border:1px solid #E6E0D5;border-radius:9px;padding:12px}
+.bub{background:#F3EFE8;border-radius:8px;height:34px;margin-bottom:7px}
+.bub.me{background:#E3F0EE;margin-left:34px}
+</style></head><body>
+
+<div class="rail">
+  <div class="brand"><div class="mark"></div><div class="brandname">CareFrame</div></div>
+  <div class="railhead">Assessment</div>
+  <div class="sec done"><span class="mk"></span>Personal details</div>
+  <div class="sec done"><span class="mk"></span>Basic needs</div>
+  <div class="sec on"><span class="mk"></span>Health &amp; medical</div>
+  <div class="sec"><span class="mk"></span>Daily living</div>
+  <div class="sec"><span class="mk"></span>Risks &amp; safeguarding</div>
+  <div class="sec"><span class="mk"></span>Social wellbeing</div>
+  <div class="sec"><span class="mk"></span>Environment</div>
+  <div class="sec"><span class="mk"></span>Advance preferences</div>
+  <div class="sec"><span class="mk"></span>Optional areas</div>
+  <div class="sec"><span class="mk"></span>Summary</div>
+  <div class="railfoot">
+    <div style="font-size:11.5px;color:#B9D4D0">7 of 11 complete</div>
+    <div class="prog"><i></i></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="person">
+    <div class="ava"></div>
+    <div>
+      <div class="pname">Peter Hamilton</div>
+      <div class="pmeta">NHS 485 777 3291 · 82 · Lincolnshire · Assessed by M. Okonkwo</div>
+    </div>
+    <div class="flags">
+      <span class="flag f-hi">Falls — High</span>
+      <span class="flag f-ok">Safeguarding — None</span>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="h2">Health &amp; medical</div>
+    <div class="sub">Diagnoses, medication and clinical contacts as recorded by the GP.</div>
+    <div class="grid">
+      <div class="fld"><label>Primary diagnosis</label><div class="inp focus"></div><div class="hint">As recorded by the GP or consultant.</div></div>
+      <div class="fld"><label>Secondary conditions</label><div class="inp"></div></div>
+      <div class="fld wide"><label>Current medication</label><div class="ta"></div><div class="hint">Drug, dose, frequency — one per line.</div></div>
+      <div class="fld"><label>GP practice</label><div class="inp"></div></div>
+      <div class="fld"><label>Last review</label><div class="inp"></div></div>
+    </div>
+  </div>
+
+  <div class="savebar">
+    <div class="btn pri">Save &amp; continue</div>
+    <div class="btn sec2">Back</div>
+    <div class="saved">Saved 14:32</div>
+  </div>
+</div>
+
+<div class="ev">
+  <div class="evh">Evidence · Health &amp; medical</div>
+  <div class="card">
+    <div class="riskline"><span class="dot"></span>Falls risk raised here</div>
+    <div class="evtxt">Two falls recorded since March. Stair access noted in Environment. Night supervision suggested.</div>
+  </div>
+  <div class="evh">People named in this section</div>
+  <div class="ppl">
+    <div class="prow"><span class="pav"></span>Dr A. Whitfield — GP</div>
+    <div class="prow"><span class="pav"></span>Grace Adeyemi — daughter, next of kin</div>
+  </div>
+  <div class="evh">Attached</div>
+  <div class="card" style="padding:4px 13px">
+    <div class="att"><span class="sq"></span>Medication list.pdf</div>
+    <div class="att" style="border:0"><span class="sq"></span>Discharge summary.pdf</div>
+  </div>
+  <div class="chat">
+    <div class="evh" style="margin-bottom:9px">Assistant</div>
+    <div class="bub"></div>
+    <div class="bub me"></div>
+    <div class="bub" style="width:70%"></div>
+  </div>
+</div>
+
+</body></html>

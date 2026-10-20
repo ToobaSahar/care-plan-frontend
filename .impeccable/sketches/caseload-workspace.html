@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:900px;background:#FAF8F4;font:14px/1.5 Inter,system-ui,sans-serif;color:#2E2C28;display:grid;grid-template-columns:212px 1fr;overflow:hidden}
+.nav{background:#1F4A4C;color:#fff;padding:20px 0}
+.brand{display:flex;align-items:center;gap:10px;padding:0 18px 26px}
+.mark{width:28px;height:28px;border-radius:7px;background:#78BDB5}
+.bn{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.nh{padding:0 18px 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#78BDB5}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 18px;font-size:13px;color:#B9D4D0}
+.ni .ic{width:16px;height:16px;border-radius:4px;background:#2C6E6B;flex:none}
+.ni.on{background:#2C6E6B;color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #78BDB5}
+.ni.on .ic{background:#78BDB5}
+.main{overflow:hidden;display:flex;flex-direction:column}
+.hd{background:#fff;border-bottom:1px solid #E6E0D5;padding:20px 32px 0}
+.hrow{display:flex;align-items:flex-end;gap:16px}
+.h1{font-size:25px;font-weight:600;letter-spacing:-.02em;color:#1F4A4C}
+.cmd{margin-left:auto;width:300px;height:38px;border:1px solid #D4CCBD;border-radius:8px;background:#FAF8F4;display:flex;align-items:center;padding:0 12px;font-size:12.5px;color:#A69D8C}
+.btn{height:38px;padding:0 17px;border-radius:8px;background:#2C6E6B;color:#fff;display:flex;align-items:center;font-size:13.5px;font-weight:500}
+.tabs{display:flex;gap:22px;margin-top:18px}
+.tab{padding-bottom:11px;font-size:13.5px;color:#6A6355}
+.tab.on{color:#2C6E6B;font-weight:600;box-shadow:inset 0 -2px 0 #2C6E6B}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:22px 32px 0}
+.st{background:#fff;border:1px solid #E6E0D5;border-radius:10px;padding:14px 16px}
+.st .k{font-size:11.5px;color:#6A6355}
+.st .v{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-top:2px;color:#1F4A4C}
+.st.alert{border-color:#FED7AA;background:#FFF7ED}
+.st.alert .v{color:#C2410C}
+.list{padding:22px 32px;overflow:hidden}
+.lh{display:grid;grid-template-columns:1.6fr .9fr .9fr 1fr 120px;gap:14px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6A6355;padding:0 14px 9px;border-bottom:1px solid #E6E0D5}
+.row{display:grid;grid-template-columns:1.6fr .9fr .9fr 1fr 120px;gap:14px;align-items:center;background:#fff;border:1px solid #E6E0D5;border-radius:10px;padding:13px 14px;margin-top:9px}
+.nm{display:flex;align-items:center;gap:11px}
+.av{width:32px;height:32px;border-radius:50%;background:#8F5C72;flex:none}
+.n1{font-size:14px;font-weight:600}
+.n2{font-size:11.5px;color:#6A6355}
+.pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid;display:inline-block}
+.p-hi{color:#C2410C;background:#FFF7ED;border-color:#FED7AA}
+.p-cr{color:#fff;background:#991B1B;border-color:#991B1B}
+.p-lo{color:#6A6355;background:#FAF8F4;border-color:#D4CCBD}
+.p-dr{color:#2C6E6B;background:#F0F6F5;border-color:#C0E0DC}
+.mini{height:5px;background:#E6E0D5;border-radius:99px;overflow:hidden}
+.mini i{display:block;height:100%;background:#78BDB5}
+.mt{font-size:11px;color:#6A6355;margin-bottom:5px}
+.go{height:32px;border:1px solid #2C6E6B;color:#2C6E6B;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:500}
+</style></head><body>
+<div class="nav">
+  <div class="brand"><div class="mark"></div><div class="bn">CareFrame</div></div>
+  <div class="nh">Workspace</div>
+  <div class="ni on"><span class="ic"></span>Caseload</div>
+  <div class="ni"><span class="ic"></span>Assessments</div>
+  <div class="ni"><span class="ic"></span>Care plans</div>
+  <div class="ni"><span class="ic"></span>Service users</div>
+  <div class="nh" style="padding-top:22px">Review</div>
+  <div class="ni"><span class="ic"></span>Needs attention</div>
+  <div class="ni"><span class="ic"></span>Signed off</div>
+</div>
+<div class="main">
+  <div class="hd">
+    <div class="hrow">
+      <div class="h1">Caseload</div>
+      <div class="cmd">Search people, assessments or plans — ⌘K</div>
+      <div class="btn">New assessment</div>
+    </div>
+    <div class="tabs"><div class="tab on">Needs attention</div><div class="tab">In progress</div><div class="tab">Awaiting sign-off</div><div class="tab">Complete</div></div>
+  </div>
+  <div class="stats">
+    <div class="st"><div class="k">Open assessments</div><div class="v">18</div></div>
+    <div class="st alert"><div class="k">High or critical risk</div><div class="v">4</div></div>
+    <div class="st"><div class="k">Awaiting sign-off</div><div class="v">6</div></div>
+    <div class="st"><div class="k">Plans generated this week</div><div class="v">11</div></div>
+  </div>
+  <div class="list">
+    <div class="lh"><div>Service user</div><div>Status</div><div>Risk</div><div>Progress</div><div></div></div>
+
+    <div class="row">
+      <div class="nm"><span class="av"></span><div><div class="n1">Peter Hamilton</div><div class="n2">82 · Lincolnshire</div></div></div>
+      <div><span class="pill p-dr">In progress</span></div>
+      <div><span class="pill p-cr">Critical</span></div>
+      <div><div class="mt">7 of 11</div><div class="mini"><i style="width:64%"></i></div></div>
+      <div class="go">Open</div>
+    </div>
+
+    <div class="row">
+      <div class="nm"><span class="av"></span><div><div class="n1">Margaret Oyelaran</div><div class="n2">79 · Boston</div></div></div>
+      <div><span class="pill p-dr">In progress</span></div>
+      <div><span class="pill p-hi">High</span></div>
+      <div><div class="mt">9 of 11</div><div class="mini"><i style="width:82%"></i></div></div>
+      <div class="go">Open</div>
+    </div>
+
+    <div class="row">
+      <div class="nm"><span class="av"></span><div><div class="n1">Tomasz Filipek</div><div class="n2">68 · Grantham</div></div></div>
+      <div><span class="pill p-dr">Draft</span></div>
+      <div><span class="pill p-lo">Low</span></div>
+      <div><div class="mt">2 of 11</div><div class="mini"><i style="width:18%"></i></div></div>
+      <div class="go">Open</div>
+    </div>
+
+    <div class="row">
+      <div class="nm"><span class="av"></span><div><div class="n1">Eileen Brathwaite</div><div class="n2">91 · Sleaford</div></div></div>
+      <div><span class="pill p-dr">Awaiting sign-off</span></div>
+      <div><span class="pill p-hi">High</span></div>
+      <div><div class="mt">11 of 11</div><div class="mini"><i style="width:100%"></i></div></div>
+      <div class="go">Open</div>
+    </div>
+
+    <div class="row">
+      <div class="nm"><span class="av"></span><div><div class="n1">Raymond Achebe</div><div class="n2">74 · Spalding</div></div></div>
+      <div><span class="pill p-dr">In progress</span></div>
+      <div><span class="pill p-lo">Low</span></div>
+      <div><div class="mt">5 of 11</div><div class="mini"><i style="width:45%"></i></div></div>
+      <div class="go">Open</div>
+    </div>
+  </div>
+</div>
+</body></html>

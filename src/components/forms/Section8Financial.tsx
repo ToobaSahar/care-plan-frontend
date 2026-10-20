@@ -16,7 +16,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: {},
   } = useForm<{ [k: string]: any }>({
     resolver: zodResolver(advancePreferencesSchema),
     defaultValues: data || {},
@@ -82,7 +82,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
           </label>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Notes</label>
+          <label className="cf-label">Notes</label>
           <textarea
             {...register(notesField)}
             onChange={(e) => handleChange(notesField, e.target.value)}
@@ -90,7 +90,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
             disabled={isReadOnly}
             rows={3}
             placeholder={notesPlaceholder}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+            className="cf-input"
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
           title="DNACPR in place?" 
           field="dnacpr_in_place" 
           notesField="dnacpr_in_place_notes" 
-          icon={<AlertTriangle className="h-5 w-5 text-red-600" />}
+          icon={<AlertTriangle className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="e.g., Yes – signed by GP"
         />
         <PreferenceArea 
@@ -118,14 +118,14 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
           title="Advance Care Plan / End-of-Life Wishes" 
           field="advance_care_plan_wishes" 
           notesField="advance_care_plan_wishes_notes" 
-          icon={<Heart className="h-5 w-5 text-green-600" />}
+          icon={<Heart className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="e.g., Wishes to stay in residence if condition worsens"
         />
         <PreferenceArea 
           title="Power of Attorney (Health/Finance)" 
           field="power_of_attorney" 
           notesField="power_of_attorney_notes" 
-          icon={<Shield className="h-5 w-5 text-purple-600" />}
+          icon={<Shield className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="e.g., Yes – daughter Jane Hamilton"
         />
       </div>
@@ -138,7 +138,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
         title="DNACPR in place?" 
         field="dnacpr_in_place" 
         notesField="dnacpr_in_place_notes" 
-        icon={<AlertTriangle className="h-5 w-5 text-red-600" />}
+        icon={<AlertTriangle className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="e.g., Yes – signed by GP"
       />
       <PreferenceArea 
@@ -152,14 +152,14 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
         title="Advance Care Plan / End-of-Life Wishes" 
         field="advance_care_plan_wishes" 
         notesField="advance_care_plan_wishes_notes" 
-        icon={<Heart className="h-5 w-5 text-green-600" />}
+        icon={<Heart className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="e.g., Wishes to stay in residence if condition worsens"
       />
       <PreferenceArea 
         title="Power of Attorney (Health/Finance)" 
         field="power_of_attorney" 
         notesField="power_of_attorney_notes" 
-        icon={<Shield className="h-5 w-5 text-purple-600" />}
+        icon={<Shield className="h-5 w-5 text-teal-600" />}
         notesPlaceholder="e.g., Yes – daughter Jane Hamilton"
       />
     </form>

@@ -55,16 +55,16 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             <Heart className="h-5 w-5 mr-2 text-blue-600" />
             Current Care Provision
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Current Care Level *
               </label>
               <select
                 {...register('currentCareLevel')}
                 onChange={(e) => handleInputChange('currentCareLevel', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select care level</option>
                 <option value="none">None</option>
@@ -79,7 +79,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Care Hours per Week
               </label>
               <input
@@ -89,7 +89,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
                 disabled={readOnly}
                 min="0"
                 placeholder="e.g., 10"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.careHoursPerWeek && (
                 <p className="mt-1 text-sm text-red-600">{errors.careHoursPerWeek.message}</p>
@@ -97,14 +97,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Care Frequency
               </label>
               <select
                 {...register('careFrequency')}
                 onChange={(e) => handleInputChange('careFrequency', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select frequency</option>
                 <option value="daily">Daily</option>
@@ -120,14 +120,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Care Type
               </label>
               <select
                 {...register('careType')}
                 onChange={(e) => handleInputChange('careType', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select care type</option>
                 <option value="personal-care">Personal Care</option>
@@ -153,7 +153,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Formal Care Services
               </label>
               <textarea
@@ -162,7 +162,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
                 disabled={readOnly}
                 rows={3}
                 placeholder="List any formal care services currently being used (e.g., home care agency, day center, nursing home)"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.formalCareServices && (
                 <p className="mt-1 text-sm text-red-600">{errors.formalCareServices.message}</p>
@@ -170,7 +170,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Informal Care Support
               </label>
               <textarea
@@ -179,7 +179,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
                 disabled={readOnly}
                 rows={2}
                 placeholder="Family, friends, or neighbors providing informal care support"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.informalCareSupport && (
                 <p className="mt-1 text-sm text-red-600">{errors.informalCareSupport.message}</p>
@@ -187,14 +187,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Care Provider Satisfaction
               </label>
               <select
                 {...register('careProviderSatisfaction')}
                 onChange={(e) => handleInputChange('careProviderSatisfaction', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select satisfaction level</option>
                 <option value="very-satisfied">Very Satisfied</option>
@@ -217,16 +217,16 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             <Clock className="h-5 w-5 mr-2 text-blue-600" />
             Future Care Needs
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Anticipated Care Level
               </label>
               <select
                 {...register('anticipatedCareLevel')}
                 onChange={(e) => handleInputChange('anticipatedCareLevel', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select anticipated level</option>
                 <option value="same">Same</option>
@@ -241,14 +241,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Timeline for Changes
               </label>
               <select
                 {...register('timelineForChanges')}
                 onChange={(e) => handleInputChange('timelineForChanges', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select timeline</option>
                 <option value="immediate">Immediate</option>
@@ -265,7 +265,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Specific Future Needs
             </label>
             <textarea
@@ -274,7 +274,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
               disabled={readOnly}
               rows={3}
               placeholder="Describe any specific care needs that are anticipated in the future"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.specificFutureNeeds && (
               <p className="mt-1 text-sm text-red-600">{errors.specificFutureNeeds.message}</p>
@@ -290,14 +290,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Preferred Care Setting
               </label>
               <select
                 {...register('preferredCareSetting')}
                 onChange={(e) => handleInputChange('preferredCareSetting', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select preference</option>
                 <option value="own-home">Own Home</option>
@@ -314,7 +314,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Care Provider Preferences
               </label>
               <textarea
@@ -323,7 +323,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
                 disabled={readOnly}
                 rows={2}
                 placeholder="Any specific preferences for care providers (e.g., gender, language, cultural background)"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.careProviderPreferences && (
                 <p className="mt-1 text-sm text-red-600">{errors.careProviderPreferences.message}</p>
@@ -331,7 +331,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Cultural or Religious Considerations
               </label>
               <textarea
@@ -340,7 +340,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
                 disabled={readOnly}
                 rows={2}
                 placeholder="Any cultural or religious considerations for care provision"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.culturalReligiousCareConsiderations && (
                 <p className="mt-1 text-sm text-red-600">{errors.culturalReligiousCareConsiderations.message}</p>
@@ -355,16 +355,16 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             <AlertTriangle className="h-5 w-5 mr-2 text-blue-600" />
             Risk Assessment
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Risk Level
               </label>
               <select
                 {...register('careRiskLevel')}
                 onChange={(e) => handleInputChange('careRiskLevel', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select risk level</option>
                 <option value="low">Low</option>
@@ -378,14 +378,14 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Risk Factors
               </label>
               <select
                 {...register('careRiskFactors')}
                 onChange={(e) => handleInputChange('careRiskFactors', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select risk factors</option>
                 <option value="none">None</option>
@@ -403,7 +403,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Risk Mitigation Strategies
             </label>
             <textarea
@@ -412,7 +412,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
               disabled={readOnly}
               rows={2}
               placeholder="Strategies to reduce or manage identified risks"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.riskMitigationStrategies && (
               <p className="mt-1 text-sm text-red-600">{errors.riskMitigationStrategies.message}</p>
@@ -424,7 +424,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
         <div className="border-t pt-6">
           <h4 className="text-md font-medium text-gray-900 mb-4">Additional Notes</h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Care Needs Assessment Notes
             </label>
             <textarea
@@ -433,7 +433,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
               disabled={readOnly}
               rows={3}
               placeholder="Additional observations or notes about care needs and support"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.careNeedsNotes && (
               <p className="mt-1 text-sm text-red-600">{errors.careNeedsNotes.message}</p>
@@ -445,7 +445,7 @@ export const Section8CareNeeds: React.FC<Section8CareNeedsProps> = ({ readOnly =
           <div className="flex justify-end space-x-3 pt-6 border-t">
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="cf-btn"
             >
               Save Section
             </button>

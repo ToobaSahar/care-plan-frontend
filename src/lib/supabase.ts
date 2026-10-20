@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { fetchAssessmentSections, SECTION_TABLES } from './assessmentSections';
 import type { AssessmentData, SectionKey } from '../schema/assessment';
 
 const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
@@ -49,6 +50,10 @@ export interface Assessment {
   status?: 'draft' | 'in_review' | 'completed' | 'locked';
   created_at: string;
   updated_at: string;
+  /** Populated by getById from the per-section tables. */
+  data?: AssessmentData;
+  /** Per-section completion, keyed by section number. */
+  section_progress?: Record<string, boolean>;
 }
 
 export interface BasicDetails {
@@ -215,19 +220,7 @@ export const assessmentApi = {
       if (assessmentData) {
         return {
           ...assessmentData,
-          data: {
-            personalDetails: {},
-            basicDetails: {},
-            healthWellbeing: {},
-            dailyLiving: {},
-            risksSafeguarding: {},
-            socialEmotional: {},
-            environmentLifestyle: {},
-            advancePreferences: {},
-            optionalAreas: {},
-            signatures: {},
-            optionalAttachments: {}
-          },
+          data: await fetchAssessmentSections(assessmentId),
           section_progress: {}
         } as any;
       }
@@ -304,7 +297,7 @@ export const assessmentApi = {
     return data as Assessment;
   },
 
-  async createWithId(id: string, serviceUserId: string, assessorName: string, assessmentDate: string): Promise<Assessment | null> {
+  async createWithId(id: string, _serviceUserId: string, assessorName: string, assessmentDate: string): Promise<Assessment | null> {
     try {
       // Ensure we have a valid UUID
       let assessmentId = id;
@@ -362,20 +355,9 @@ export const assessmentApi = {
         console.log('Generated UUID for updateSection:', validAssessmentId);
       }
 
-      // Map sections to tables
-      const tableMap: Record<string, string> = {
-        'personalDetails': 'service_users',
-        'basicDetails': 'basic_details',
-        'healthWellbeing': 'health_wellbeing',
-        'dailyLiving': 'daily_living',
-        'risksSafeguarding': 'risks_safeguarding',
-        'socialEmotional': 'social_emotional',
-        'environmentLifestyle': 'environment_lifestyle',
-        'advancePreferences': 'advance_preferences',
-        'optionalAreas': 'optional_areas',
-        'signatures': 'signatures',
-        'optionalAttachments': 'optional_attachments'
-      };
+      // Mapping lives in assessmentSections.ts so the read and the write
+      // cannot drift apart.
+      const tableMap: Record<string, string> = SECTION_TABLES;
 
       const tableName = tableMap[sectionKey];
       if (!tableName) return false;
@@ -482,18 +464,18 @@ export const assessmentApi = {
     }
   },
 
-  async updateSectionProgress(id: string, sectionNumber: number, completed: boolean): Promise<boolean> {
-    // This would need to be implemented based on your progress tracking needs
+  async updateSectionProgress(_id: string, _sectionNumber: number, _completed: boolean): Promise<boolean> {
+    // Not implemented: progress is derived from the section data itself.
     return true;
   },
 
-  async updateStatus(id: string, status: string): Promise<boolean> {
-    // This would need to be implemented based on your status tracking needs
+  async updateStatus(_id: string, _status: string): Promise<boolean> {
+    // Not implemented: the assessments table has no status column yet.
     return true;
   },
 
-  async updatePdfUrl(id: string, pdfUrl: string): Promise<boolean> {
-    // This would need to be implemented based on your PDF storage needs
+  async updatePdfUrl(_id: string, _pdfUrl: string): Promise<boolean> {
+    // Not implemented: PDFs are generated client-side by jsPDF.
     return true;
   }
 };

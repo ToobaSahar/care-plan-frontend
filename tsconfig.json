@@ -19,5 +19,22 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
+
+  // Unwired drafts. These four forms are imported by nothing, are never
+  // bundled, and were superseded by the Section8Financial / Section9Financial
+  // / Section10Summary forms that AssessmentPage actually renders. They are
+  // written against field names no schema section defines, so typechecking
+  // them reports ~289 errors for code that does not run.
+  //
+  // Kept on disk deliberately, as reference for the sections they sketch.
+  // Before wiring any of them back in, remove it from this list and define
+  // its fields in src/schema/assessment.ts first.
+  "exclude": [
+    "src/components/forms/Section9Goals.tsx",
+    "src/components/forms/Section8CareNeeds.tsx",
+    "src/components/forms/Section11Summary.tsx",
+    "src/components/forms/Section9CareNeeds.tsx"
+  ],
+
   "references": [{ "path": "./tsconfig.node.json" }]
 }

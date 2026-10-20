@@ -1,131 +1,234 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { ClipboardList, FileText, Plus, Search, User, Users } from 'lucide-react';
 import { AssessmentPage } from './pages/AssessmentPage';
 import { CriticalInformationPage } from './pages/CriticalInformationPage';
-import { supabase } from './lib/supabase';
+import { formatDate } from './lib/format';
+import { cn } from './lib/cn';
+import { useServiceUsers } from './hooks/useServiceUsers';
+import { WorkSurface } from './components/layout/WorkSurface';
+import {
+  Alert,
+  Avatar,
+  Button,
+  EmptyState,
+  Logo,
+  Pagination,
+  SkeletonRows,
+} from './components/ui';
 import './index.css';
 
-// Mock data for development - replace with actual data fetching
-const mockAssessments = [
-  {
-    id: '1',
-    service_user_name: 'Peter Hamilton',
-    status: 'draft',
-    created_at: '2024-01-15T10:00:00Z',
-    updated_at: '2024-01-15T10:00:00Z',
-  },
-];
+const PAGE_SIZE = 12;
 
-// Simple Assessments List Page
-const AssessmentsListPage: React.FC = () => {
+/**
+ * Caseload — the product's first screen.
+ *
+ * It opens on who needs attention rather than on a blank form, so the first
+ * thing anyone sees (assessor or otherwise) is the work, not an empty shell.
+ * Paging and searching are both done in Postgres; see useServiceUsers.
+ */
+const CaseloadPage: React.FC = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const listTopRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const { data: usersData, error } = await supabase
-          .from('service_users')
-          .select('id, full_name, created_at')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Error fetching users:', error);
-        } else {
-          setUsers(usersData || []);
-        }
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  const {
+    rows,
+    total,
+    page,
+    pageCount,
+    pageSize,
+    isInitialLoading,
+    isFetching,
+    error,
+    query,
+    setQuery,
+    setPage,
+    retry,
+  } = useServiceUsers({ pageSize: PAGE_SIZE });
 
   const handleViewCarePlan = (userId: string) => {
-    // Navigate to critical information page with user ID as a query parameter
     navigate(`/critical-information?userId=${userId}`);
   };
 
+  // Changing page keeps the scroll position otherwise, which lands the reader
+  // halfway down a list they have not seen the top of.
+  const handlePageChange = (next: number) => {
+    setPage(next);
+    listTopRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
+
+  const isSearching = query.trim().length > 0;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">Care Assessments</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage and review care needs assessments
-            </p>
-          </div>
-          
-          <div className="p-6">
-            <div className="text-center py-12">
-              <a
-                href="/assessment"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                View Assessment
-              </a>
-            </div>
-          </div>
+    <div className="flex min-h-screen bg-teal-800">
+      {/* Navigation — the same Slate Teal field the assessment rail uses. */}
+      <nav
+        aria-label="Main"
+        className="cf-rail hidden w-[212px] flex-none flex-col bg-teal-800 py-5 lg:flex"
+      >
+        <div className="px-5 pb-7">
+          <Logo onDark size="md" />
         </div>
 
-        {/* Care Plans Section */}
-        <div className="mt-8 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900">Care Plans</h2>
-            <p className="mt-1 text-sm text-gray-500">
-              View care plans for all service users
-            </p>
-          </div>
-          
-          <div className="p-6">
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-500">Loading users...</p>
+        {/* One destination, because there is genuinely one list. Assessments and
+            care plans belong to a person, so they are reached from that person's
+            row rather than from nav items that cannot know who is meant. */}
+        <p className="px-5 pb-2 text-2xs font-semibold uppercase text-teal-400">Workspace</p>
+        <span
+          aria-current="page"
+          className="flex items-center gap-3 bg-teal-600 px-5 py-2.5 text-base font-semibold text-white shadow-[inset_3px_0_0_#78BDB5]"
+        >
+          <Users className="h-4 w-4 flex-none" aria-hidden="true" />
+          Caseload
+        </span>
+
+        <p className="mt-auto px-5 text-2xs leading-5 text-teal-100/50">
+          Universal Care Needs Assessment
+        </p>
+      </nav>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="px-6 pb-6 pt-5">
+          <div className="mx-auto flex w-full max-w-5xl flex-wrap items-end gap-x-4 gap-y-4">
+            <div className="lg:hidden">
+              <Logo size="sm" variant="mark" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-3xl font-semibold tracking-tight text-white">Caseload</h1>
+              <p className="mt-1.5 text-base text-teal-100/80">
+                Service users with an assessment or care plan on record.
+              </p>
+            </div>
+
+            <div className="ml-auto flex flex-wrap items-center gap-2.5">
+              <div className="relative">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-teal-300"
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search by name or id"
+                  aria-label="Search caseload"
+                  className="h-10 w-full rounded-md border border-teal-600 bg-teal-900/60 pl-9 pr-3 text-base text-white placeholder:text-teal-300/80 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40 sm:w-64"
+                />
               </div>
-            ) : users.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">👥</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-                <p className="text-gray-500">No service users have been created yet.</p>
+              <Button variant="onDark" icon={<Plus />} onClick={() => navigate('/assessment')}>
+                New assessment
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <WorkSurface className="flex-1 px-6 py-7">
+          <div ref={listTopRef} className="mx-auto flex w-full max-w-5xl flex-col gap-5">
+            {error && (
+              <Alert tone="error" title="The caseload could not be loaded">
+                {error}
+                <div className="mt-2.5">
+                  <Button variant="secondary" size="sm" onClick={retry}>
+                    Try again
+                  </Button>
+                </div>
+              </Alert>
+            )}
+
+            <div className="flex items-baseline gap-2.5">
+              <h2 className="text-lg font-semibold text-oat-900">Service users</h2>
+              {!isInitialLoading && (
+                <span className="text-xs tabular-nums text-oat-600">
+                  {total}
+                  {isSearching ? ' matching' : ''}
+                </span>
+              )}
+            </div>
+
+            {isInitialLoading ? (
+              <SkeletonRows rows={6} />
+            ) : rows.length === 0 ? (
+              <div className="rounded-xl border border-oat-200 bg-white">
+                <EmptyState
+                  icon={<User />}
+                  title={isSearching ? 'Nothing matches that search' : 'No service users yet'}
+                  description={
+                    isSearching
+                      ? 'Try a different name, or clear the search to see the whole caseload.'
+                      : 'Once an assessment is started, the person it is about appears here with their care plan.'
+                  }
+                  action={
+                    isSearching ? (
+                      <Button variant="secondary" onClick={() => setQuery('')}>
+                        Clear search
+                      </Button>
+                    ) : (
+                      <Button icon={<Plus />} onClick={() => navigate('/assessment')}>
+                        Start an assessment
+                      </Button>
+                    )
+                  }
+                />
               </div>
             ) : (
-              <div className="space-y-4">
-                {users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-                  >
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {user.full_name || 'Unnamed User'}
+              <ul
+                className={cn(
+                  'flex flex-col gap-2.5 transition-opacity duration-fast',
+                  isFetching && 'opacity-60',
+                )}
+                aria-busy={isFetching}
+              >
+                {rows.map((user) => (
+                  <li key={user.id}>
+                    <article className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-oat-200 bg-white px-4 py-2.5 shadow-xs transition-shadow duration-fast ease-out hover:shadow-sm">
+                      <Avatar name={user.full_name ?? undefined} size="md" />
+
+                      <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-oat-900">
+                        {user.full_name || 'Unnamed service user'}
                       </h3>
-                      <p className="text-sm text-gray-500">
-                        ID: {user.id}
+
+                      <p className="hidden w-28 flex-none text-xs text-oat-600 sm:block">
+                        {formatDate(user.created_at)}
                       </p>
-                      <p className="text-sm text-gray-500">
-                        Created: {new Date(user.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => handleViewCarePlan(user.id)}
-                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+
+                      {/* Both of a person's destinations, offered from the person
+                          — which is the only context in which either makes sense. */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/assessment/${user.id}`)}
+                        icon={<ClipboardList />}
                       >
-                        View Care Plan
-                      </button>
-                    </div>
-                  </div>
+                        Assessment
+                      </Button>
+
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleViewCarePlan(user.id)}
+                        icon={<FileText />}
+                      >
+                        Care plan
+                      </Button>
+                    </article>
+                  </li>
                 ))}
-              </div>
+              </ul>
+            )}
+
+            {!isInitialLoading && rows.length > 0 && (
+              <Pagination
+                page={page}
+                pageCount={pageCount}
+                total={total}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
+                busy={isFetching}
+                itemLabel="service users"
+              />
             )}
           </div>
-        </div>
+        </WorkSurface>
       </div>
     </div>
   );
@@ -137,7 +240,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Navigate to="/assessments" replace />} />
-          <Route path="/assessments" element={<AssessmentsListPage />} />
+          <Route path="/assessments" element={<CaseloadPage />} />
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/assessment/:id" element={<AssessmentPage />} />
           <Route path="/critical-information" element={<CriticalInformationPage />} />

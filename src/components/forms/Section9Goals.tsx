@@ -57,7 +57,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Primary Short-term Goal *
               </label>
               <textarea
@@ -66,7 +66,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={3}
                 placeholder="What is the main goal to achieve in the next 6 months?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.primaryShortTermGoal && (
                 <p className="mt-1 text-sm text-red-600">{errors.primaryShortTermGoal.message}</p>
@@ -74,7 +74,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Additional Short-term Goals
               </label>
               <textarea
@@ -83,23 +83,23 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={3}
                 placeholder="List any other short-term goals or objectives"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.additionalShortTermGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.additionalShortTermGoals.message}</p>
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="cf-grid">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="cf-label">
                   Priority Level
                 </label>
                 <select
                   {...register('shortTermGoalPriority')}
                   onChange={(e) => handleInputChange('shortTermGoalPriority', e.target.value)}
                   disabled={readOnly}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="cf-input"
                 >
                   <option value="">Select priority</option>
                   <option value="high">High</option>
@@ -112,7 +112,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="cf-label">
                   Expected Completion
                 </label>
                 <input
@@ -120,7 +120,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                   {...register('shortTermGoalExpectedCompletion')}
                   onChange={(e) => handleInputChange('shortTermGoalExpectedCompletion', e.target.value)}
                   disabled={readOnly}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="cf-input"
                 />
                 {errors.shortTermGoalExpectedCompletion && (
                   <p className="mt-1 text-sm text-red-600">{errors.shortTermGoalExpectedCompletion.message}</p>
@@ -138,7 +138,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Primary Medium-term Goal
               </label>
               <textarea
@@ -147,7 +147,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={3}
                 placeholder="What is the main goal to achieve in the next 6-12 months?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.primaryMediumTermGoal && (
                 <p className="mt-1 text-sm text-red-600">{errors.primaryMediumTermGoal.message}</p>
@@ -155,7 +155,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Additional Medium-term Goals
               </label>
               <textarea
@@ -164,7 +164,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="List any other medium-term goals or objectives"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.additionalMediumTermGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.additionalMediumTermGoals.message}</p>
@@ -181,7 +181,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Primary Long-term Goal
               </label>
               <textarea
@@ -190,7 +190,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={3}
                 placeholder="What is the main long-term goal or aspiration?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.primaryLongTermGoal && (
                 <p className="mt-1 text-sm text-red-600">{errors.primaryLongTermGoal.message}</p>
@@ -198,7 +198,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Additional Long-term Goals
               </label>
               <textarea
@@ -207,7 +207,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="List any other long-term goals or aspirations"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.additionalLongTermGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.additionalLongTermGoals.message}</p>
@@ -222,9 +222,9 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             <CheckCircle className="h-5 w-5 mr-2 text-blue-600" />
             Goal Categories
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Health and Wellbeing Goals
               </label>
               <textarea
@@ -233,7 +233,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="Goals related to physical health, mental health, or general wellbeing"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.healthWellbeingGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.healthWellbeingGoals.message}</p>
@@ -241,7 +241,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Independence Goals
               </label>
               <textarea
@@ -250,7 +250,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="Goals related to maintaining or increasing independence"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.independenceGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.independenceGoals.message}</p>
@@ -258,7 +258,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Social Goals
               </label>
               <textarea
@@ -267,7 +267,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="Goals related to social activities, relationships, or community involvement"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.socialGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.socialGoals.message}</p>
@@ -275,7 +275,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Lifestyle Goals
               </label>
               <textarea
@@ -284,7 +284,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="Goals related to hobbies, interests, or lifestyle changes"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.lifestyleGoals && (
                 <p className="mt-1 text-sm text-red-600">{errors.lifestyleGoals.message}</p>
@@ -299,16 +299,16 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             <CheckCircle className="h-5 w-5 mr-2 text-blue-600" />
             Goal Achievement
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Current Progress
               </label>
               <select
                 {...register('currentProgress')}
                 onChange={(e) => handleInputChange('currentProgress', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select progress level</option>
                 <option value="not-started">Not Started</option>
@@ -323,14 +323,14 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Barriers to Achievement
               </label>
               <select
                 {...register('barriersToAchievement')}
                 onChange={(e) => handleInputChange('barriersToAchievement', e.target.value)}
                 disabled={readOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select barriers</option>
                 <option value="none">None</option>
@@ -348,7 +348,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Support Required
             </label>
             <textarea
@@ -357,7 +357,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
               disabled={readOnly}
               rows={2}
               placeholder="What support is needed to achieve these goals?"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.supportRequired && (
               <p className="mt-1 text-sm text-red-600">{errors.supportRequired.message}</p>
@@ -373,7 +373,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Desired Outcomes
               </label>
               <textarea
@@ -382,7 +382,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={3}
                 placeholder="What specific outcomes are desired from achieving these goals?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.desiredOutcomes && (
                 <p className="mt-1 text-sm text-red-600">{errors.desiredOutcomes.message}</p>
@@ -390,7 +390,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Success Measures
               </label>
               <textarea
@@ -399,7 +399,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
                 disabled={readOnly}
                 rows={2}
                 placeholder="How will success be measured? What indicators will show progress?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.successMeasures && (
                 <p className="mt-1 text-sm text-red-600">{errors.successMeasures.message}</p>
@@ -412,7 +412,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
         <div className="border-t pt-6">
           <h4 className="text-md font-medium text-gray-900 mb-4">Additional Notes</h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Goals and Outcomes Assessment Notes
             </label>
             <textarea
@@ -421,7 +421,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
               disabled={readOnly}
               rows={3}
               placeholder="Additional observations or notes about goals and outcomes"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.goalsOutcomesNotes && (
               <p className="mt-1 text-sm text-red-600">{errors.goalsOutcomesNotes.message}</p>
@@ -433,7 +433,7 @@ export const Section9Goals: React.FC<Section9GoalsProps> = ({ readOnly = false }
           <div className="flex justify-end space-x-3 pt-6 border-t">
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="cf-btn"
             >
               Save Section
             </button>

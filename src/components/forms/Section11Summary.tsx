@@ -57,7 +57,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             Overall Assessment Summary
           </h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Assessment Summary *
             </label>
             <textarea
@@ -66,7 +66,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
               disabled={isReadOnly}
               rows={4}
               placeholder="Provide a comprehensive summary of the assessment findings, including key observations and overall impressions"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.overallAssessmentSummary && (
               <p className="mt-1 text-sm text-red-600">{errors.overallAssessmentSummary.message}</p>
@@ -80,9 +80,9 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             <CheckCircle className="h-5 w-5 mr-2 text-blue-600" />
             Key Findings
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Key Strengths *
               </label>
               <textarea
@@ -91,7 +91,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={4}
                 placeholder="Identify and describe the individual's key strengths and positive attributes"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.keyStrengths && (
                 <p className="mt-1 text-sm text-red-600">{errors.keyStrengths.message}</p>
@@ -99,7 +99,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Areas of Concern *
               </label>
               <textarea
@@ -108,7 +108,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={4}
                 placeholder="Identify and describe areas that require attention or intervention"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.areasOfConcern && (
                 <p className="mt-1 text-sm text-red-600">{errors.areasOfConcern.message}</p>
@@ -125,7 +125,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Primary Recommendations *
               </label>
               <textarea
@@ -134,7 +134,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={4}
                 placeholder="Provide the main recommendations for care, support, and intervention"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.primaryRecommendations && (
                 <p className="mt-1 text-sm text-red-600">{errors.primaryRecommendations.message}</p>
@@ -142,7 +142,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Service Recommendations
               </label>
               <textarea
@@ -151,7 +151,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={3}
                 placeholder="Specific recommendations for services, equipment, or adaptations"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.serviceRecommendations && (
                 <p className="mt-1 text-sm text-red-600">{errors.serviceRecommendations.message}</p>
@@ -159,7 +159,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Equipment/Adaptations
               </label>
               <textarea
@@ -168,7 +168,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={3}
                 placeholder="Recommendations for equipment, adaptations, or environmental modifications"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.equipmentAdaptations && (
                 <p className="mt-1 text-sm text-red-600">{errors.equipmentAdaptations.message}</p>
@@ -183,16 +183,16 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             <AlertTriangle className="h-5 w-5 mr-2 text-blue-600" />
             Risk Assessment
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Overall Risk Level
               </label>
               <select
                 {...register('overallRiskLevel')}
                 onChange={(e) => handleInputChange('overallRiskLevel', e.target.value)}
                 disabled={isReadOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select risk level</option>
                 <option value="low">Low</option>
@@ -206,14 +206,14 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Risk Management Plan
               </label>
               <select
                 {...register('riskManagementPlan')}
                 onChange={(e) => handleInputChange('riskManagementPlan', e.target.value)}
                 disabled={isReadOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select plan status</option>
                 <option value="in_place">In Place</option>
@@ -229,7 +229,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
 
           <div className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Risk Management Actions
               </label>
               <textarea
@@ -238,7 +238,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={3}
                 placeholder="Specific actions required to manage identified risks"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.riskManagementActions && (
                 <p className="mt-1 text-sm text-red-600">{errors.riskManagementActions.message}</p>
@@ -253,16 +253,16 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             <Calendar className="h-5 w-5 mr-2 text-blue-600" />
             Review and Monitoring
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Review Frequency
               </label>
               <select
                 {...register('reviewFrequency')}
                 onChange={(e) => handleInputChange('reviewFrequency', e.target.value)}
                 disabled={isReadOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select frequency</option>
                 <option value="weekly">Weekly</option>
@@ -277,7 +277,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Next Review Date
               </label>
               <input
@@ -285,7 +285,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 {...register('nextReviewDate')}
                 onChange={(e) => handleInputChange('nextReviewDate', e.target.value)}
                 disabled={isReadOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.nextReviewDate && (
                 <p className="mt-1 text-sm text-red-600">{errors.nextReviewDate.message}</p>
@@ -294,7 +294,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Monitoring Requirements
             </label>
             <textarea
@@ -303,7 +303,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
               disabled={isReadOnly}
               rows={3}
               placeholder="Specific monitoring requirements and ongoing assessment needs"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.monitoringRequirements && (
               <p className="mt-1 text-sm text-red-600">{errors.monitoringRequirements.message}</p>
@@ -319,7 +319,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
           </h4>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Key Stakeholders
               </label>
               <textarea
@@ -328,7 +328,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={3}
                 placeholder="Identify key stakeholders involved in the individual's care and support"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.keyStakeholders && (
                 <p className="mt-1 text-sm text-red-600">{errors.keyStakeholders.message}</p>
@@ -336,7 +336,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Communication Plan
               </label>
               <textarea
@@ -345,7 +345,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
                 disabled={isReadOnly}
                 rows={3}
                 placeholder="Outline the communication plan for sharing assessment findings and recommendations"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               />
               {errors.communicationPlan && (
                 <p className="mt-1 text-sm text-red-600">{errors.communicationPlan.message}</p>
@@ -360,16 +360,16 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
             <Star className="h-5 w-5 mr-2 text-blue-600" />
             Quality Assurance
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="cf-label">
                 Assessment Quality Rating
               </label>
               <select
                 {...register('assessmentQualityRating')}
                 onChange={(e) => handleInputChange('assessmentQualityRating', e.target.value)}
                 disabled={isReadOnly}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="cf-input"
               >
                 <option value="">Select rating</option>
                 <option value="excellent">Excellent</option>
@@ -384,7 +384,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="cf-label">
               Quality Assurance Notes
             </label>
             <textarea
@@ -393,7 +393,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
               disabled={isReadOnly}
               rows={3}
               placeholder="Any quality assurance notes or observations about the assessment process"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="cf-input"
             />
             {errors.qualityAssuranceNotes && (
               <p className="mt-1 text-sm text-red-600">{errors.qualityAssuranceNotes.message}</p>
@@ -405,7 +405,7 @@ export const Section11Summary: React.FC<Section11SummaryProps> = ({ isReadOnly =
           <div className="flex justify-end space-x-3 pt-6 border-t">
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="cf-btn"
             >
               Save Section
             </button>

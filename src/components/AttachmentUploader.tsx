@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, X, File, Download, Trash2 } from 'lucide-react';
+import { Upload, File, Download, Trash2 } from 'lucide-react';
 import { useAssessment } from '../state/useAssessment';
 import { supabase } from '../lib/supabase';
 
@@ -27,7 +27,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { currentAssessment } = useAssessment();
+  const {} = useAssessment();
 
   // Load existing attachments
   React.useEffect(() => {
@@ -95,24 +95,23 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
     try {
       // Create unique filename
       const timestamp = new Date().getTime();
-      const fileExtension = file.name.split('.').pop();
       const filename = `${timestamp}_${file.name}`;
       const filePath = `attachments/${assessmentId}/${filename}`;
 
       // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
+      // supabase-js v2 has no upload-progress callback — the option passed
+      // here was silently ignored, so the bar never moved. Report completion
+      // instead of pretending to track bytes.
+      const { error } = await supabase.storage
         .from('attachments')
-        .upload(filePath, file, {
-          onUploadProgress: (progress) => {
-            const percent = (progress.loaded / progress.total) * 100;
-            setUploadProgress(percent);
-          },
-        });
+        .upload(filePath, file);
 
       if (error) throw error;
 
+      setUploadProgress(100);
+
       // Get public URL
-      const { data: urlData } = supabase.storage
+      supabase.storage
         .from('attachments')
         .getPublicUrl(filePath);
 

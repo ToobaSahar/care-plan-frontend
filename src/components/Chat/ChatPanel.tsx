@@ -1,17 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User, Loader2, Paperclip, X as XIcon } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, Loader2, Paperclip, X as XIcon } from 'lucide-react';
 import { useAssessment } from '../../state/useAssessment';
 import { Message } from './Message';
+import type { AgentMessage } from './types';
 
 // Simple mock AI response for chat functionality
-interface AgentMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-  toolsUsed?: Record<string, unknown>;
-}
-
 interface ChatPanelProps {
   assessmentId: string;
   isOpen: boolean;
@@ -200,7 +193,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
             onKeyPress={handleKeyPress}
             placeholder="Ask me anything about the assessment..."
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            disabled={isLoading || isStreaming}
+            disabled={isLoading}
           />
           
           {/* File Attachment Button */}
@@ -213,7 +206,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading || isStreaming}
+            disabled={isLoading}
             className="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Attach MP3 file"
           >
@@ -222,10 +215,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
           
           <button
             onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading || isStreaming}
+            disabled={!inputValue.trim() || isLoading}
             className={`
               px-4 py-2 rounded-md transition-colors
-              ${inputValue.trim() && !isLoading && !isStreaming
+              ${inputValue.trim() && !isLoading
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }
@@ -248,9 +241,10 @@ export const ChatButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center z-40"
+      className="fixed bottom-[5.5rem] right-5 w-14 h-14 bg-teal-700 text-white rounded-full shadow-lg hover:bg-teal-800 transition-colors duration-fast flex items-center justify-center z-40"
     >
-      <MessageSquare className="w-6 h-6" />
+      <MessageSquare className="w-6 h-6" aria-hidden="true" />
+      <span className="sr-only">Open assistant</span>
     </button>
   );
 };

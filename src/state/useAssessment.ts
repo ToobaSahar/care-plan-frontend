@@ -80,7 +80,7 @@ const initialFormData: AssessmentData = {
     falls_risk: undefined,
     eating_drinking: '',
     personal_care: undefined,
-    continence: '',
+    continence: undefined,
     sleep_pattern: undefined,
     communication_mode: undefined,
     communication_notes: ''
@@ -152,6 +152,26 @@ const initialFormData: AssessmentData = {
     communication_passport: false
   }
 };
+
+/**
+ * Overlays a loaded assessment onto the blank form shape.
+ *
+ * Every section keeps its full set of keys with their empty-string defaults,
+ * and saved answers are layered on top. Without this, a partially completed
+ * record hands React `undefined` for unanswered fields.
+ */
+function mergeFormData(loaded: unknown): AssessmentData {
+  if (!loaded || typeof loaded !== 'object') return initialFormData;
+
+  const source = loaded as Record<string, Record<string, unknown> | undefined>;
+
+  return Object.fromEntries(
+    Object.entries(initialFormData).map(([section, defaults]) => [
+      section,
+      { ...(defaults as Record<string, unknown>), ...(source[section] ?? {}) },
+    ]),
+  ) as AssessmentData;
+}
 
 export const useAssessment = create<AssessmentState>()(
   devtools(
@@ -324,9 +344,13 @@ export const useAssessment = create<AssessmentState>()(
           
           const assessment = await assessmentApi.getById(id);
           if (assessment) {
-            set({ 
+            set({
               currentAssessment: assessment,
-              formData: assessment.data || initialFormData, // Use loaded data or fallback to initial
+              // Overlay saved values onto the defaults rather than replacing
+              // them: a loaded section only carries the fields that were
+              // answered, and an absent field would otherwise arrive as
+              // undefined and flip its input from controlled to uncontrolled.
+              formData: mergeFormData(assessment.data),
               sectionProgress: assessment.section_progress || {},
               hasUnsavedChanges: false
             });
@@ -391,9 +415,10 @@ export const useAssessment = create<AssessmentState>()(
           set({ isLoading: true, error: null });
           
           // This would need to be implemented based on your PDF generation needs
-          const pdfUrl = await assessmentApi.updatePdfUrl(currentAssessment.id, 'mock-pdf-url');
-          
-          return pdfUrl;
+          const saved = await assessmentApi.updatePdfUrl(currentAssessment.id, 'mock-pdf-url');
+
+          // updatePdfUrl reports success; the contract here is the URL itself.
+          return saved ? 'mock-pdf-url' : null;
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to generate PDF';
           set({ error: errorMessage });

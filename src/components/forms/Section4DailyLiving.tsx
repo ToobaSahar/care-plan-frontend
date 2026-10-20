@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { dailyLivingSchema } from '../../schema/assessment';
 import { useCurrentSectionData } from '../../state/useAssessment';
+import { SelectField } from '../ui';
 
 interface Section4DailyLivingProps {
   isReadOnly?: boolean;
@@ -15,7 +16,7 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: {},
   } = useForm<{ [k: string]: any }>({
     resolver: zodResolver(dailyLivingSchema),
     defaultValues: data || {},
@@ -56,20 +57,17 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
       <h4 className="text-md font-medium text-gray-900 mb-3">{title}</h4>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Needs</label>
+          <label className="cf-label">Needs</label>
                      {needsType === 'select' ? (
-             <select
-               {...register(needsField)}
-               onChange={(e) => handleChange(needsField, e.target.value)}
-               onBlur={(e) => handleBlur(needsField, e.target.value)}
+             <SelectField
+               aria-label="Needs"
+               name={needsField}
+               value={(data as any)?.[needsField] ?? ''}
+               options={options || []}
                disabled={isReadOnly}
-               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
-             >
-               <option value="">Select</option>
-               {(options || []).map(o => (
-                 <option key={o.value} value={o.value}>{o.label}</option>
-               ))}
-             </select>
+               onValueChange={(v) => handleChange(needsField, v)}
+               onBlur={(v) => handleBlur(needsField, v)}
+             />
            ) : (
              <input
                type="text"
@@ -78,12 +76,12 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
                onBlur={(e) => handleBlur(needsField, e.target.value)}
                disabled={isReadOnly}
                placeholder={needsPlaceholder}
-               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+               className="cf-input"
              />
            )}
         </div>
         <div className="lg:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+          <label className="cf-label">Notes</label>
                      <textarea
              {...register(notesField)}
              onChange={(e) => handleChange(notesField, e.target.value)}
@@ -91,7 +89,7 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
              disabled={isReadOnly}
              rows={2}
              placeholder={notesPlaceholder}
-             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+             className="cf-input"
            />
         </div>
       </div>

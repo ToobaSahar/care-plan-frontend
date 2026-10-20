@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { PenTool, RotateCcw, Download, Upload, X } from 'lucide-react';
+import { PenTool, RotateCcw, Download, Upload } from 'lucide-react';
 import { useAssessment } from '../state/useAssessment';
 import { supabase } from '../lib/supabase';
 
@@ -19,7 +19,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
   const [hasSignature, setHasSignature] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [existingSignature, setExistingSignature] = useState<string | null>(null);
-  const { currentAssessment } = useAssessment();
+  const {} = useAssessment();
 
   useEffect(() => {
     if (assessmentId) {
@@ -143,7 +143,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
       const filePath = `signatures/${assessmentId}/${filename}`;
 
       // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from('signatures')
         .upload(filePath, blob, {
           contentType: 'image/png',

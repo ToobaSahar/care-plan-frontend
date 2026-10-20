@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:900px;background:#FAF8F4;font:14px/1.5 Inter,system-ui,sans-serif;color:#2E2C28;overflow:hidden}
+.top{height:58px;background:#fff;border-bottom:1px solid #E6E0D5;display:flex;align-items:center;padding:0 28px;gap:11px}
+.mark{width:28px;height:28px;border-radius:7px;background:#2C6E6B}
+.bn{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.who{margin-left:auto;font-size:12.5px;color:#6A6355}
+.shell{display:grid;grid-template-columns:260px 1fr;height:842px}
+.rail{background:#fff;border-right:1px solid #E6E0D5;padding:22px 16px}
+.rh{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6A6355;padding:0 10px 12px}
+.s{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:7px;font-size:13px;color:#4F4A40}
+.s .n{width:20px;height:20px;border-radius:50%;border:1.5px solid #D4CCBD;font-size:10.5px;display:flex;align-items:center;justify-content:center;color:#6A6355;flex:none}
+.s.done .n{background:#2C6E6B;border-color:#2C6E6B;color:#fff}
+.s.on{background:#F0F6F5;color:#1F4A4C;font-weight:600}
+.s.on .n{border-color:#2C6E6B;color:#2C6E6B}
+.bar{margin:16px 10px 0;padding-top:14px;border-top:1px solid #E6E0D5;font-size:11.5px;color:#6A6355}
+.pg{height:5px;background:#E6E0D5;border-radius:99px;margin-top:8px;overflow:hidden}
+.pg i{display:block;width:64%;height:100%;background:#78BDB5}
+.body{overflow:hidden;position:relative}
+.col{width:720px;margin:0 auto;padding:36px 0 0}
+.ph{font-size:12px;color:#6A6355}
+.h1{font-size:26px;font-weight:600;letter-spacing:-.02em;color:#1F4A4C;margin-top:4px}
+.sb{font-size:13.5px;color:#6A6355;margin-top:6px}
+.card{background:#fff;border:1px solid #E6E0D5;border-radius:11px;padding:24px;margin-top:22px}
+.ch{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:600;color:#1F4A4C;margin-bottom:18px}
+.ci{width:20px;height:20px;border-radius:5px;background:#78BDB5;flex:none}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.f label{display:block;font-size:12.5px;font-weight:500;margin-bottom:6px}
+.i{height:42px;border:1px solid #D4CCBD;border-radius:7px}
+.i.foc{border-color:#2C6E6B;box-shadow:0 0 0 3px rgba(44,110,107,.18)}
+.w{grid-column:1/-1}
+.ta{height:84px;border:1px solid #D4CCBD;border-radius:7px}
+.hint{font-size:11.5px;color:#6A6355;margin-top:5px}
+.save{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E6E0D5;padding:14px 0}
+.sin{width:720px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.btn{height:40px;padding:0 20px;border-radius:7px;display:flex;align-items:center;font-size:13.5px;font-weight:500}
+.pri{background:#2C6E6B;color:#fff}
+.gh{color:#6A6355}
+.sv{margin-left:auto;font-size:12px;color:#2C6E6B}
+.fab{position:absolute;right:26px;bottom:88px;height:44px;padding:0 18px;border-radius:99px;background:#1F4A4C;color:#fff;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500}
+</style></head><body>
+<div class="top"><div class="mark"></div><div class="bn">CareFrame</div><div class="who">Peter Hamilton · NHS 485 777 3291 · M. Okonkwo</div></div>
+<div class="shell">
+  <div class="rail">
+    <div class="rh">Assessment sections</div>
+    <div class="s done"><span class="n">✓</span>Personal details</div>
+    <div class="s done"><span class="n">✓</span>Basic needs</div>
+    <div class="s on"><span class="n">3</span>Health &amp; medical</div>
+    <div class="s"><span class="n">4</span>Daily living</div>
+    <div class="s"><span class="n">5</span>Risks &amp; safeguarding</div>
+    <div class="s"><span class="n">6</span>Social wellbeing</div>
+    <div class="s"><span class="n">7</span>Environment</div>
+    <div class="s"><span class="n">8</span>Advance preferences</div>
+    <div class="s"><span class="n">9</span>Optional areas</div>
+    <div class="s"><span class="n">10</span>Summary</div>
+    <div class="bar">7 of 11 complete<div class="pg"><i></i></div></div>
+  </div>
+  <div class="body">
+    <div class="col">
+      <div class="ph">Section 3 of 11</div>
+      <div class="h1">Health &amp; medical</div>
+      <div class="sb">Diagnoses, medication and clinical contacts as recorded by the GP.</div>
+      <div class="card">
+        <div class="ch"><span class="ci"></span>Diagnosis</div>
+        <div class="g">
+          <div class="f"><label>Primary diagnosis</label><div class="i foc"></div><div class="hint">As recorded by the GP or consultant.</div></div>
+          <div class="f"><label>Secondary conditions</label><div class="i"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ci"></span>Medication</div>
+        <div class="g">
+          <div class="f w"><label>Current medication</label><div class="ta"></div><div class="hint">Drug, dose, frequency — one per line.</div></div>
+          <div class="f"><label>GP practice</label><div class="i"></div></div>
+          <div class="f"><label>Last review</label><div class="i"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fab">Assistant</div>
+    <div class="save"><div class="sin"><div class="btn pri">Save &amp; continue</div><div class="btn gh">Back</div><div class="sv">Saved 14:32</div></div></div>
+  </div>
+</div>
+</body></html>

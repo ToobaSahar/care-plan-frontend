@@ -5,6 +5,7 @@ import { User, Calendar, Hash, MapPin, Phone, Heart, AlertTriangle } from 'lucid
 import { personalDetailsSchema } from '../../schema/assessment';
 import { useCurrentSectionData } from '../../state/useAssessment';
 import type { PersonalDetails } from '../../schema/assessment';
+import { DateField } from '../ui';
 
 interface Section1PersonalProps {
   isReadOnly?: boolean;
@@ -16,9 +17,8 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
-    setValue,
-    watch
+    formState: { errors },
+    setValue
   } = useForm<PersonalDetails>({
     resolver: zodResolver(personalDetailsSchema),
     defaultValues: data || {
@@ -49,12 +49,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
       });
     }
   }, [data, setValue]);
-
-  // Update global state when form changes
-  const handleInputChange = (field: keyof PersonalDetails, value: any) => {
-    setValue(field, value);
-    updateData({ [field]: value });
-  };
 
   const onSubmit = (formData: any) => {
     updateData(formData as PersonalDetails);
@@ -87,23 +81,23 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
   if (isReadOnly) {
     return (
       <div className="space-y-6">
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="pt-1">
+          <div className="cf-grid">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
-              <p className="mt-1 text-sm text-gray-900">{data?.full_name || '-'}</p>
+              <label className="cf-label">Full Name</label>
+              <p className="cf-value">{data?.full_name || '-'}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-              <p className="mt-1 text-sm text-gray-900">{data?.date_of_birth || '-'}</p>
+              <label className="cf-label">Date of Birth</label>
+              <p className="cf-value">{data?.date_of_birth || '-'}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">NHS Number</label>
-              <p className="mt-1 text-sm text-gray-900">{data?.nhs_number || '-'}</p>
+              <label className="cf-label">NHS Number</label>
+              <p className="cf-value">{data?.nhs_number || '-'}</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Address</label>
-              <p className="mt-1 text-sm text-gray-900">{data?.address_line || '-'}</p>
+              <label className="cf-label">Address</label>
+              <p className="cf-value">{data?.address_line || '-'}</p>
             </div>
           </div>
         </div>
@@ -114,11 +108,11 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       
-      <div className="bg-gray-100 p-4 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="pt-1">
+        <div className="cf-grid">
           {/* Full Name */}
           <div>
-            <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="full_name" className="cf-label">
               <User className="inline w-4 h-4 mr-2" />
               Full Name *
             </label>
@@ -128,7 +122,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('full_name', {
                 onChange: (e) => updateData({ full_name: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter full name"
             />
             {errors.full_name && (
@@ -138,17 +132,18 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Date of Birth */}
           <div>
-            <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="date_of_birth" className="cf-label">
               <Calendar className="inline w-4 h-4 mr-2" />
               Date of Birth *
             </label>
-            <input
-              type="date"
+            <DateField
               id="date_of_birth"
-              {...register('date_of_birth', {
-                onChange: (e) => updateData({ date_of_birth: e.target.value })
-              })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              name="date_of_birth"
+              value={(data as any)?.date_of_birth ?? ''}
+              onValueChange={(v) => {
+                setValue('date_of_birth', v);
+                updateData({ date_of_birth: v });
+              }}
             />
             {errors.date_of_birth && (
               <p className="mt-1 text-sm text-red-600">{errors.date_of_birth.message}</p>
@@ -157,7 +152,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* NHS Number */}
           <div>
-            <label htmlFor="nhs_number" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="nhs_number" className="cf-label">
               <Hash className="inline w-4 h-4 mr-2" />
               NHS Number *
             </label>
@@ -167,7 +162,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('nhs_number', {
                 onChange: handleNhsNumberChange
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="123 456 7890"
               maxLength={12}
             />
@@ -178,7 +173,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Local Authority Number */}
           <div>
-            <label htmlFor="local_authority_number" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="local_authority_number" className="cf-label">
               Local Authority Number
             </label>
             <input
@@ -187,14 +182,14 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('local_authority_number', {
                 onChange: (e) => updateData({ local_authority_number: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter LA number"
             />
           </div>
 
           {/* Preferred Name */}
           <div>
-            <label htmlFor="preferred_name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="preferred_name" className="cf-label">
               Preferred Name
             </label>
             <input
@@ -203,14 +198,14 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('preferred_name', {
                 onChange: (e) => updateData({ preferred_name: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter preferred name"
             />
           </div>
 
           {/* Address */}
           <div className="md:col-span-2">
-            <label htmlFor="address_line" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="address_line" className="cf-label">
               <MapPin className="inline w-4 h-4 mr-2" />
               Address *
             </label>
@@ -220,7 +215,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
                 onChange: (e) => updateData({ address_line: e.target.value })
               })}
               rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter full address"
             />
             {errors.address_line && (
@@ -230,7 +225,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Postcode */}
           <div>
-            <label htmlFor="postcode" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="postcode" className="cf-label">
               Postcode
             </label>
             <input
@@ -239,7 +234,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('postcode', {
                 onChange: handlePostcodeChange
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="e.g., SW1A 1AA"
             />
             {errors.postcode && (
@@ -249,7 +244,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="phone_number" className="cf-label">
               <Phone className="inline w-4 h-4 mr-2" />
               Phone Number *
             </label>
@@ -259,7 +254,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('phone_number', {
                 onChange: (e) => updateData({ phone_number: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter phone number"
             />
             {errors.phone_number && (
@@ -269,7 +264,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* GP Name */}
           <div>
-            <label htmlFor="gp_name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="gp_name" className="cf-label">
               <Heart className="inline w-4 h-4 mr-2" />
               GP Name
             </label>
@@ -279,14 +274,14 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('gp_name', {
                 onChange: (e) => updateData({ gp_name: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter GP name"
             />
           </div>
 
           {/* GP Contact */}
           <div>
-            <label htmlFor="gp_contact" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="gp_contact" className="cf-label">
               GP Contact
             </label>
             <input
@@ -295,14 +290,14 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('gp_contact', {
                 onChange: (e) => updateData({ gp_contact: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter GP contact details"
             />
           </div>
 
           {/* Emergency Contact Name */}
           <div>
-            <label htmlFor="emergency_contact_name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="emergency_contact_name" className="cf-label">
               <AlertTriangle className="inline w-4 h-4 mr-2" />
               Emergency Contact Name *
             </label>
@@ -312,7 +307,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('emergency_contact_name', {
                 onChange: (e) => updateData({ emergency_contact_name: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter emergency contact name"
             />
             {errors.emergency_contact_name && (
@@ -322,7 +317,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Emergency Contact Phone */}
           <div>
-            <label htmlFor="emergency_contact_number" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="emergency_contact_number" className="cf-label">
               Emergency Contact Phone *
             </label>
             <input
@@ -331,7 +326,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('emergency_contact_number', {
                 onChange: (e) => updateData({ emergency_contact_number: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="Enter emergency contact phone"
             />
             {errors.emergency_contact_number && (
@@ -341,7 +336,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
 
           {/* Relationship */}
           <div className="md:col-span-2">
-            <label htmlFor="relationship_to_service_user" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="relationship_to_service_user" className="cf-label">
               Relationship to Individual *
             </label>
             <input
@@ -350,7 +345,7 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
               {...register('relationship_to_service_user', {
                 onChange: (e) => updateData({ relationship_to_service_user: e.target.value })
               })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-6 py-4"
+              className="cf-input"
               placeholder="e.g., Son, Daughter, Spouse, etc."
             />
             {errors.relationship_to_service_user && (

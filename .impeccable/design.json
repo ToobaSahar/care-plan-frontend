@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T00:00:00Z",
+  "title": "Design System: CareFrame",
+  "extensions": {
+    "colorMeta": {
+      "deep-sea": {
+        "role": "primary",
+        "displayName": "Deep Sea",
+        "canonical": "#2C6E6B",
+        "tonalRamp": ["#112829", "#1A3C3E", "#1F4A4C", "#255B5B", "#2C6E6B", "#46918C", "#78BDB5", "#A9D7D1", "#C0E0DC", "#DFEFED", "#F2F8F7"]
+      },
+      "slate-teal": {
+        "role": "primary",
+        "displayName": "Slate Teal",
+        "canonical": "#1F4A4C",
+        "tonalRamp": ["#112829", "#1A3C3E", "#1F4A4C", "#255B5B", "#2C6E6B", "#46918C", "#78BDB5", "#A9D7D1", "#C0E0DC", "#DFEFED", "#F2F8F7"]
+      },
+      "sea-mist": {
+        "role": "primary",
+        "displayName": "Sea Mist",
+        "canonical": "#78BDB5",
+        "tonalRamp": ["#112829", "#1A3C3E", "#1F4A4C", "#255B5B", "#2C6E6B", "#46918C", "#78BDB5", "#A9D7D1", "#C0E0DC", "#DFEFED", "#F2F8F7"]
+      },
+      "dusty-mulberry": {
+        "role": "secondary",
+        "displayName": "Dusty Mulberry",
+        "canonical": "#8F5C72",
+        "tonalRamp": ["#2C1C24", "#4D3240", "#5F3C4C", "#774B5F", "#8F5C72", "#9E6B82", "#B2819A", "#D4AEC0", "#E8CFD9", "#F4E7EC", "#FAF4F6"]
+      },
+      "oat-ground": {
+        "role": "neutral",
+        "displayName": "Oat Ground",
+        "canonical": "#FAF8F4",
+        "tonalRamp": ["#1F1C18", "#2E2C28", "#3A352E", "#4F4A40", "#635C4E", "#7A7362", "#A69D8C", "#D4CCBD", "#E6E0D5", "#F3EFE8", "#FAF8F4"]
+      },
+      "soft-charcoal": {
+        "role": "neutral",
+        "displayName": "Soft Charcoal",
+        "canonical": "#2E2C28",
+        "tonalRamp": ["#1F1C18", "#2E2C28", "#3A352E", "#4F4A40", "#635C4E", "#7A7362", "#A69D8C", "#D4CCBD", "#E6E0D5", "#F3EFE8", "#FAF8F4"]
+      },
+      "clinical-amber": {
+        "role": "tertiary",
+        "displayName": "Clinical Amber (stock Tailwind orange)",
+        "canonical": "#C2410C",
+        "tonalRamp": ["#431407", "#7C2D12", "#9A3412", "#C2410C", "#EA580C", "#F97316", "#FB923C", "#FDBA74", "#FED7AA", "#FFEDD5", "#FFF7ED"]
+      },
+      "clinical-red": {
+        "role": "tertiary",
+        "displayName": "Clinical Red (stock Tailwind red)",
+        "canonical": "#991B1B",
+        "tonalRamp": ["#450A0A", "#7F1D1D", "#991B1B", "#B91C1C", "#DC2626", "#EF4444", "#F87171", "#FCA5A5", "#FECACA", "#FEE2E2", "#FEF2F2"]
+      },
+      "clinical-green": {
+        "role": "tertiary",
+        "displayName": "Clinical Green (stock Tailwind green)",
+        "canonical": "#15803D",
+        "tonalRamp": ["#052E16", "#14532D", "#166534", "#15803D", "#16A34A", "#22C55E", "#4ADE80", "#86EFAC", "#BBF7D0", "#DCFCE7", "#F0FDF4"]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Section Headline", "purpose": "The section title at the top of each assessment section, in Slate Teal. Largest type that ships." },
+      "title": { "displayName": "Title", "purpose": "Person name, card group headings, empty-state titles, logotype." },
+      "body": { "displayName": "Body", "purpose": "Product default: rail items, card text, read values, alert copy." },
+      "control": { "displayName": "Control", "purpose": "Every input, textarea and select. One step above body so the thing being typed into stays legible on a tablet." },
+      "label": { "displayName": "Field Label", "purpose": "Field labels above the control, never floating inside it." },
+      "micro": { "displayName": "Micro", "purpose": "Metadata, hints, errors, badge text, secondary counts." },
+      "group-label": { "displayName": "Region Label", "purpose": "Uppercase label for a structural region (rail head, evidence column, panel heading). Never an editorial kicker above a heading." }
+    },
+    "shadows": [
+      { "name": "resting-sheet", "value": "0 1px 2px rgb(31 28 24 / 0.05)", "purpose": "Default. Cards and primary buttons resting on the oat ground." },
+      { "name": "raised-sheet", "value": "0 1px 3px rgb(31 28 24 / 0.07), 0 1px 2px rgb(31 28 24 / 0.04)", "purpose": "Slightly lifted panels." },
+      { "name": "floating-panel", "value": "0 2px 8px rgb(31 28 24 / 0.08)", "purpose": "Popovers and menus." },
+      { "name": "overlay", "value": "0 8px 24px rgb(31 28 24 / 0.10)", "purpose": "True overlays." },
+      { "name": "modal", "value": "0 16px 48px rgb(31 28 24 / 0.14)", "purpose": "Modal dialogs only." },
+      { "name": "rail-edge", "value": "inset -1px 0 0 rgb(31 28 24 / 0.06)", "purpose": "Inset hairline where a rail meets content." },
+      { "name": "focus-ring", "value": "0 0 0 3px rgb(44 110 107 / 0.20)", "purpose": "Input focus halo, paired with a Deep Sea border shift. The system's only zero-offset shadow." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The product's only easing curve. Exponential ease-out on every state change." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Colour and shadow transitions on buttons, rail items and input focus." },
+      { "name": "duration-default", "value": "180ms", "purpose": "General state transitions." },
+      { "name": "duration-slow", "value": "220ms", "purpose": "Progress bar width advance." },
+      { "name": "settle-in", "value": "settle-in 200ms cubic-bezier(0.16, 1, 0.3, 1) both; from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none }", "purpose": "Evidence entries arriving in place rather than appearing from nowhere." },
+      { "name": "pulse-soft", "value": "pulse-soft 1.6s ease-in-out infinite; 0%,100% { opacity: 1 } 50% { opacity: 0.45 }", "purpose": "Skeleton loading rows. Skeletons, never a centred spinner." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce) { animation-duration: 0.01ms; transition-duration: 0.01ms }", "purpose": "All motion is suppressed product-wide. Non-negotiable." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The product's only primary action. Deep Sea ground, resting-sheet shadow, 40px tall.",
+      "html": "<button class=\"ds-btn-primary\">Save &amp; continue<svg class=\"ds-btn-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: 7px; background: #2C6E6B; color: #fff; font-family: 'Public Sans', system-ui, sans-serif; font-size: 0.875rem; line-height: 1.375rem; font-weight: 500; white-space: nowrap; box-shadow: 0 1px 2px rgb(31 28 24 / 0.05); transition: background-color 150ms cubic-bezier(0.16,1,0.3,1); cursor: pointer; } .ds-btn-primary:hover { background: #255B5B; } .ds-btn-primary:active { background: #1F4A4C; } .ds-btn-primary:focus-visible { outline: 2px solid #2C6E6B; outline-offset: 2px; } .ds-btn-icon { width: 16px; height: 16px; flex: none; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White ground with a Deep Sea outline. Used for recessive affirmative actions such as the evidence column's assistant trigger.",
+      "html": "<button class=\"ds-btn-secondary\">Ask about this assessment</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid #2C6E6B; border-radius: 7px; background: #fff; color: #255B5B; font-family: 'Public Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; transition: background-color 150ms cubic-bezier(0.16,1,0.3,1); cursor: pointer; } .ds-btn-secondary:hover { background: #F2F8F7; } .ds-btn-secondary:active { background: #DFEFED; } .ds-btn-secondary:focus-visible { outline: 2px solid #2C6E6B; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Label above, control, hint beneath. Focus shifts the border to Deep Sea and adds a 3px teal ring.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-nhs\">NHS number<span class=\"ds-field-req\">*</span></label><input class=\"ds-field-input\" id=\"ds-nhs\" placeholder=\"684 102 9471\"><p class=\"ds-field-hint\">Ten digits, as printed on the record.</p></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: 'Public Sans', system-ui, sans-serif; max-width: 360px; } .ds-field-label { font-size: 0.8125rem; line-height: 1.25rem; font-weight: 500; color: #3A352E; } .ds-field-req { margin-left: 2px; color: #991B1B; } .ds-field-input { display: block; width: 100%; padding: 10px 12px; border: 1px solid #D4CCBD; border-radius: 7px; background: #fff; color: #2E2C28; font-family: inherit; font-size: 1rem; line-height: 1.5rem; font-variant-numeric: tabular-nums; transition: box-shadow 150ms cubic-bezier(0.16,1,0.3,1), border-color 150ms cubic-bezier(0.16,1,0.3,1); } .ds-field-input::placeholder { color: #7A7362; } .ds-field-input:focus { outline: none; border-color: #2C6E6B; box-shadow: 0 0 0 3px rgb(44 110 107 / 0.20); } .ds-field-hint { margin: 0; font-size: 0.75rem; line-height: 1.125rem; color: #635C4E; }"
+    },
+    {
+      "name": "Risk Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Clinical risk at four levels. Always icon plus word; Low is neutral oat because the brand owns the green channel.",
+      "html": "<span class=\"ds-badge ds-badge-low\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"m9 12 2 2 4-4\"/></svg>Risk — Low</span> <span class=\"ds-badge ds-badge-high\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>Falls — High</span> <span class=\"ds-badge ds-badge-critical\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polygon points=\"7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86\"/></svg>Risk — Critical</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid; border-radius: 9999px; font-family: 'Public Sans', system-ui, sans-serif; font-size: 0.75rem; line-height: 1.125rem; font-weight: 600; white-space: nowrap; } .ds-badge svg { width: 14px; height: 14px; flex: none; } .ds-badge-low { color: #635C4E; background: #FAF8F4; border-color: #D4CCBD; } .ds-badge-high { color: #9A3412; background: #FFEDD5; border-color: #FDBA74; } .ds-badge-critical { color: #fff; background: #991B1B; border-color: #991B1B; }"
+    },
+    {
+      "name": "People Badge",
+      "kind": "chip",
+      "refersTo": "badge-people",
+      "description": "The mulberry tone. Only ever used where a named human being appears in the record.",
+      "html": "<span class=\"ds-badge-people\"><span class=\"ds-avatar\">GA</span>Grace Adeyemi · Daughter</span>",
+      "css": ".ds-badge-people { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border: 1px solid #E8CFD9; border-radius: 9999px; background: #FAF4F6; color: #774B5F; font-family: 'Public Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; } .ds-avatar { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #8F5C72; color: #fff; font-size: 0.6875rem; font-weight: 600; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A white work sheet on the oat ground: 11px corners, 1px oat hairline, resting-sheet shadow, 24px padding.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-head\"><span class=\"ds-card-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"/></svg></span><h3 class=\"ds-card-title\">Health &amp; Wellbeing</h3></div><p class=\"ds-card-desc\">Diagnoses, medication and specialist support for this person.</p></div>",
+      "css": ".ds-card { padding: 24px; border: 1px solid #E6E0D5; border-radius: 11px; background: #fff; box-shadow: 0 1px 2px rgb(31 28 24 / 0.05); font-family: 'Public Sans', system-ui, sans-serif; max-width: 420px; } .ds-card-head { display: flex; align-items: center; gap: 10px; } .ds-card-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex: none; border-radius: 7px; background: #F2F8F7; color: #255B5B; } .ds-card-icon svg { width: 16px; height: 16px; } .ds-card-title { margin: 0; font-size: 1.125rem; line-height: 1.625rem; letter-spacing: -0.01em; font-weight: 600; color: #1F4A4C; } .ds-card-desc { margin: 6px 0 0; font-size: 0.875rem; line-height: 1.375rem; color: #635C4E; }"
+    },
+    {
+      "name": "Section Rail",
+      "kind": "nav",
+      "refersTo": "section-rail",
+      "description": "Full-height Slate Teal field, 232px. Section state is a printed mark on a hairline: hairline at rest, filled Sea Mist when done, struck when skipped. Never pills.",
+      "html": "<nav class=\"ds-rail\" aria-label=\"Assessment sections\"><p class=\"ds-rail-group\">Assessment</p><ul class=\"ds-rail-list\"><li><button class=\"ds-rail-item\"><span class=\"ds-mark ds-mark-done\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></span>Personal Details</button></li><li><button class=\"ds-rail-item\"><span class=\"ds-mark ds-mark-skipped\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/></svg></span>Basic Details</button></li><li><button class=\"ds-rail-item ds-rail-item-current\" aria-current=\"step\"><span class=\"ds-mark ds-mark-current\">3</span>Health &amp; Wellbeing</button></li><li><button class=\"ds-rail-item\"><span class=\"ds-mark\">4</span>Daily Living</button></li></ul><div class=\"ds-rail-foot\"><p class=\"ds-rail-count\">2 of 10 sections started</p><div class=\"ds-progress\"><div class=\"ds-progress-fill\"></div></div></div></nav>",
+      "css": ".ds-rail { display: flex; flex-direction: column; width: 232px; padding: 20px 0; background: #1F4A4C; font-family: 'Public Sans', system-ui, sans-serif; } .ds-rail-group { margin: 0 0 8px; padding: 0 20px; font-size: 0.6875rem; line-height: 1rem; letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; color: #78BDB5; } .ds-rail-list { list-style: none; margin: 0; padding: 0; } .ds-rail-item { display: flex; width: 100%; align-items: center; gap: 12px; padding: 10px 20px; border: 0; background: transparent; color: rgb(223 239 237 / 0.8); font-family: inherit; font-size: 0.875rem; line-height: 1.375rem; text-align: left; cursor: pointer; transition: background-color 150ms cubic-bezier(0.16,1,0.3,1), color 150ms cubic-bezier(0.16,1,0.3,1); } .ds-rail-item:hover { background: rgb(37 91 91 / 0.6); color: #fff; } .ds-rail-item-current { background: #2C6E6B; color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 #78BDB5; } .ds-rail-item:focus-visible { outline: 2px solid #78BDB5; outline-offset: -2px; } .ds-mark { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex: none; border: 1px solid rgb(70 145 140 / 0.7); border-radius: 9999px; font-size: 10px; font-weight: 600; color: #A9D7D1; } .ds-mark svg { width: 12px; height: 12px; } .ds-mark-done { border-color: #78BDB5; background: #78BDB5; color: #1A3C3E; } .ds-mark-skipped { border-color: #46918C; color: #78BDB5; text-decoration: line-through; } .ds-mark-current { border-color: #78BDB5; color: #fff; } .ds-rail-foot { margin-top: 16px; padding: 16px 20px 0; border-top: 1px solid rgb(44 110 107 / 0.6); } .ds-rail-count { margin: 0; font-size: 0.75rem; color: rgb(223 239 237 / 0.8); } .ds-progress { margin-top: 8px; height: 6px; width: 100%; overflow: hidden; border-radius: 9999px; background: #112829; } .ds-progress-fill { height: 100%; width: 20%; border-radius: 9999px; background: #78BDB5; transition: width 220ms cubic-bezier(0.16,1,0.3,1); }"
+    },
+    {
+      "name": "Evidence Column",
+      "kind": "custom",
+      "refersTo": "evidence-column",
+      "description": "The signature component. A 340px oat-recessed aside scoped to the section in view; every entry names the field that produced it. Empty slots are dashed, not blank.",
+      "html": "<aside class=\"ds-evidence\" aria-label=\"Evidence for this section\"><p class=\"ds-evidence-head\">Evidence · Health &amp; Wellbeing</p><h2 class=\"ds-evidence-group\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/><path d=\"M12 8v4\"/><path d=\"M12 16h.01\"/></svg>Raised by this record</h2><article class=\"ds-evidence-entry\"><span class=\"ds-badge ds-badge-high\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>Falls — High</span><p class=\"ds-evidence-note\">Two unwitnessed falls in the last six months.</p><button class=\"ds-evidence-source\">Raised in Risks &amp; Safeguarding</button></article><h2 class=\"ds-evidence-group\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/></svg>People named here</h2><div class=\"ds-evidence-people\"><span class=\"ds-avatar\">GA</span><span><span class=\"ds-person-name\">Grace Adeyemi</span><span class=\"ds-person-role\">Daughter</span></span></div><h2 class=\"ds-evidence-group\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M13.234 20.252 21 12.3\"/><path d=\"m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.485 8.485\"/></svg>Attached</h2><p class=\"ds-evidence-empty\">No documents attached.</p></aside>",
+      "css": ".ds-evidence { display: flex; flex-direction: column; gap: 20px; width: 340px; padding: 20px; border-left: 1px solid #E6E0D5; background: #F3EFE8; font-family: 'Public Sans', system-ui, sans-serif; } .ds-evidence-head { margin: 0; font-size: 0.6875rem; letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; color: #7A7362; } .ds-evidence-group { display: flex; align-items: center; gap: 8px; margin: 0 0 -10px; font-size: 0.6875rem; letter-spacing: 0.04em; font-weight: 600; text-transform: uppercase; color: #635C4E; } .ds-evidence-group svg { width: 14px; height: 14px; flex: none; } .ds-evidence-entry { padding: 12px; border: 1px solid #E6E0D5; border-radius: 9px; background: #fff; animation: ds-settle 200ms cubic-bezier(0.16,1,0.3,1) both; } @keyframes ds-settle { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } .ds-evidence-note { margin: 8px 0 0; font-size: 0.75rem; line-height: 1.25rem; color: #4F4A40; } .ds-evidence-source { margin-top: 8px; border: 0; padding: 0; background: none; font-family: inherit; font-size: 0.6875rem; font-weight: 500; color: #255B5B; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; } .ds-evidence-source:hover { color: #1F4A4C; } .ds-evidence-people { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #E8CFD9; border-radius: 9px; background: #FAF4F6; } .ds-person-name { display: block; font-size: 0.875rem; font-weight: 500; color: #2E2C28; } .ds-person-role { display: block; font-size: 0.6875rem; color: #635C4E; } .ds-evidence-empty { margin: 0; padding: 10px 12px; border: 1px dashed #D4CCBD; border-radius: 9px; font-size: 0.75rem; color: #635C4E; }"
+    },
+    {
+      "name": "Person Header",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "Who the record is about, pinned above the work area so an assessor never navigates to remember. Mulberry avatar; risk rides here from every section.",
+      "html": "<header class=\"ds-person\"><span class=\"ds-person-avatar\">PH</span><span class=\"ds-person-id\"><span class=\"ds-person-h1\">Peter Hamilton</span><span class=\"ds-person-meta\">NHS 684 102 9471 · 81 years · NG31 8QT</span></span><span class=\"ds-badge ds-badge-high\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>Risk — High</span></header>",
+      "css": ".ds-person { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid #E6E0D5; background: #fff; font-family: 'Public Sans', system-ui, sans-serif; } .ds-person-avatar { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; border-radius: 9999px; background: #8F5C72; color: #fff; font-size: 0.8125rem; font-weight: 600; } .ds-person-id { min-width: 0; margin-right: auto; } .ds-person-h1 { display: block; font-size: 1.125rem; line-height: 1.625rem; letter-spacing: -0.01em; font-weight: 600; color: #2E2C28; } .ds-person-meta { display: block; font-size: 0.75rem; line-height: 1.125rem; color: #635C4E; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Alert",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Inline status with icon and title. Five tones; the working tone is teal because the brand carries in-progress, not green.",
+      "html": "<div class=\"ds-alert ds-alert-working\" role=\"status\"><svg class=\"ds-alert-icon ds-spin\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-6.219-8.56\"/></svg><div><p class=\"ds-alert-title\">Generating the care plan</p><div class=\"ds-alert-body\">Three agents are reading the record — analysing needs, drafting the plan, then reviewing it.</div></div></div>",
+      "css": ".ds-alert { display: flex; gap: 12px; padding: 14px 16px; border: 1px solid; border-radius: 9px; font-family: 'Public Sans', system-ui, sans-serif; max-width: 520px; } .ds-alert-working { border-color: #C0E0DC; background: #F2F8F7; color: #1A3C3E; } .ds-alert-icon { width: 18px; height: 18px; flex: none; margin-top: 2px; } .ds-spin { animation: ds-rotate 1s linear infinite; } @keyframes ds-rotate { to { transform: rotate(360deg); } } .ds-alert-title { margin: 0; font-size: 0.875rem; line-height: 1.375rem; font-weight: 600; } .ds-alert-body { margin-top: 4px; font-size: 0.875rem; line-height: 1.375rem; opacity: 0.9; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Open Case File",
+    "overview": "CareFrame is a workspace that behaves like a well-kept paper case file opened flat on a kitchen table: a warm oat ground, white working sheets laid on it, hairline rules instead of boxes, and a tab edge down the left that tells you where you are in the record. Nothing is glossy, nothing floats, nothing asks for attention it has not earned. The register is clinical but domestic — this is at-home care, not a hospital console — which is why the neutral channel is warm oat rather than grey, and why the brand teal is a full-height field of colour on the rail rather than a decorative accent dropped on a white dashboard.\n\nThe organising conviction is evidential. The three-column shell — Slate Teal rail (232px), white work surface with a 760px field column, oat evidence column (340px) — exists so that what the record raises sits physically beside the field that raised it. Risk is a layer riding over the terrain in one reserved ink; it never recolours the fields beneath it. People are marked in Dusty Mulberry and nowhere else. Section state is a printed mark on a hairline — hairline at rest, filled when done, struck when skipped — because a list of marks reads as a record and a row of pills reads as a dashboard.\n\nDensity is high but unhurried. Body type is 14px with generous 22px leading, controls are 16px so they survive a tablet in bad lamplight, and all numerals are tabular. The build is light-only by decision: the use scene is daytime home visits and PDF output, and there is no dark mode to maintain across eleven section forms. Motion is state-only, 150–220ms on an exponential ease-out, and is fully suppressed under prefers-reduced-motion. There is no page-load choreography anywhere in the build.",
+    "keyCharacteristics": [
+      "Warm oat ground (#FAF8F4) with white work surfaces and 1px oat hairlines, never grey",
+      "Slate Teal left rail as a full-height field of colour, not a tinted sidebar",
+      "Mulberry reserved exclusively for named human beings in the record",
+      "One typeface, Public Sans, self-hosted, on a fixed rem scale at a ~1.2 ratio",
+      "Low offset shadows only; never a zero-offset halo",
+      "Light-only, tabular numerals, one focus ring product-wide"
+    ],
+    "rules": [
+      { "name": "The Mulberry Is People Rule", "body": "Dusty Mulberry marks a named human being in the record and nothing else. If what you are colouring is a state, a status, a count, a category or a chart series, it is not mulberry. Audit test: point at any mulberry pixel and name the person it belongs to; if you cannot, it is wrong.", "section": "colors" },
+      { "name": "The Green Channel Is Taken Rule", "body": "The brand occupies the green channel, so Low risk is neutral oat — not green — and \"saved / in progress\" is carried by brand teal. Green remains reserved for the clinical success state only. Low risk should not shout; a quiet badge is the correct answer.", "section": "colors" },
+      { "name": "The Colour Is Never Alone Rule", "body": "No status is communicated by hue alone. Every risk badge carries an icon and a word; every alert carries an icon and a title. A screenshot rendered in greyscale must still be readable by a clinician.", "section": "colors" },
+      { "name": "The Clinical Hues Don't Drift Rule", "body": "green, red, orange and yellow stay exactly as Tailwind ships them. They were deliberately not warmed when the brand was. Do not harmonise them.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Public Sans does everything. There is no display face, no serif accent, no second sans. Hierarchy comes from the fixed rem scale, weight (400/500/600) and ink colour. Do not introduce a second family to make something feel important.", "section": "typography" },
+      { "name": "The Tabular Numerals Rule", "body": "font-variant-numeric: tabular-nums is set on body product-wide. NHS numbers, dates, phone numbers and counts align in columns and do not jitter as they change. Do not override it.", "section": "typography" },
+      { "name": "The No Decorative Eyebrow Rule", "body": "Uppercase 0.6875rem type labels a region (a rail, a column, a panel). It never sits above a heading as an editorial kicker or eyebrow. If a heading needs a line above it to be understood, the heading is wrong.", "section": "typography" },
+      { "name": "The Three-Column Thesis Rule", "body": "The evidence column is not a sidebar that can be dropped on small screens. It reflows inline beneath the fields and keeps every entry's \"raised in\" provenance link. Never replace it with a floating help button, a modal or a drawer.", "section": "layout" },
+      { "name": "The No Halo Rule", "body": "Every elevation shadow carries a vertical offset and a cool-charcoal tint (rgb(31 28 24 / …)). A zero-offset, evenly-spread shadow is a glow, and the only legitimate glow in this system is the focus ring. No hard offset shadows, no coloured drop shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use the named brand / teal / oat / mulberry scales and the React primitives in components/ui for all new work.",
+      "Do keep Dusty Mulberry #8F5C72 for named human beings only — carers, next of kin, relationships, avatars.",
+      "Do render Low risk as neutral oat and \"saved / in progress\" as brand teal; the green channel belongs to the brand.",
+      "Do pair every status colour with an icon and a word.",
+      "Do express section state as a printed mark on a hairline — hairline at rest, filled when done, struck when skipped.",
+      "Do keep controls at 16px and body at 14px, and leave tabular numerals on.",
+      "Do separate regions with 1px Oat Rule hairlines and tonal steps (oat ground → white → oat recessed).",
+      "Do keep motion to state changes at 150–220ms on cubic-bezier(0.16, 1, 0.3, 1), and leave the prefers-reduced-motion suppression intact.",
+      "Do self-host type; a care record makes no third-party font request.",
+      "Do carry every evidence entry with the field that produced it."
+    ],
+    "donts": [
+      "Don't use mulberry for a system state, status, category or chart series.",
+      "Don't soften, warm or re-tint green / red / orange / yellow; they carry clinical meaning.",
+      "Don't add a dark mode or dark-mode variants. Light-only is a decision, not an omission.",
+      "Don't add a second typeface, a display face, or a system display font. Public Sans is the whole voice.",
+      "Don't use a zero-offset or hard-offset shadow for elevation; offset-and-tinted only, and the focus ring is the sole glow.",
+      "Don't remove or restyle the product's single focus ring.",
+      "Don't replace the section rail's marks with a row of filled pills (the sub-1024px tab strip is the one exception, and it is a tab strip).",
+      "Don't put an uppercase kicker or eyebrow line above a heading; the 0.6875rem uppercase style labels regions only.",
+      "Don't reach for stock blue-* / gray-* / purple-* / indigo-* classes in new code. They are remapped to brand ramps as a safety net for unmigrated markup, not as an API.",
+      "Don't convert existing .cf-* section-form markup to the React primitives as a drive-by; that boundary is deliberate and the field wiring is load-bearing.",
+      "Don't add page-load choreography, entrance animations or scroll-triggered reveals."
+    ]
+  }
+}

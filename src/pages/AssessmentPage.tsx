@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, FileText, Lock, Download, MessageSquare, Paperclip, PenTool, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 // Removed AutosaveBadge import since we're disabling autosave functionality
 import { Section1Personal } from '../components/forms/Section1Personal';
 import { Section2Basic } from '../components/forms/Section2Basic';
@@ -12,12 +12,18 @@ import { Section7EnvironmentLifestyle } from '../components/forms/Section7Financ
 import { Section8AdvancePreferences } from '../components/forms/Section8Financial';
 import { Section9OptionalAreas } from '../components/forms/Section9Financial';
 import { Section10Summary } from '../components/forms/Section10Summary';
-import { AttachmentUploader } from '../components/AttachmentUploader';
-import { SignaturePad } from '../components/SignaturePad';
-import { ChatPanel, ChatButton } from '../components/Chat/ChatPanel';
+import { ChatPanel } from '../components/Chat/ChatPanel';
+
+import { SectionRail } from '../components/layout/SectionRail';
+import { PersonHeader } from '../components/layout/PersonHeader';
+import { EvidenceColumn } from '../components/layout/EvidenceColumn';
+import { RiskSpine } from '../components/layout/RiskSpine';
+import { WorkSurface } from '../components/layout/WorkSurface';
+import { Alert, Button, Logo, Skeleton } from '../components/ui';
+import { deriveEvidence, sectionCompletion } from '../lib/evidence';
+import { newUuid } from '../lib/ids';
 
 import { useAssessment } from '../state/useAssessment';
-import { assessmentApi } from '../lib/supabase';
 import { carePlanAPI } from '../lib/carePlanApi';
 
 export const AssessmentPage: React.FC = () => {
@@ -38,16 +44,30 @@ export const AssessmentPage: React.FC = () => {
     setCurrentSection,
     loadAssessment,
     updateAssessmentStatus,
-    generatePdf,
     saveSection
   } = useAssessment();
 
-  // Load assessment on mount
+  /* Reaching /assessment with no id means "start a new one". Mint the id and
+     redirect to its own URL; `loadAssessment` then takes the normal path and
+     creates the row, so there is one create path rather than two.
+
+     The id is held in a ref so React 18 StrictMode's double-invoked effect
+     cannot mint two and leave an orphan assessment behind, and the redirect
+     replaces the history entry so Back does not bounce into another new one. */
+  const newAssessmentIdRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (id) {
       loadAssessment(id);
+      return;
     }
-  }, [id, loadAssessment]);
+
+    if (!newAssessmentIdRef.current) {
+      newAssessmentIdRef.current = newUuid();
+    }
+
+    navigate(`/assessment/${newAssessmentIdRef.current}`, { replace: true });
+  }, [id, loadAssessment, navigate]);
 
   // Validation function to check required fields for each section
   const validateCurrentSection = (): boolean => {
@@ -327,29 +347,6 @@ export const AssessmentPage: React.FC = () => {
     'Signatures'
   ];
 
-  // Handle status change
-  const handleStatusChange = async (status: 'draft' | 'in_review' | 'completed' | 'locked') => {
-    if (currentAssessment) {
-      const success = await updateAssessmentStatus(status);
-      if (success) {
-        // Show success message
-        console.log(`Assessment status updated to ${status}`);
-      }
-    }
-  };
-
-  // Handle PDF generation
-  const handleGeneratePdf = async () => {
-    if (currentAssessment) {
-      const pdfUrl = await generatePdf();
-      if (pdfUrl) {
-        // Show success message and download link
-        console.log('PDF generated successfully');
-        window.open(pdfUrl, '_blank');
-      }
-    }
-  };
-
   // Render current section
   const renderCurrentSection = () => {
     const isReadOnly = currentAssessment?.status === 'locked';
@@ -380,12 +377,45 @@ export const AssessmentPage: React.FC = () => {
     }
   };
 
+
+  /* ── Derived presentation state ─────────────────────────────────────────
+     Everything below reads from formData; none of it writes. The evidence
+     column is a view of the record, never a second source of truth.        */
+  const evidence = deriveEvidence(formData);
+  const completion = sectionCompletion(formData);
+  const personal = formData.personalDetails;
+
+  const ShellFallback: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-oat-50 px-6">
+      <Logo size="lg" />
+      {children}
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading assessment...</p>
+      <div className="flex h-screen overflow-hidden bg-oat-50">
+        <div className="hidden w-[232px] flex-none bg-teal-800 p-5 lg:block">
+          <Logo onDark size="md" />
+          <div className="mt-8 flex flex-col gap-2.5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="h-7 w-full bg-teal-700/60" />
+            ))}
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center gap-4 border-b border-oat-200 bg-white px-6 py-3.5">
+            <Skeleton className="h-11 w-11 rounded-full" />
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-3 w-72" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-5 p-7">
+            <Skeleton className="h-6 w-64" />
+            <Skeleton className="h-40 w-full rounded-xl" />
+            <Skeleton className="h-40 w-full rounded-xl" />
+          </div>
         </div>
       </div>
     );
@@ -393,181 +423,217 @@ export const AssessmentPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Assessment</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={() => navigate('/assessments')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Back to Assessments
-          </button>
-        </div>
-      </div>
+      <ShellFallback>
+        <Alert tone="error" title="This assessment could not be opened" className="max-w-md">
+          {error}
+        </Alert>
+        <Button onClick={() => navigate('/assessments')} icon={<ArrowLeft />}>
+          Back to caseload
+        </Button>
+      </ShellFallback>
     );
   }
 
   if (!currentAssessment) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading assessment...</p>
-        </div>
-      </div>
+      <ShellFallback>
+        <Alert tone="info" title="No assessment open" className="max-w-md">
+          Open an assessment from the caseload to start recording. Assessments are addressed
+          by id, so this page needs one to know whose record to load.
+        </Alert>
+        <Button onClick={() => navigate('/assessments')} icon={<ArrowLeft />}>
+          Go to caseload
+        </Button>
+      </ShellFallback>
     );
   }
 
+  const isFinalSection = currentSection === 10;
+
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="flex h-screen overflow-hidden bg-teal-800">
+      {/* Section rail — the far edge of one continuous teal ground. */}
+      <div className="hidden w-[232px] flex-none lg:block">
+        <SectionRail
+          titles={sectionTitles}
+          current={currentSection}
+          completed={completion}
+          onSelect={(n) => {
+            setCurrentSection(n);
+            setValidationErrors([]);
+          }}
+          footer={
+            <button
+              type="button"
+              onClick={() => navigate('/assessments')}
+              className="text-xs font-medium text-teal-200 underline underline-offset-2 hover:text-white"
+            >
+              Back to caseload
+            </button>
+          }
+        />
+      </div>
 
-             {/* Main Content */}
-       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-         {/* Universal Care Needs Assessment Title - Only on first section */}
-         {currentSection === 1 && (
-           <div className="mb-6">
-             <h1 className="text-3xl font-bold text-gray-900 mb-2">Universal Care Needs Assessment</h1>
-             <p className="text-gray-600">Comprehensive assessment for care and support planning</p>
-           </div>
-         )}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <PersonHeader
+          name={personal?.full_name}
+          nhsNumber={personal?.nhs_number}
+          dateOfBirth={personal?.date_of_birth}
+          postcode={personal?.postcode}
+          assessorName={formData.signatures?.assessor_name}
+          status={currentAssessment.status}
+          overallRisk={evidence.overall}
+          onBack={() => navigate('/assessments')}
+          className="lg:[&>button]:hidden"
+        />
 
-         {/* Success Message - Show when assessment is completed */}
-         {showCompletionMessage && (
-           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-             <div className="flex items-center">
-               <div className="flex-shrink-0">
-                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                 </svg>
-               </div>
-               <div className="ml-3">
-                 <h3 className="text-sm font-medium text-green-800">
-                   Care Plan Generated and Saved Successfully!
-                 </h3>
-                 <p className="mt-1 text-sm text-green-700">
-                   Your assessment has been completed and care plan has been generated and saved to the database. Redirecting to Critical Information page...
-                 </p>
-               </div>
-             </div>
-           </div>
-         )}
+        {/* Fields sit on a warm plane lifted off the ground; evidence stays on
+            the ground itself, so the two read as different kinds of surface. */}
+        <div className="flex min-h-0 flex-1">
+          <WorkSurface className="flex min-w-0 flex-1 flex-col overflow-hidden">
+            {/* Compact stepper for narrow screens, where the rail is hidden. */}
+            <div
+              className="flex gap-1.5 overflow-x-auto border-b border-oat-200 px-4 py-2.5 lg:hidden"
+              role="tablist"
+              aria-label="Assessment sections"
+            >
+              {sectionTitles.map((title, i) => (
+                <button
+                  key={title}
+                  type="button"
+                  role="tab"
+                  aria-selected={currentSection === i + 1}
+                  onClick={() => {
+                    setCurrentSection(i + 1);
+                    setValidationErrors([]);
+                  }}
+                  className={
+                    currentSection === i + 1
+                      ? 'flex-none rounded-full bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white'
+                      : completion[i]
+                      ? 'flex-none rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-medium text-teal-700'
+                      : 'flex-none rounded-full border border-oat-200 px-3 py-1.5 text-xs text-oat-600'
+                  }
+                >
+                  {i + 1}. {title}
+                </button>
+              ))}
+            </div>
 
-         {/* Loading Message - Show while generating care plan */}
-         {isGeneratingCarePlan && (
-           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-             <div className="flex items-center">
-               <div className="flex-shrink-0">
-                 <svg className="animate-spin h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                 </svg>
-               </div>
-               <div className="ml-3">
-                 <h3 className="text-sm font-medium text-blue-800">
-                   Generating Care Plan...
-                 </h3>
-                 <p className="mt-1 text-sm text-blue-700">
-                   Please wait while the AI generates your personalized care plan and saves it to the database.
-                 </p>
-               </div>
-             </div>
-           </div>
-         )}
+            <div className="flex-1 overflow-y-auto px-5 py-7 sm:px-8">
+              <div className="mx-auto flex w-full max-w-[760px] flex-col gap-5">
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-2xl font-semibold text-teal-800">
+                    {sectionTitles[currentSection - 1]}
+                  </h2>
+                  <span className="ml-auto font-mono text-xs text-oat-500">
+                    {String(currentSection).padStart(2, '0')}
+                    <span className="text-oat-300"> / {sectionTitles.length}</span>
+                  </span>
+                </div>
 
-         {/* Validation Errors Display */}
-         {validationErrors.length > 0 && (
-           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-             <div className="flex items-center">
-               <div className="flex-shrink-0">
-                 <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                 </svg>
-               </div>
-               <div className="ml-3">
-                 <h3 className="text-sm font-medium text-red-800">
-                   Please complete all required fields before proceeding
-                 </h3>
-                 <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
-                   {validationErrors.map((error, index) => (
-                     <li key={index}>{error}</li>
-                   ))}
-                 </ul>
-               </div>
-             </div>
-           </div>
-         )}
+                {showCompletionMessage && (
+                  <Alert tone="success" title="Care plan generated and saved">
+                    The assessment is complete and the plan has been written to the record.
+                    Taking you to Critical Information.
+                  </Alert>
+                )}
 
-         {/* Section Title Bar */}
-         <div className="bg-gray-600 text-white p-4 rounded-t-lg mb-0">
-           <h2 className="text-xl font-bold">{sectionTitles[currentSection - 1]}</h2>
-         </div>
+                {isGeneratingCarePlan && (
+                  <Alert tone="working" title="Generating the care plan">
+                    Three agents are reading the record — analysing needs, drafting the plan,
+                    then reviewing it. This takes a moment.
+                  </Alert>
+                )}
 
-        {/* Form Content */}
-        <div className="bg-gray-100 border border-gray-600 border-t-0 rounded-b-lg p-6">
-          {renderCurrentSection()}
-        </div>
+                {validationErrors.length > 0 && (
+                  <Alert tone="error" title="Some required answers are still missing">
+                    <ul className="mt-1 list-inside list-disc space-y-0.5">
+                      {validationErrors.map((err, i) => (
+                        <li key={i}>{err}</li>
+                      ))}
+                    </ul>
+                  </Alert>
+                )}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-6">
-          <button
-            onClick={handlePreviousSection}
-            disabled={currentSection === 1}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-              currentSection === 1
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gray-600 text-white hover:bg-gray-700'
-            }`}
-          >
-            <ChevronLeft className="w-4 h-4" />
-            <span>Previous</span>
-          </button>
+                <div className="rounded-xl border border-oat-200 bg-white p-6 shadow-xs">
+                  {renderCurrentSection()}
+                </div>
 
-          <div className="text-sm text-gray-600">
-            Section {currentSection} of 10
+                {/* Below 1280px the evidence cannot sit beside the fields, so it
+                    follows them. The thesis holds on a tablet rather than
+                    collapsing into a floating help button. */}
+                <div className="overflow-hidden rounded-xl border border-oat-200 bg-oat-100 xl:hidden">
+                  <RiskSpine level={evidence.overall} orientation="horizontal" />
+                  <EvidenceColumn
+                    evidence={evidence}
+                    sectionIndex={currentSection}
+                    onOpenSection={(n) => {
+                      setCurrentSection(n);
+                      setValidationErrors([]);
+                    }}
+                    onOpenAssistant={() => setIsChatOpen(true)}
+                    className="border-l-0"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Sticky action bar. The primary action never scrolls out of reach. */}
+            <div className="border-t border-oat-200 bg-white px-5 py-3.5 sm:px-8">
+              <div className="mx-auto flex w-full max-w-[760px] flex-wrap items-center gap-2.5">
+                <Button
+                  onClick={handleNextSection}
+                  loading={isGeneratingCarePlan}
+                  iconRight={!isFinalSection ? <ChevronRight /> : undefined}
+                >
+                  {isGeneratingCarePlan
+                    ? 'Generating care plan'
+                    : isFinalSection
+                    ? 'Complete assessment & generate care plan'
+                    : 'Save & continue'}
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  onClick={handlePreviousSection}
+                  disabled={currentSection === 1}
+                  icon={<ChevronLeft />}
+                >
+                  Back
+                </Button>
+
+                <p className="ml-auto hidden text-xs text-oat-600 sm:block">
+                  {completion.filter(Boolean).length} of {sectionTitles.length} started
+                </p>
+              </div>
+            </div>
+          </WorkSurface>
+
+          {/* The record's risk, as the edge between the fields and their evidence. */}
+          <RiskSpine level={evidence.overall} className="hidden w-1.5 xl:block" />
+
+          <div className="hidden w-[340px] flex-none xl:block">
+            <EvidenceColumn
+              evidence={evidence}
+              sectionIndex={currentSection}
+              onOpenSection={(n) => {
+                setCurrentSection(n);
+                setValidationErrors([]);
+              }}
+              onOpenAssistant={() => setIsChatOpen(true)}
+              onDark
+            />
           </div>
-
-          <button
-            onClick={handleNextSection}
-            disabled={isGeneratingCarePlan}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-              isGeneratingCarePlan
-                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                : currentSection === 10
-                ? 'bg-green-600 text-white hover:bg-green-700'
-                : 'bg-gray-600 text-white hover:bg-gray-700'
-            }`}
-          >
-            {isGeneratingCarePlan ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Generating Care Plan...</span>
-              </>
-            ) : (
-              <>
-                <span>{currentSection === 10 ? 'Complete Assessment & Generate Care Plan' : 'Next'}</span>
-                <ChevronRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
         </div>
       </div>
 
-
-
-      {/* Chat Panel */}
       <ChatPanel
         assessmentId={currentAssessment.id}
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
       />
-
-      {/* Floating Chat Button */}
-      <ChatButton onClick={() => setIsChatOpen(true)} />
     </div>
   );
 };

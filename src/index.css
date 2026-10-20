@@ -2,16 +2,207 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ──────────────────────────────────────────────────────────────────────────
+   CareFrame base layer.
+   Tokens live in tailwind.config.js; this file themes the surfaces Tailwind
+   does not reach — selection, caret, scrollbars, focus rings, numerals — and
+   sets the page ground. Light-only by decision: the use scene is daytime home
+   visits and printed output.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Public Sans, self-hosted.
+   Designed for public-service interfaces: open apertures, true tabular
+   numerals, and legible at 13–16px in poor light — which is the actual use
+   scene. Served from our own origin rather than a font CDN, so a care record
+   makes no third-party request to render. */
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/public-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/public-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  :root {
+    --cf-teal-400: #78bdb5;
+    --cf-teal-600: #2c6e6b;
+    --cf-teal-800: #1f4a4c;
+    --cf-mulberry: #8f5c72;
+    --cf-oat-50: #faf8f4;
+    --cf-oat-200: #e6e0d5;
+    --cf-oat-400: #a69d8c;
+    --cf-ink: #2e2c28;
+
+    color-scheme: light;
+    accent-color: var(--cf-teal-600);
+    scrollbar-color: var(--cf-oat-400) transparent;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--cf-oat-50);
+    color: var(--cf-ink);
+    font-family: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Headings carry their own weight; balance them rather than letting them orphan. */
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: #c0e0dc;
+    color: var(--cf-teal-800);
+  }
+
+  :where(input, textarea, [contenteditable]) {
+    caret-color: var(--cf-teal-600);
+  }
+
+  /* One focus ring for the whole product. Never removed — assessors use keyboards. */
+  :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--cf-teal-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--cf-oat-200);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--cf-oat-400);
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Dark rail keeps its own scrollbar so it does not punch a light hole. */
+  .cf-rail {
+    scrollbar-color: #2c6e6b transparent;
+  }
+  .cf-rail::-webkit-scrollbar-thumb {
+    background: #2c6e6b;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Printed marks, not pills: the section rail's state vocabulary. */
+  .cf-mark {
+    @apply inline-flex h-[18px] w-[18px] flex-none items-center justify-center rounded-full border text-2xs font-semibold leading-none;
+  }
+
+  /* Evidence entries arrive in place rather than appearing from nowhere. */
+  .cf-arrive {
+    @apply animate-settle-in;
+  }
+
+  /* ── Section form vocabulary ──────────────────────────────────────────
+     The eleven section forms predate the React primitives in
+     components/ui and hold ~3,000 lines of hand-written control markup.
+     Rather than rewrite that JSX (and risk the field wiring that drives
+     autosave and validation), their four repeated class strings resolve
+     here. Same tokens as Field.tsx, one source of truth, no structural
+     change. New forms should use the <Field> components instead.         */
+
+  .cf-label {
+    @apply mb-1.5 block text-sm font-medium text-oat-800;
+  }
+
+  .cf-input {
+    @apply block w-full rounded-md border border-oat-300 bg-white px-3 py-2.5 text-md text-oat-900
+           transition-shadow duration-fast ease-out
+           placeholder:text-oat-500
+           focus:border-teal-600 focus:shadow-focus focus:outline-none
+           disabled:cursor-not-allowed disabled:bg-oat-100 disabled:text-oat-500
+           read-only:bg-oat-50;
+  }
+
+  /* Matches Button variant="primary" exactly, for the section forms' own submits. */
+  .cf-btn {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-md border border-transparent
+           bg-teal-600 px-4 text-base font-medium text-white shadow-xs
+           transition-colors duration-fast ease-out
+           hover:bg-teal-700 active:bg-teal-800
+           disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none;
+  }
+
+  .cf-btn-lg {
+    @apply h-11 px-5;
+  }
+
+  /* Checkboxes carried the last surviving copy of the old focus vocabulary. */
+  .cf-check {
+    @apply h-4 w-4 rounded border-oat-300 text-teal-600 accent-teal-600
+           focus:ring-2 focus:ring-teal-600 focus:ring-offset-2;
+  }
+
+  textarea.cf-input {
+    @apply resize-y leading-6;
+  }
+
+  .cf-value {
+    @apply mt-1 text-base text-oat-900;
+  }
+
+  .cf-grid {
+    @apply grid grid-cols-1 gap-5 md:grid-cols-2;
+  }
+}
+
+/* The Critical Information pack rasterises to PDF on a white page. */
+@media print {
+  body {
+    background: #fff;
+  }
+  .cf-no-print {
+    display: none !important;
+  }
 }
