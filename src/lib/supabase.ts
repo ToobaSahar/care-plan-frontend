@@ -3,22 +3,64 @@ import { fetchAssessmentSections, SECTION_TABLES } from './assessmentSections';
 import type { AssessmentData, SectionKey } from '../schema/assessment';
 
 const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL;
-const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || (import.meta as any).env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const supabaseAnonKey =
+  (import.meta as any).env.VITE_SUPABASE_ANON_KEY ||
+  (import.meta as any).env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-// Debug logging
-console.log('🔧 Supabase Configuration:');
-console.log('URL:', supabaseUrl);
-console.log('Key exists:', !!supabaseAnonKey);
-
+// Misconfiguration should be loud in development and silent in production,
+// where the console is somewhere strangers read. The anon key is public by
+// design; the project URL is not worth volunteering to a visitor.
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ Missing Supabase environment variables!');
-  console.error('Please check your .env.local file has VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY');
+  const message =
+    'Missing Supabase configuration. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.';
+  if ((import.meta as any).env.DEV) console.error(message);
+  // Without these, every call would fail later with a confusing network
+  // error instead of naming the actual problem here.
+  throw new Error(message);
 }
 
 // ----------------------
 // Supabase client
 // ----------------------
-export const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string);
+export const supabase = createClient(supabaseUrl as string, supabaseAnonKey as string, {
+  auth: {
+    // The session lives in storage and refreshes in the background, so a
+    // shift does not end mid-assessment with an expired token.
+    persistSession: true,
+    autoRefreshToken: true,
+    storageKey: 'careframe.auth',
+    // PKCE keeps the code exchange safe in a browser, where no client secret
+    // can be kept, and is what a password-recovery link returns through.
+    flowType: 'pkce',
+    detectSessionInUrl: true,
+  },
+  global: {
+    headers: { 'x-application-name': 'careframe-web' },
+  },
+});
+
+// ----------------------
+// Audit authorship
+// ----------------------
+
+/**
+ * The value legacy rows already carry. Keeping it means an unattributed
+ * record reads as "unknown" rather than being quietly assigned to whoever
+ * happened to be nearby.
+ */
+const UNKNOWN_AUTHOR = '00000000-0000-0000-0000-000000000000';
+
+/**
+ * Who to record as the author of a row.
+ *
+ * Every write now happens behind the sign-in gate, so in practice this is
+ * always a real person. A care record that cannot say who entered it is of
+ * limited use at an inspection, and the column was previously a constant.
+ */
+async function currentUserId(): Promise<string> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user.id ?? UNKNOWN_AUTHOR;
+}
 
 // Database types for care schema
 export interface ServiceUser {
@@ -234,7 +276,7 @@ export const assessmentApi = {
           service_user_id: assessmentId, // Use the same ID for both
           assessor_name: 'Care Assessor',
           assessment_date: new Date().toISOString().split('T')[0],
-          created_by: '00000000-0000-0000-0000-000000000000' // Use a dummy UUID to avoid foreign key constraint
+          created_by: await currentUserId(),
         })
         .select()
         .single();
@@ -283,7 +325,7 @@ export const assessmentApi = {
         service_user_id: serviceUserId,
         assessor_name: assessorName,
         assessment_date: assessmentDate,
-        created_by: '00000000-0000-0000-0000-000000000000' // Use a dummy UUID to avoid foreign key constraint
+        created_by: await currentUserId(),
       })
       .select()
       .single();
@@ -319,7 +361,7 @@ export const assessmentApi = {
           service_user_id: assessmentId, // Use the same ID for both
           assessor_name: assessorName,
           assessment_date: assessmentDate,
-          created_by: '00000000-0000-0000-0000-000000000000' // Use a dummy UUID to avoid foreign key constraint
+          created_by: await currentUserId(),
         })
         .select()
         .single();
@@ -411,7 +453,7 @@ export const assessmentApi = {
             emergency_contact_name: sectionData.emergency_contact_name,
             emergency_contact_number: sectionData.emergency_contact_number,
             relationship_to_service_user: sectionData.relationship_to_service_user,
-            created_by: '00000000-0000-0000-0000-000000000000' // Use a dummy UUID to avoid foreign key constraint
+            created_by: await currentUserId(),
           };
           
           console.log('🔍 Debug: Creating new service user with data:', serviceUserData);

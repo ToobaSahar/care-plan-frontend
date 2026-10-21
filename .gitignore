@@ -23,3 +23,12 @@ yarn-error.log*
 .idea/
 .vscode/
 .DS_Store
+
+# Impeccable working artifacts — review screenshots, concept sketches and the
+# decision payload. Kept on disk as a record of the redesign, but they are
+# scratch output rather than product code, so they stay out of the repo.
+# design.json and surfaces/ are deliberately NOT ignored: they are the design
+# system tokens and the direction contract, which the build and future work read.
+.impeccable/review/
+.impeccable/sketches/
+.impeccable/payload-surface.json
