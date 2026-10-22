@@ -34,7 +34,7 @@ const oat = {
   200: '#E6E0D5',
   300: '#D4CCBD',
   400: '#A69D8C',
-  500: '#7A7362',
+  500: '#716A5A',
   600: '#635C4E',
   700: '#4F4A40',
   800: '#3A352E',
@@ -92,13 +92,15 @@ export default {
         '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.022em' }],
       },
 
+      // Softened one step from the original 4–14px ramp: still a clinical
+      // record, but sheets read as paper laid down rather than boxes drawn.
       borderRadius: {
-        sm: '4px',
-        DEFAULT: '6px',
-        md: '7px',
-        lg: '9px',
-        xl: '11px',
-        '2xl': '14px',
+        sm: '5px',
+        DEFAULT: '7px',
+        md: '8px',
+        lg: '10px',
+        xl: '14px',
+        '2xl': '18px',
       },
 
       // Low and offset. Clinical, not glossy — never a zero-offset halo.
@@ -109,6 +111,8 @@ export default {
         lg: '0 8px 24px rgb(31 28 24 / 0.10)',
         xl: '0 16px 48px rgb(31 28 24 / 0.14)',
         rail: 'inset -1px 0 0 rgb(31 28 24 / 0.06)',
+        // A sheet resting on the oat ground: hairline-weight, offset, warm.
+        sheet: '0 1px 2px rgb(31 28 24 / 0.04), 0 4px 16px -6px rgb(31 28 24 / 0.08)',
         focus: '0 0 0 3px rgb(44 110 107 / 0.20)',
       },
 

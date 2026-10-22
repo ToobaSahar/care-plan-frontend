@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 // Removed AutosaveBadge import since we're disabling autosave functionality
@@ -15,16 +15,22 @@ import { Section10Summary } from '../components/forms/Section10Summary';
 import { ChatPanel } from '../components/Chat/ChatPanel';
 
 import { SectionRail } from '../components/layout/SectionRail';
+import { SectionBar } from '../components/layout/SectionBar';
+import { RailDrawer } from '../components/layout/RailDrawer';
+import { RailFrame } from '../components/layout/RailFrame';
 import { PersonHeader } from '../components/layout/PersonHeader';
 import { EvidenceColumn } from '../components/layout/EvidenceColumn';
-import { RiskSpine } from '../components/layout/RiskSpine';
 import { WorkSurface } from '../components/layout/WorkSurface';
-import { Alert, Button, Logo, Skeleton } from '../components/ui';
+import { Alert, Button, Card, Logo, Skeleton } from '../components/ui';
 import { deriveEvidence, sectionCompletion } from '../lib/evidence';
 import { newUuid } from '../lib/ids';
+import { cn } from '../lib/cn';
+import { RAIL_DOCK, useRailLayout } from '../hooks/useRailLayout';
 
 import { useAssessment } from '../state/useAssessment';
 import { carePlanAPI } from '../lib/carePlanApi';
+import { useAuth } from '../auth/AuthProvider';
+import { primeRecent, rememberRecent } from '../lib/recentRecords';
 
 export const AssessmentPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +52,34 @@ export const AssessmentPage: React.FC = () => {
     updateAssessmentStatus,
     saveSection
   } = useAssessment();
+
+  // Where the section rail sits at this width: docked beside the work, or an
+  // icon strip that opens a drawer over it.
+  const rail = useRailLayout(RAIL_DOCK.assessment);
+  const dockedRailId = useId();
+  const drawerRailId = useId();
+
+  // For the workspace rail's "Recently opened": the id goes to storage once
+  // per open; the name stays in memory, kept current as it is edited.
+  const { staff } = useAuth();
+  const staffId = staff?.id;
+  const openedId = currentAssessment?.id === id ? id : undefined;
+  const openedName = formData.personalDetails?.full_name;
+  const openedNhs = formData.personalDetails?.nhs_number;
+
+  useEffect(() => {
+    if (staffId && openedId) rememberRecent(staffId, openedId);
+  }, [staffId, openedId]);
+
+  useEffect(() => {
+    if (staffId && openedId) {
+      primeRecent(staffId, {
+        id: openedId,
+        full_name: openedName || null,
+        nhs_number: openedNhs || null,
+      });
+    }
+  }, [staffId, openedId, openedName, openedNhs]);
 
   /* Reaching /assessment with no id means "start a new one". Mint the id and
      redirect to its own URL; `loadAssessment` then takes the normal path and
@@ -386,7 +420,7 @@ export const AssessmentPage: React.FC = () => {
   const personal = formData.personalDetails;
 
   const ShellFallback: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-oat-50 px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-oat-100 px-6">
       <Logo size="lg" />
       {children}
     </div>
@@ -394,27 +428,47 @@ export const AssessmentPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen overflow-hidden bg-oat-50">
-        <div className="hidden w-[232px] flex-none bg-teal-800 p-5 lg:block">
-          <Logo onDark size="md" />
-          <div className="mt-8 flex flex-col gap-2.5">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Skeleton key={i} className="h-7 w-full bg-teal-700/60" />
-            ))}
-          </div>
+      <div className="flex h-viewport overflow-hidden bg-oat-100">
+        {/* The same rail shape the page will open with, so nothing jumps. */}
+        <div
+          className={cn(
+            'hidden flex-none border-r border-oat-200 bg-oat-100 py-5 md:block',
+            rail.expanded ? 'w-[248px] px-3' : 'w-[72px]',
+          )}
+        >
+          {rail.expanded ? (
+            <>
+              <div className="px-3 pb-7 pt-1">
+                <Logo size="md" />
+              </div>
+              <div className="flex flex-col gap-2 px-3">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <Skeleton key={i} className="h-6 w-full" />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-7">
+              <div className="pt-1">
+                <Logo variant="mark" size="md" />
+              </div>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} className="h-5 w-5 rounded-full" />
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex items-center gap-4 border-b border-oat-200 bg-white px-6 py-3.5">
-            <Skeleton className="h-11 w-11 rounded-full" />
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-4 w-48" />
-              <Skeleton className="h-3 w-72" />
+          <div className="flex items-center gap-5 border-b border-oat-200 bg-white px-5 py-5 sm:px-8">
+            <Skeleton className="h-12 w-12 flex-none rounded-full sm:h-14 sm:w-14" />
+            <div className="flex min-w-0 flex-col gap-2.5">
+              <Skeleton className="h-6 w-56 max-w-full" />
+              <Skeleton className="h-3.5 w-80 max-w-full" />
             </div>
           </div>
-          <div className="flex flex-col gap-5 p-7">
-            <Skeleton className="h-6 w-64" />
-            <Skeleton className="h-40 w-full rounded-xl" />
-            <Skeleton className="h-40 w-full rounded-xl" />
+          <div className="mx-auto flex w-full max-w-[760px] flex-col gap-5 px-4 py-6 sm:px-8 sm:py-8">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-72 w-full rounded-xl" />
           </div>
         </div>
       </div>
@@ -428,7 +482,7 @@ export const AssessmentPage: React.FC = () => {
           {error}
         </Alert>
         <Button onClick={() => navigate('/assessments')} icon={<ArrowLeft />}>
-          Back to caseload
+          Back to service users
         </Button>
       </ShellFallback>
     );
@@ -438,11 +492,11 @@ export const AssessmentPage: React.FC = () => {
     return (
       <ShellFallback>
         <Alert tone="info" title="No assessment open" className="max-w-md">
-          Open an assessment from the caseload to start recording. Assessments are addressed
+          Open an assessment from the service users list to start recording. Assessments are addressed
           by id, so this page needs one to know whose record to load.
         </Alert>
         <Button onClick={() => navigate('/assessments')} icon={<ArrowLeft />}>
-          Go to caseload
+          Go to service users
         </Button>
       </ShellFallback>
     );
@@ -451,31 +505,70 @@ export const AssessmentPage: React.FC = () => {
   const isFinalSection = currentSection === 10;
 
 
+  const openSection = (n: number) => {
+    setCurrentSection(n);
+    setValidationErrors([]);
+  };
+
+  const goToServiceUsers = () => navigate('/assessments');
+
+  const selectFromDrawer = (n: number) => {
+    openSection(n);
+    rail.closeDrawer();
+  };
+
+  /* Layout by width — the same record and the same order of work everywhere,
+     arranged for the room available:
+
+       ≥1280  rail docked (full or icon strip, the assessor's choice, kept on
+              this device) · fields · evidence column beside them
+       ≥1024  icon strip, expanding as a drawer · fields · evidence beside
+       ≥768   icon strip, expanding as a drawer · fields, evidence beneath
+       <768   the page scrolls as one: person header, then a sticky section
+              bar that opens the drawer, fields, evidence beneath, and the
+              action bar pinned to the foot of the screen                    */
   return (
-    <div className="flex h-screen overflow-hidden bg-teal-800">
-      {/* Section rail — the far edge of one continuous teal ground. */}
-      <div className="hidden w-[232px] flex-none lg:block">
+    <div className="flex min-h-viewport bg-oat-100 md:h-viewport md:overflow-hidden">
+      {/* Docked rail, in the same frame and with the same edge handle as
+          every other screen. Below the docking width the handle opens the
+          drawer instead of widening the rail. */}
+      <RailFrame
+        className="hidden md:block"
+        expanded={rail.expanded}
+        onToggle={rail.toggle}
+        controls={rail.canDock ? dockedRailId : drawerRailId}
+        toggleExpanded={rail.canDock ? rail.expanded : rail.drawerOpen}
+      >
+        <SectionRail
+          id={dockedRailId}
+          titles={sectionTitles}
+          current={currentSection}
+          completed={completion}
+          onSelect={openSection}
+          onBack={goToServiceUsers}
+          collapsed={!rail.expanded}
+        />
+      </RailFrame>
+
+      {/* The full rail over the content, wherever it cannot sit beside it. */}
+      <RailDrawer
+        id={drawerRailId}
+        open={rail.drawerOpen}
+        onClose={rail.closeDrawer}
+        label="Assessment sections"
+      >
         <SectionRail
           titles={sectionTitles}
           current={currentSection}
           completed={completion}
-          onSelect={(n) => {
-            setCurrentSection(n);
-            setValidationErrors([]);
-          }}
-          footer={
-            <button
-              type="button"
-              onClick={() => navigate('/assessments')}
-              className="text-xs font-medium text-teal-200 underline underline-offset-2 hover:text-white"
-            >
-              Back to caseload
-            </button>
-          }
+          onSelect={selectFromDrawer}
+          onBack={goToServiceUsers}
         />
-      </div>
+      </RailDrawer>
 
       <div className="flex min-w-0 flex-1 flex-col">
+        {/* On a phone the docked rail is absent, so the header keeps its own
+            way back; from tablet width up the rail carries it. */}
         <PersonHeader
           name={personal?.full_name}
           nhsNumber={personal?.nhs_number}
@@ -484,53 +577,35 @@ export const AssessmentPage: React.FC = () => {
           assessorName={formData.signatures?.assessor_name}
           status={currentAssessment.status}
           overallRisk={evidence.overall}
-          onBack={() => navigate('/assessments')}
-          className="lg:[&>button]:hidden"
+          onBack={goToServiceUsers}
+          className="md:[&>button]:hidden"
         />
 
-        {/* Fields sit on a warm plane lifted off the ground; evidence stays on
-            the ground itself, so the two read as different kinds of surface. */}
-        <div className="flex min-h-0 flex-1">
-          <WorkSurface className="flex min-w-0 flex-1 flex-col overflow-hidden">
-            {/* Compact stepper for narrow screens, where the rail is hidden. */}
-            <div
-              className="flex gap-1.5 overflow-x-auto border-b border-oat-200 px-4 py-2.5 lg:hidden"
-              role="tablist"
-              aria-label="Assessment sections"
-            >
-              {sectionTitles.map((title, i) => (
-                <button
-                  key={title}
-                  type="button"
-                  role="tab"
-                  aria-selected={currentSection === i + 1}
-                  onClick={() => {
-                    setCurrentSection(i + 1);
-                    setValidationErrors([]);
-                  }}
-                  className={
-                    currentSection === i + 1
-                      ? 'flex-none rounded-full bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white'
-                      : completion[i]
-                      ? 'flex-none rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-medium text-teal-700'
-                      : 'flex-none rounded-full border border-oat-200 px-3 py-1.5 text-xs text-oat-600'
-                  }
-                >
-                  {i + 1}. {title}
-                </button>
-              ))}
-            </div>
+        {/* Fields on the oat ground, evidence one tonal step down beside
+            them, so the two read as different kinds of surface. */}
+        <div className="flex flex-1 md:min-h-0">
+          <WorkSurface className="flex min-w-0 flex-1 flex-col md:overflow-hidden">
+            <SectionBar
+              className="md:hidden"
+              title={sectionTitles[currentSection - 1]}
+              index={currentSection}
+              total={sectionTitles.length}
+              personName={personal?.full_name || undefined}
+              onOpenSections={rail.openDrawer}
+              sectionsOpen={rail.drawerOpen}
+              sectionsId={drawerRailId}
+            />
 
-            <div className="flex-1 overflow-y-auto px-5 py-7 sm:px-8">
+            <div className="flex-1 px-4 py-6 sm:px-8 sm:py-9 md:overflow-y-auto">
               <div className="mx-auto flex w-full max-w-[760px] flex-col gap-5">
-                <div className="flex items-baseline gap-3">
+                {/* On a phone the sticky section bar carries this heading. */}
+                <div className="hidden flex-wrap items-baseline justify-between gap-x-4 gap-y-1 md:flex">
                   <h2 className="text-2xl font-semibold text-teal-800">
                     {sectionTitles[currentSection - 1]}
                   </h2>
-                  <span className="ml-auto font-mono text-xs text-oat-500">
-                    {String(currentSection).padStart(2, '0')}
-                    <span className="text-oat-300"> / {sectionTitles.length}</span>
-                  </span>
+                  <p className="text-xs tabular-nums text-oat-500">
+                    Section {currentSection} of {sectionTitles.length}
+                  </p>
                 </div>
 
                 {showCompletionMessage && (
@@ -557,73 +632,72 @@ export const AssessmentPage: React.FC = () => {
                   </Alert>
                 )}
 
-                <div className="rounded-xl border border-oat-200 bg-white p-6 shadow-xs">
+                <Card flush className="p-5 sm:p-7">
                   {renderCurrentSection()}
-                </div>
+                </Card>
 
-                {/* Below 1280px the evidence cannot sit beside the fields, so it
+                {/* Below 1024px the evidence cannot sit beside the fields, so it
                     follows them. The thesis holds on a tablet rather than
                     collapsing into a floating help button. */}
-                <div className="overflow-hidden rounded-xl border border-oat-200 bg-oat-100 xl:hidden">
-                  <RiskSpine level={evidence.overall} orientation="horizontal" />
-                  <EvidenceColumn
-                    evidence={evidence}
-                    sectionIndex={currentSection}
-                    onOpenSection={(n) => {
-                      setCurrentSection(n);
-                      setValidationErrors([]);
-                    }}
-                    onOpenAssistant={() => setIsChatOpen(true)}
-                    className="border-l-0"
-                  />
-                </div>
+                <EvidenceColumn
+                  evidence={evidence}
+                  sectionIndex={currentSection}
+                  onOpenSection={openSection}
+                  onOpenAssistant={() => setIsChatOpen(true)}
+                  inline
+                  className="lg:hidden"
+                />
               </div>
             </div>
 
-            {/* Sticky action bar. The primary action never scrolls out of reach. */}
-            <div className="border-t border-oat-200 bg-white px-5 py-3.5 sm:px-8">
-              <div className="mx-auto flex w-full max-w-[760px] flex-wrap items-center gap-2.5">
+            {/* Sticky action bar. The primary action never scrolls out of reach:
+                pinned to the foot of the work area, and on a phone to the foot
+                of the screen. */}
+            <div className="sticky bottom-0 z-20 border-t border-oat-200 bg-white px-4 py-3 sm:px-8 sm:py-3.5 md:static">
+              <div className="mx-auto flex w-full max-w-[760px] items-center gap-2.5">
                 <Button
                   onClick={handleNextSection}
                   loading={isGeneratingCarePlan}
                   iconRight={!isFinalSection ? <ChevronRight /> : undefined}
+                  className="min-w-0 flex-1 sm:flex-none"
                 >
-                  {isGeneratingCarePlan
-                    ? 'Generating care plan'
-                    : isFinalSection
-                    ? 'Complete assessment & generate care plan'
-                    : 'Save & continue'}
+                  {isGeneratingCarePlan ? (
+                    'Generating care plan'
+                  ) : isFinalSection ? (
+                    <>
+                      <span className="min-w-0 truncate sm:hidden">Complete &amp; generate care plan</span>
+                      <span className="hidden sm:inline">Complete assessment &amp; generate care plan</span>
+                    </>
+                  ) : (
+                    'Save & continue'
+                  )}
                 </Button>
 
+                {/* On a phone Back is the arrow alone, left of the primary
+                    action, so the primary can take the width. */}
                 <Button
                   variant="ghost"
                   onClick={handlePreviousSection}
                   disabled={currentSection === 1}
                   icon={<ChevronLeft />}
+                  className="order-first flex-none sm:order-none"
                 >
-                  Back
+                  <span className="sr-only sm:not-sr-only">Back</span>
                 </Button>
 
-                <p className="ml-auto hidden text-xs text-oat-600 sm:block">
+                <p className="ml-auto hidden flex-none text-xs tabular-nums text-oat-500 sm:block">
                   {completion.filter(Boolean).length} of {sectionTitles.length} started
                 </p>
               </div>
             </div>
           </WorkSurface>
 
-          {/* The record's risk, as the edge between the fields and their evidence. */}
-          <RiskSpine level={evidence.overall} className="hidden w-1.5 xl:block" />
-
-          <div className="hidden w-[340px] flex-none xl:block">
+          <div className="hidden w-[300px] flex-none lg:block xl:w-[340px]">
             <EvidenceColumn
               evidence={evidence}
               sectionIndex={currentSection}
-              onOpenSection={(n) => {
-                setCurrentSection(n);
-                setValidationErrors([]);
-              }}
+              onOpenSection={openSection}
               onOpenAssistant={() => setIsChatOpen(true)}
-              onDark
             />
           </div>
         </div>

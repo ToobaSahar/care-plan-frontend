@@ -10,6 +10,7 @@ import {
   Avatar,
   Badge,
   Button,
+  Card,
   EmptyState,
   Field,
   Input,
@@ -60,7 +61,7 @@ const NewAccountHandover: React.FC<{
   };
 
   return (
-    <div className="rounded-xl border border-teal-200 bg-teal-50 p-5">
+    <div className="cf-arrive rounded-xl border border-teal-200 bg-teal-50 p-6">
       <div className="flex items-start gap-3">
         <KeyRound className="mt-0.5 h-[18px] w-[18px] flex-none text-teal-700" aria-hidden="true" />
         <div className="min-w-0 flex-1">
@@ -134,9 +135,9 @@ const AddColleague: React.FC<{
   return (
     <form
       onSubmit={submit}
-      className="flex flex-col gap-5 rounded-xl border border-oat-200 bg-white p-5"
+      className="cf-arrive flex flex-col gap-5 rounded-xl border border-oat-200 bg-white p-6 shadow-sheet"
     >
-      <h3 className="text-base font-semibold text-oat-900">Add a colleague</h3>
+      <h3 className="text-lg font-semibold text-teal-800">Add a colleague</h3>
 
       {error && <Alert tone="error" title="Could not add them">{error}</Alert>}
 
@@ -219,7 +220,7 @@ const RosterRow: React.FC<{
 
     {!member.is_active && <Badge tone="neutral">No access</Badge>}
 
-    <p className="hidden w-24 flex-none text-xs text-oat-600 sm:block">
+    <p className="hidden w-24 flex-none text-sm text-oat-600 sm:block">
       {member.created_at ? formatDate(member.created_at) : ''}
     </p>
 
@@ -238,29 +239,35 @@ const RosterRow: React.FC<{
         />
       </div>
     ) : (
-      <Badge tone={member.role === 'admin' ? 'people' : 'brand'}>
-        {ROLE_LABELS[member.role]}
-      </Badge>
+      <div className="flex-none sm:w-[168px]">
+        <Badge tone={member.role === 'admin' ? 'brand' : 'neutral'}>
+          {ROLE_LABELS[member.role]}
+        </Badge>
+      </div>
     )}
 
-    {canManage && !isSelf && (
-      <Button
-        variant={member.is_active ? 'ghost' : 'secondary'}
-        size="sm"
-        disabled={busy}
-        onClick={() => onChange({ is_active: !member.is_active })}
-      >
-        {member.is_active ? 'Withdraw access' : 'Restore access'}
-      </Button>
+    {canManage && (
+      <div className="flex flex-none sm:w-[132px] sm:justify-end">
+        {!isSelf && (
+          <Button
+            variant={member.is_active ? 'ghost' : 'secondary'}
+            size="sm"
+            disabled={busy}
+            onClick={() => onChange({ is_active: !member.is_active })}
+          >
+            {member.is_active ? 'Withdraw access' : 'Restore access'}
+          </Button>
+        )}
+      </div>
     )}
   </article>
 );
 
 function cnRow(active: boolean): string {
   return [
-    'flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border px-4 py-2.5 shadow-xs',
-    'transition-shadow duration-fast ease-out hover:shadow-sm',
-    active ? 'border-oat-200 bg-white' : 'border-oat-200 bg-oat-100/70',
+    'flex flex-wrap items-center gap-x-4 gap-y-2.5 px-5 py-3.5',
+    'transition-colors duration-fast ease-out',
+    active ? 'bg-white hover:bg-oat-100' : 'bg-oat-100 text-oat-600',
   ].join(' ');
 }
 
@@ -324,11 +331,11 @@ export const TeamPage: React.FC = () => {
   return (
     <WorkspaceShell
       title="Team"
-      description="Who can open the caseload, and what each of them may do."
+      description="Who can open service user records, and what each of them may do."
       actions={
         canManage &&
         !adding && (
-          <Button variant="onDark" icon={<UserPlus />} onClick={() => setAdding(true)}>
+          <Button icon={<UserPlus />} onClick={() => setAdding(true)}>
             Add colleague
           </Button>
         )
@@ -354,10 +361,10 @@ export const TeamPage: React.FC = () => {
           <AddColleague onCreated={handleCreated} onCancel={() => setAdding(false)} />
         )}
 
-        <div className="flex items-baseline gap-2.5">
+        <div className="flex items-center gap-2.5">
           <h2 className="text-lg font-semibold text-oat-900">Care team</h2>
           {!loading && (
-            <span className="text-xs tabular-nums text-oat-600">
+            <span className="rounded-full border border-oat-200 bg-white px-2 py-0.5 text-xs font-medium tabular-nums text-oat-600">
               {roster.filter((m) => m.is_active).length} with access
             </span>
           )}
@@ -366,11 +373,11 @@ export const TeamPage: React.FC = () => {
         {loading ? (
           <SkeletonRows rows={4} />
         ) : roster.length === 0 ? (
-          <div className="rounded-xl border border-oat-200 bg-white">
+          <Card flush>
             <EmptyState
               icon={<UserPlus />}
               title="No one on the team yet"
-              description="Add the colleagues who need to open the caseload."
+              description="Add the colleagues who need to open service user records."
               action={
                 canManage ? (
                   <Button icon={<UserPlus />} onClick={() => setAdding(true)}>
@@ -379,9 +386,9 @@ export const TeamPage: React.FC = () => {
                 ) : undefined
               }
             />
-          </div>
+          </Card>
         ) : (
-          <ul className="flex flex-col gap-2.5">
+          <ul className="divide-y divide-oat-100 overflow-hidden rounded-xl border border-oat-200 bg-white shadow-sheet">
             {roster.map((member) => (
               <li key={member.id}>
                 <RosterRow

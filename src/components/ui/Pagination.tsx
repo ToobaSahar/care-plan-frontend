@@ -88,6 +88,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={page <= 1 || busy}
           onClick={() => onPageChange(page - 1)}
           aria-label="Previous page"
+          // It sits on the oat ground, where the ghost hover would not show;
+          // match the page numbers beside it.
+          className="hover:!bg-oat-200"
         >
           <span className="hidden sm:inline">Previous</span>
         </Button>
@@ -132,6 +135,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           disabled={page >= pageCount || busy}
           onClick={() => onPageChange(page + 1)}
           aria-label="Next page"
+          className="hover:!bg-oat-200"
         >
           <span className="hidden sm:inline">Next</span>
         </Button>

@@ -42,7 +42,7 @@ interface AuthContextValue {
   status: AuthStatus;
   session: Session | null;
   staff: StaffProfile | null;
-  /** False for `viewer`, who may read the caseload but not alter it. */
+  /** False for `viewer`, who may read service user records but not alter them. */
   canWrite: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;

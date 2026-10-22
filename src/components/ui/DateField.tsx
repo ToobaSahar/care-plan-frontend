@@ -404,11 +404,10 @@ export const DateField: React.FC<DateFieldProps> = ({
           }
         }}
         className={cn(
-          'flex w-full items-center justify-between gap-2 rounded-md border bg-white px-3 py-2.5 text-left text-md',
-          'transition-shadow duration-fast ease-out',
+          'flex w-full items-center justify-between gap-2 rounded-md border bg-white px-3.5 py-2.5 text-left text-md shadow-[0_1px_0_rgb(31_28_24/0.02)] transition-[border-color,box-shadow] duration-fast ease-out',
           'focus:border-teal-600 focus:shadow-focus focus:outline-none',
           'disabled:cursor-not-allowed disabled:bg-oat-100 disabled:text-oat-500',
-          invalid ? 'border-red-700' : 'border-oat-300',
+          invalid ? 'border-red-700' : 'border-oat-300 hover:border-oat-400',
           open && 'border-teal-600 shadow-focus',
           selected ? 'text-oat-900' : 'text-oat-500',
           className,

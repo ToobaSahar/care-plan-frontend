@@ -10,19 +10,20 @@ import { cn } from '../../lib/cn';
    ────────────────────────────────────────────────────────────────────────── */
 
 const CONTROL_BASE =
-  'block w-full bg-white text-oat-900 border rounded-md transition-shadow duration-fast ease-out ' +
+  'block w-full bg-white text-oat-900 border rounded-md shadow-[0_1px_0_rgb(31_28_24/0.02)] ' +
+  'transition-[border-color,box-shadow] duration-fast ease-out ' +
   'placeholder:text-oat-500 ' +
   'focus:outline-none focus:border-teal-600 focus:shadow-focus ' +
   'disabled:bg-oat-100 disabled:text-oat-500 disabled:cursor-not-allowed ' +
-  'read-only:bg-oat-50';
+  'read-only:bg-oat-100';
 
-const CONTROL_SIZE = 'text-md px-3 py-2.5';
+const CONTROL_SIZE = 'text-md px-3.5 py-2.5';
 
 function controlClasses(invalid?: boolean, extra?: string) {
   return cn(
     CONTROL_BASE,
     CONTROL_SIZE,
-    invalid ? 'border-red-700 focus:border-red-700' : 'border-oat-300',
+    invalid ? 'border-red-700 focus:border-red-700' : 'border-oat-300 hover:border-oat-400',
     extra,
   );
 }
@@ -68,7 +69,7 @@ export const Field: React.FC<FieldProps> = ({
       <label htmlFor={id} className="text-sm font-medium text-oat-800">
         {label}
         {required && (
-          <span className="ml-0.5 text-red-700" aria-hidden="true">
+          <span className="ml-1 text-red-700" aria-hidden="true">
             *
           </span>
         )}

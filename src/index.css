@@ -43,6 +43,7 @@
     --cf-teal-800: #1f4a4c;
     --cf-mulberry: #8f5c72;
     --cf-oat-50: #faf8f4;
+    --cf-oat-100: #f3efe8;
     --cf-oat-200: #e6e0d5;
     --cf-oat-400: #a69d8c;
     --cf-ink: #2e2c28;
@@ -58,7 +59,7 @@
 
   body {
     margin: 0;
-    background: var(--cf-oat-50);
+    background: var(--cf-oat-100);
     color: var(--cf-ink);
     font-family: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
     font-size: 0.875rem;
@@ -109,12 +110,12 @@
     background-clip: content-box;
   }
 
-  /* Dark rail keeps its own scrollbar so it does not punch a light hole. */
+  /* The rail scrolls on its own; its thumb stays a quiet oat stroke. */
   .cf-rail {
-    scrollbar-color: #2c6e6b transparent;
+    scrollbar-color: #d4ccbd transparent;
   }
   .cf-rail::-webkit-scrollbar-thumb {
-    background: #2c6e6b;
+    background: #d4ccbd;
   }
 
   a {
@@ -157,12 +158,14 @@
   }
 
   .cf-input {
-    @apply block w-full rounded-md border border-oat-300 bg-white px-3 py-2.5 text-md text-oat-900
-           transition-shadow duration-fast ease-out
+    @apply block w-full rounded-md border border-oat-300 bg-white px-3.5 py-2.5 text-md text-oat-900
+           shadow-[0_1px_0_rgb(31_28_24/0.02)]
+           transition-[border-color,box-shadow] duration-fast ease-out
            placeholder:text-oat-500
+           hover:border-oat-400
            focus:border-teal-600 focus:shadow-focus focus:outline-none
-           disabled:cursor-not-allowed disabled:bg-oat-100 disabled:text-oat-500
-           read-only:bg-oat-50;
+           disabled:cursor-not-allowed disabled:bg-oat-100 disabled:text-oat-500 disabled:hover:border-oat-300
+           read-only:bg-oat-100;
   }
 
   /* Matches Button variant="primary" exactly, for the section forms' own submits. */
@@ -171,17 +174,71 @@
            bg-teal-600 px-4 text-base font-medium text-white shadow-xs
            transition-colors duration-fast ease-out
            hover:bg-teal-700 active:bg-teal-800
-           disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none;
+           disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none
+           [&>svg]:h-[18px] [&>svg]:w-[18px] [&>svg]:mr-0;
   }
 
   .cf-btn-lg {
     @apply h-11 px-5;
   }
 
+  /* Matches Button variant="secondary". */
+  .cf-btn-secondary {
+    @apply border-oat-300 bg-white text-teal-700 shadow-xs hover:border-teal-600 hover:bg-teal-50 active:bg-teal-100;
+  }
+
   /* Checkboxes carried the last surviving copy of the old focus vocabulary. */
   .cf-check {
-    @apply h-4 w-4 rounded border-oat-300 text-teal-600 accent-teal-600
+    @apply h-[18px] w-[18px] flex-none cursor-pointer rounded border-oat-300 text-teal-600 accent-teal-600
            focus:ring-2 focus:ring-teal-600 focus:ring-offset-2;
+  }
+
+  /* ── Grouping inside a section sheet ──────────────────────────────────
+     A section is one sheet. Groups inside it are separated by a hairline
+     and a heading, never by a second box — a card inside a card reads as
+     two documents, and this is one record.                               */
+
+  .cf-group {
+    @apply border-t border-oat-200 pt-6 first:border-t-0 first:pt-0;
+  }
+
+  .cf-group-title {
+    @apply mb-4 flex items-center text-md font-semibold text-teal-800;
+  }
+
+  .cf-group-title > svg,
+  .cf-subtitle > svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--cf-teal-600);
+  }
+
+  .cf-subtitle {
+    @apply flex items-center text-base font-semibold text-oat-800;
+  }
+
+  /* A checkbox with its label, set as a selectable row. The whole row is
+     the label's hit area, which is what a tablet on a knee needs. */
+  .cf-check-row {
+    @apply flex items-center gap-3 rounded-lg border border-oat-200 bg-white px-3.5 py-3
+           transition-colors duration-fast ease-out
+           hover:border-oat-300 hover:bg-oat-100
+           has-[:checked]:border-teal-200 has-[:checked]:bg-teal-50;
+  }
+
+  .cf-check-label {
+    @apply flex flex-1 cursor-pointer items-center text-base text-oat-900;
+  }
+
+  .cf-check-label > svg {
+    flex: none;
+    color: var(--cf-teal-600);
+  }
+
+  /* The closing call to action on the last section. */
+  .cf-callout {
+    @apply rounded-xl border border-teal-200 bg-teal-50 p-6;
   }
 
   textarea.cf-input {
@@ -194,6 +251,20 @@
 
   .cf-grid {
     @apply grid grid-cols-1 gap-5 md:grid-cols-2;
+  }
+}
+
+@layer utilities {
+  /* The visible viewport. `dvh` follows a mobile browser's toolbars as they
+     show and hide, so a bar pinned to the foot is never tucked under them;
+     the `vh` line is the fallback for browsers that predate it. */
+  .h-viewport {
+    height: 100vh;
+    height: 100dvh;
+  }
+  .min-h-viewport {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 

@@ -1,18 +1,22 @@
 import { supabase } from './supabase';
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Service user queries for the caseload.
+   Service user queries for the service users list.
 
    Paging and searching both happen in Postgres, not in the browser. With a
    client-side filter over a server-paged list, a search would only ever match
    the rows that happened to be on screen — which is worse than no search at
-   all on a caseload an assessor is scanning for one person.
+   all on a list an assessor is scanning for one person.
    ────────────────────────────────────────────────────────────────────────── */
 
 export interface ServiceUserRow {
   id: string;
   full_name: string | null;
   created_at: string;
+  /** Shown beside the name: two people can share one, but not these. */
+  nhs_number?: string | null;
+  date_of_birth?: string | null;
+  postcode?: string | null;
 }
 
 export interface ServiceUserPage {
@@ -48,7 +52,7 @@ export async function fetchServiceUsers({
   // pager needs; `head: false` keeps the rows in the same round trip.
   let request = supabase
     .from('service_users')
-    .select('id, full_name, created_at', { count: 'exact' })
+    .select('id, full_name, created_at, nhs_number, date_of_birth, postcode', { count: 'exact' })
     .order('created_at', { ascending: false })
     // created_at is not unique in this data, so without a tiebreaker the same
     // row can appear on two pages. id makes the ordering total.

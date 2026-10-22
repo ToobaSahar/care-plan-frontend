@@ -48,8 +48,8 @@ export const Section7EnvironmentLifestyle: React.FC<Section7EnvironmentLifestyle
     icon: React.ReactNode;
     notesPlaceholder: string;
   }> = ({ title, notesField, icon, notesPlaceholder }) => (
-    <div className="border rounded-lg p-4">
-      <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+    <div className="cf-group">
+      <h4 className="cf-group-title">
         {icon}
         <span className="ml-2">{title}</span>
       </h4>

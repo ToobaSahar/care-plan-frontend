@@ -76,7 +76,7 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
       <div className="space-y-6">
         {/* Signatures Read Only */}
         <div className="pt-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Signatures</h3>
+          <h3 className="cf-group-title">Signatures</h3>
           <div className="cf-grid">
             <div>
               <label className="cf-label">Assessor Name</label>
@@ -98,8 +98,8 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
         </div>
 
         {/* Optional Attachments Read Only */}
-        <div className="pt-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Optional Attachments</h3>
+        <div className="border-t border-oat-200 pt-6">
+          <h3 className="cf-group-title">Optional Attachments</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {Object.entries(attachmentsData || {}).map(([key, value]) => (
               <div key={key} className="flex items-center">
@@ -118,7 +118,7 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
       {/* Signatures Section */}
       <form onSubmit={handleSubmitSignatures(onSubmitSignatures)} className="space-y-6">
         <div className="pt-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <h3 className="cf-group-title">
             <FileText className="w-5 h-5 mr-2 text-gray-600" />
             Signatures
           </h3>
@@ -126,7 +126,7 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
           <div className="cf-grid">
             {/* Assessor Information */}
             <div className="space-y-4">
-              <h4 className="text-md font-medium text-gray-900 flex items-center">
+              <h4 className="cf-subtitle">
                 <User className="w-4 h-4 mr-2 text-blue-600" />
                 Assessor
               </h4>
@@ -186,7 +186,7 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
 
             {/* Individual/Representative Information */}
             <div className="space-y-4">
-              <h4 className="text-md font-medium text-gray-900 flex items-center">
+              <h4 className="cf-subtitle">
                 <Users className="w-4 h-4 mr-2 text-blue-600" />
                 Individual / Representative
               </h4>
@@ -249,14 +249,14 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
 
       {/* Optional Attachments Section */}
       <form onSubmit={handleSubmitAttachments(onSubmitAttachments)} className="space-y-6">
-        <div className="pt-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="border-t border-oat-200 pt-6">
+          <h3 className="cf-group-title">
             <FileCheck className="w-5 h-5 mr-2 text-gray-600" />
             Optional Attachments
           </h3>
           
           <div className="cf-grid">
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="risk_assessments"
@@ -265,13 +265,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="risk_assessments" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="risk_assessments" className="cf-check-label">
                 <Shield className="w-4 h-4 mr-2 text-blue-600" />
                 Risk Assessments (falls, choking, capacity)
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="dnacpr"
@@ -280,13 +280,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="dnacpr" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="dnacpr" className="cf-check-label">
                 <FileText className="w-4 h-4 mr-2 text-blue-600" />
                 DNACPR
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="respect_form"
@@ -295,13 +295,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="respect_form" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="respect_form" className="cf-check-label">
                 <FileText className="w-4 h-4 mr-2 text-blue-600" />
                 ReSPECT Form
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="medication_list"
@@ -310,13 +310,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="medication_list" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="medication_list" className="cf-check-label">
                 <Pill className="w-4 h-4 mr-2 text-blue-600" />
                 Medication List
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="poa_documentation"
@@ -325,13 +325,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="poa_documentation" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="poa_documentation" className="cf-check-label">
                 <FileCheck className="w-4 h-4 mr-2 text-blue-600" />
                 PoA Documentation
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="peep_evacuation_plan"
@@ -340,13 +340,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="peep_evacuation_plan" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="peep_evacuation_plan" className="cf-check-label">
                 <Shield className="w-4 h-4 mr-2 text-blue-600" />
                 PEEP (Evacuation Plan)
               </label>
             </div>
 
-            <div className="flex items-center">
+            <div className="cf-check-row">
               <input
                 type="checkbox"
                 id="communication_passport"
@@ -355,7 +355,7 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
                 disabled={readOnly}
                 className="cf-check"
               />
-              <label htmlFor="communication_passport" className="ml-2 block text-sm text-gray-900 flex items-center">
+              <label htmlFor="communication_passport" className="cf-check-label">
                 <MessageSquare className="w-4 h-4 mr-2 text-blue-600" />
                 Communication Passport
               </label>
@@ -366,25 +366,25 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
 
       {/* Complete Assessment Button */}
       {!readOnly && onCompleteAssessment && (
-        <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg">
-          <h3 className="text-lg font-semibold text-green-900 mb-4 flex items-center">
+        <div className="cf-callout">
+          <h3 className="cf-group-title mb-2">
             <CheckCircle className="w-5 h-5 mr-2 text-teal-600" />
             Complete Assessment
           </h3>
-          <p className="text-green-700 mb-4">
+          <p className="mb-5 max-w-prose text-base leading-6 text-teal-900/80">
             Once you have completed all sections and reviewed the information, click the button below to finalize the assessment and generate the AI care plan.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-2.5 sm:flex-row">
             <button
               onClick={onCompleteAssessment}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center"
+              className="cf-btn cf-btn-lg"
             >
               <CheckCircle className="w-5 h-5 mr-2" />
               Complete Assessment & Generate Care Plan
             </button>
             <button
               onClick={() => navigate('/critical-information')}
-              className="cf-btn cf-btn-lg"
+              className="cf-btn cf-btn-lg cf-btn-secondary"
             >
               <Info className="w-5 h-5 mr-2" />
               View Critical Information

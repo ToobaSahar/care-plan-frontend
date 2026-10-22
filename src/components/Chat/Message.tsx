@@ -21,7 +21,7 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
     if (!hasTools) return null;
 
     return (
-      <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+      <div className="mt-2 rounded-md border border-teal-200 bg-white p-2">
         <div className="flex items-center space-x-2 text-xs text-blue-700">
           <CheckCircle className="w-3 h-3" />
           <span className="font-medium">Tools used:</span>
@@ -45,8 +45,8 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
         <div className={`
           flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
           ${isUser 
-            ? 'bg-blue-600 text-white' 
-            : 'bg-gray-200 text-gray-700'
+            ? 'bg-teal-600 text-white' 
+            : 'bg-teal-50 text-teal-700 ring-1 ring-teal-100'
           }
         `}>
           {isUser ? (
@@ -58,10 +58,10 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
 
         {/* Message Content */}
         <div className={`
-          px-3 py-2 rounded-lg text-sm
+          px-3.5 py-2.5 rounded-xl text-base leading-6
           ${isUser 
-            ? 'bg-blue-600 text-white' 
-            : 'bg-gray-100 text-gray-900'
+            ? 'bg-teal-600 text-white rounded-tr-sm' 
+            : 'bg-oat-100 text-oat-900 rounded-tl-sm'
           }
         `}>
           {/* Message Text */}
@@ -73,7 +73,7 @@ export const Message: React.FC<MessageProps> = ({ message }) => {
           {/* Timestamp */}
           <div className={`
             text-xs mt-1
-            ${isUser ? 'text-blue-200' : 'text-gray-500'}
+            ${isUser ? 'text-teal-100/80' : 'text-oat-500'}
           `}>
             {formatTimestamp(message.timestamp)}
           </div>

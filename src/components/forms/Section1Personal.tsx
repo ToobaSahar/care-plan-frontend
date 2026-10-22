@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Calendar, Hash, MapPin, Phone, Heart, AlertTriangle } from 'lucide-react';
 import { personalDetailsSchema } from '../../schema/assessment';
 import { useCurrentSectionData } from '../../state/useAssessment';
 import type { PersonalDetails } from '../../schema/assessment';
@@ -113,7 +112,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* Full Name */}
           <div>
             <label htmlFor="full_name" className="cf-label">
-              <User className="inline w-4 h-4 mr-2" />
               Full Name *
             </label>
             <input
@@ -133,7 +131,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* Date of Birth */}
           <div>
             <label htmlFor="date_of_birth" className="cf-label">
-              <Calendar className="inline w-4 h-4 mr-2" />
               Date of Birth *
             </label>
             <DateField
@@ -153,7 +150,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* NHS Number */}
           <div>
             <label htmlFor="nhs_number" className="cf-label">
-              <Hash className="inline w-4 h-4 mr-2" />
               NHS Number *
             </label>
             <input
@@ -206,7 +202,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* Address */}
           <div className="md:col-span-2">
             <label htmlFor="address_line" className="cf-label">
-              <MapPin className="inline w-4 h-4 mr-2" />
               Address *
             </label>
             <textarea
@@ -245,7 +240,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* Phone */}
           <div>
             <label htmlFor="phone_number" className="cf-label">
-              <Phone className="inline w-4 h-4 mr-2" />
               Phone Number *
             </label>
             <input
@@ -265,7 +259,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* GP Name */}
           <div>
             <label htmlFor="gp_name" className="cf-label">
-              <Heart className="inline w-4 h-4 mr-2" />
               GP Name
             </label>
             <input
@@ -298,7 +291,6 @@ export const Section1Personal: React.FC<Section1PersonalProps> = ({ isReadOnly =
           {/* Emergency Contact Name */}
           <div>
             <label htmlFor="emergency_contact_name" className="cf-label">
-              <AlertTriangle className="inline w-4 h-4 mr-2" />
               Emergency Contact Name *
             </label>
             <input

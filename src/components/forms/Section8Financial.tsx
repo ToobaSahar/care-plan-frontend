@@ -49,14 +49,14 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
     icon: React.ReactNode;
     notesPlaceholder: string;
   }> = ({ title, field, notesField, icon, notesPlaceholder }) => (
-    <div className="border rounded-lg p-4">
-      <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+    <div className="cf-group">
+      <h4 className="cf-group-title">
         {icon}
         <span className="ml-2">{title}</span>
       </h4>
       <div className="space-y-4">
-        <div className="space-y-2">
-          <label className="flex items-center">
+        <div className="grid max-w-md grid-cols-2 gap-2.5">
+          <label className="cf-check-row cursor-pointer">
             <input
               type="radio"
               {...register(field)}
@@ -64,11 +64,11 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
               onChange={(e) => handleChange(field, e.target.value)}
               onBlur={(e) => handleBlur(field, e.target.value)}
               disabled={isReadOnly}
-              className="mr-2"
+              className="cf-check"
             />
-            <span className="text-sm text-gray-700">Yes</span>
+            <span className="text-base text-oat-900">Yes</span>
           </label>
-          <label className="flex items-center">
+          <label className="cf-check-row cursor-pointer">
             <input
               type="radio"
               {...register(field)}
@@ -76,9 +76,9 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
               onChange={(e) => handleChange(field, e.target.value)}
               onBlur={(e) => handleBlur(field, e.target.value)}
               disabled={isReadOnly}
-              className="mr-2"
+              className="cf-check"
             />
-            <span className="text-sm text-gray-700">No</span>
+            <span className="text-base text-oat-900">No</span>
           </label>
         </div>
         <div>

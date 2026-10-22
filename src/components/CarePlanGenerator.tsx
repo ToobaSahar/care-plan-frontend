@@ -59,21 +59,21 @@ export const CarePlanGenerator: React.FC<CarePlanGeneratorProps> = ({
           <div className="space-y-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <p className="text-gray-900 bg-gray-50 p-2 rounded">{section.description || '-'}</p>
+              <p className="text-gray-900 bg-oat-100 p-2 rounded">{section.description || '-'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Identified Need</label>
-              <p className="text-gray-900 bg-gray-50 p-2 rounded">{section.identified_need || '-'}</p>
+              <p className="text-gray-900 bg-oat-100 p-2 rounded">{section.identified_need || '-'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Planned Outcomes</label>
-              <p className="text-gray-900 bg-gray-50 p-2 rounded">{section.planned_outcomes || '-'}</p>
+              <p className="text-gray-900 bg-oat-100 p-2 rounded">{section.planned_outcomes || '-'}</p>
             </div>
           </div>
           <div className="space-y-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">How to Achieve Outcomes</label>
-              <p className="text-gray-900 bg-gray-50 p-2 rounded">{section.how_to_achieve || '-'}</p>
+              <p className="text-gray-900 bg-oat-100 p-2 rounded">{section.how_to_achieve || '-'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Level of Need</label>

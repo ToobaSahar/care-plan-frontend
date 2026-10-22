@@ -5,7 +5,7 @@ import {
 } from '../lib/serviceUsers';
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Caseload data.
+   Service users list data.
 
    Owns paging, searching and the request lifecycle so the page stays
    presentational. Three things here are not optional on a list that is typed
@@ -91,7 +91,7 @@ export function useServiceUsers({
         if (id !== requestId.current) return;
         if (controller.signal.aborted) return;
         console.error('Error fetching service users:', err);
-        setError(err instanceof Error ? err.message : 'The caseload could not be loaded.');
+        setError(err instanceof Error ? err.message : 'Service users could not be loaded.');
       })
       .finally(() => {
         if (id !== requestId.current) return;

@@ -29,7 +29,7 @@ export type BadgeTone =
   | 'info';
 
 const TONES: Record<BadgeTone, string> = {
-  neutral: 'text-oat-600 bg-oat-50 border-oat-300',
+  neutral: 'text-oat-600 bg-oat-100 border-oat-300',
   brand: 'text-teal-700 bg-teal-50 border-teal-200',
   people: 'text-mulberry-700 bg-mulberry-50 border-mulberry-200',
   success: 'text-green-700 bg-green-50 border-green-200',

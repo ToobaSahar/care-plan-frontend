@@ -37,3 +37,6 @@ export type { AlertTone, CardProps } from './Surfaces';
 
 export { Logo } from './Logo';
 export type { LogoProps } from './Logo';
+
+export { Tooltip } from './Tooltip';
+export type { TooltipProps } from './Tooltip';

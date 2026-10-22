@@ -60,7 +60,7 @@ export const StepTabs: React.FC<StepTabsProps> = ({ currentSection, onSectionCha
                   ? 'border-gray-600 bg-gray-200 shadow-sm' 
                   : isCompleted 
                     ? 'border-gray-500 bg-gray-100 hover:border-gray-600 hover:bg-gray-200' 
-                    : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
+                    : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-oat-100'
                 }
               `}
             >
@@ -110,7 +110,7 @@ export const StepTabs: React.FC<StepTabsProps> = ({ currentSection, onSectionCha
             flex items-center px-3 py-1.5 rounded-lg border text-sm transition-colors
             ${currentSection === 1 
               ? 'border-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+              : 'border-gray-300 text-gray-700 hover:bg-oat-100 hover:border-gray-400'
             }
           `}
         >
@@ -127,7 +127,7 @@ export const StepTabs: React.FC<StepTabsProps> = ({ currentSection, onSectionCha
             flex items-center px-3 py-1.5 rounded-lg border text-sm transition-colors
             ${currentSection === 10 
               ? 'border-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+              : 'border-gray-300 text-gray-700 hover:bg-oat-100 hover:border-gray-400'
             }
           `}
         >

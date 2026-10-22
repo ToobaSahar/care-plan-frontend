@@ -112,25 +112,28 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
   if (!isOpen) return null;
 
   return (
-    <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col">
+    <div className="cf-arrive fixed inset-y-0 right-0 z-50 flex w-full max-w-[380px] flex-col xl:max-w-[340px] border-l border-oat-200 bg-white shadow-xl">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-        <div className="flex items-center space-x-2">
-          <Bot className="w-5 h-5" />
-          <h3 className="font-semibold">AI Assistant</h3>
+      <div className="flex items-center justify-between gap-3 border-b border-oat-200 px-5 py-4">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-teal-100 bg-teal-50 text-teal-700">
+            <Bot className="h-[18px] w-[18px]" aria-hidden="true" />
+          </span>
+          <h3 className="text-lg font-semibold text-teal-800">AI Assistant</h3>
         </div>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-blue-600 rounded-md transition-colors"
+          aria-label="Close assistant"
+          className="rounded-md p-1.5 text-oat-600 transition-colors duration-fast hover:bg-oat-100 hover:text-oat-900"
         >
-          <X className="w-5 h-5" />
+          <X className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
 
       {/* Assessment Info */}
       {currentAssessment && (
-        <div className="p-4 bg-gray-50 border-b border-gray-200">
-          <div className="text-sm text-gray-600">
+        <div className="border-b border-oat-200 bg-oat-100 px-5 py-2.5">
+          <div className="flex items-baseline gap-2 text-xs text-oat-600">
             <div className="font-medium">Assessment ID:</div>
             <div className="font-mono text-xs">{currentAssessment.id.slice(0, 8)}...</div>
           </div>
@@ -138,13 +141,15 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto p-5">
         {messages.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
-            <Bot className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm">Hello! I'm here to help with your assessment.</p>
-            <p className="text-xs mt-1">I can help you:</p>
-            <ul className="text-xs mt-2 space-y-1">
+          <div className="py-10 text-center text-oat-600">
+            <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-100 bg-teal-50 text-teal-600">
+              <Bot className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <p className="text-base font-medium text-oat-900">Hello! I'm here to help with your assessment.</p>
+            <p className="mt-2 text-xs">I can help you:</p>
+            <ul className="mt-2 space-y-1 text-xs">
               <li>• Prefill form fields</li>
               <li>• Validate sections</li>
               <li>• Generate risk summaries</li>
@@ -158,7 +163,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
         )}
         
         {isLoading && (
-          <div className="flex items-center space-x-2 text-gray-500">
+          <div className="flex items-center gap-2 text-oat-500">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="text-sm">AI is thinking...</span>
           </div>
@@ -168,10 +173,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="border-t border-oat-200 bg-white px-5 py-4">
         {/* File Attachment Display */}
         {selectedFile && (
-          <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-md flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between rounded-lg border border-teal-200 bg-teal-50 px-3 py-2">
             <div className="flex items-center space-x-2">
               <Paperclip className="w-4 h-4 text-blue-600" />
               <span className="text-sm text-blue-800 truncate">{selectedFile.name}</span>
@@ -185,14 +190,14 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
           </div>
         )}
 
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask me anything about the assessment..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="cf-input min-w-0 flex-1"
             disabled={isLoading}
           />
           
@@ -207,28 +212,28 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
-            className="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex w-11 flex-none items-center justify-center rounded-md border border-oat-300 bg-white text-oat-600 transition-colors duration-fast hover:bg-oat-100 hover:text-oat-900 disabled:cursor-not-allowed disabled:opacity-50"
             title="Attach MP3 file"
           >
-            <Paperclip className="w-4 h-4 text-gray-600" />
+            <Paperclip className="h-4 w-4" aria-hidden="true" />
           </button>
           
           <button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isLoading}
             className={`
-              px-4 py-2 rounded-md transition-colors
+              flex w-11 flex-none items-center justify-center rounded-md transition-colors duration-fast
               ${inputValue.trim() && !isLoading
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'bg-teal-600 text-white shadow-xs hover:bg-teal-700'
+                : 'cursor-not-allowed bg-oat-200 text-oat-500'
               }
             `}
           >
-            <Send className="w-4 h-4" />
+            <Send className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
         
-        <div className="text-xs text-gray-500 mt-2">
+        <div className="mt-2.5 text-xs text-oat-500">
           Press Enter to send, Shift+Enter for new line • Only .mp3 files allowed
         </div>
       </div>

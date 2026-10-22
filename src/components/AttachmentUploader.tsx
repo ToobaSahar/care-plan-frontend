@@ -278,7 +278,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           {attachments.map((attachment) => (
             <div
               key={attachment.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              className="flex items-center justify-between p-3 bg-oat-100 rounded-lg"
             >
               <div className="flex items-center space-x-3">
                 <File className="h-5 w-5 text-gray-400" />

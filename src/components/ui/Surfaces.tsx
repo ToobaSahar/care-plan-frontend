@@ -12,7 +12,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Card: React.FC<CardProps> = ({ flush, className, children, ...rest }) => (
   <div
     className={cn(
-      'rounded-xl border border-oat-200 bg-white shadow-xs',
+      'rounded-xl border border-oat-200 bg-white shadow-sheet',
       !flush && 'p-6',
       className,
     )}
@@ -79,7 +79,7 @@ export const Alert: React.FC<{
 export const Progress: React.FC<{
   value: number;
   max?: number;
-  /** Renders light-on-dark, for use inside the teal rail. */
+  /** Renders on a Slate Teal card. */
   onDark?: boolean;
   className?: string;
 }> = ({ value, max = 100, onDark, className }) => {
@@ -92,7 +92,7 @@ export const Progress: React.FC<{
       aria-valuemax={100}
       className={cn(
         'h-1.5 w-full overflow-hidden rounded-full',
-        onDark ? 'bg-teal-950' : 'bg-oat-200',
+        onDark ? 'bg-teal-950/70' : 'bg-oat-200',
         className,
       )}
     >
@@ -107,11 +107,11 @@ export const Progress: React.FC<{
 /* ── Avatar ──────────────────────────────────────────────────────────────── */
 
 /** Mulberry by rule: this is a person, and people are the only thing that colour marks. */
-export const Avatar: React.FC<{ name?: string; size?: 'sm' | 'md' | 'lg'; className?: string }> = ({
-  name,
-  size = 'md',
-  className,
-}) => {
+export const Avatar: React.FC<{
+  name?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}> = ({ name, size = 'md', className }) => {
   const initials = (name || '')
     .split(/\s+/)
     .filter(Boolean)
@@ -123,13 +123,14 @@ export const Avatar: React.FC<{ name?: string; size?: 'sm' | 'md' | 'lg'; classN
     sm: 'h-7 w-7 text-2xs',
     md: 'h-9 w-9 text-xs',
     lg: 'h-11 w-11 text-sm',
+    xl: 'h-12 w-12 text-base sm:h-14 sm:w-14 sm:text-lg',
   };
 
   return (
     <span
       aria-hidden="true"
       className={cn(
-        'inline-flex flex-none items-center justify-center rounded-full bg-mulberry-600 font-semibold text-white',
+        'inline-flex flex-none select-none items-center justify-center rounded-full bg-mulberry-600 font-semibold tracking-[0.02em] text-white',
         sizes[size],
         className,
       )}
@@ -150,9 +151,17 @@ export const SkeletonRows: React.FC<{ rows?: number; className?: string }> = ({
   rows = 4,
   className,
 }) => (
-  <div className={cn('flex flex-col gap-2.5', className)} aria-hidden="true">
+  <div
+    className={cn('overflow-hidden rounded-xl border border-oat-200 bg-white shadow-sheet', className)}
+    aria-hidden="true"
+  >
     {Array.from({ length: rows }).map((_, i) => (
-      <Skeleton key={i} className="h-16 w-full rounded-xl" />
+      <div key={i} className="flex items-center gap-4 border-t border-oat-100 px-5 py-4 first:border-t-0">
+        <Skeleton className="h-9 w-9 rounded-full" />
+        <Skeleton className="h-3.5 w-48" />
+        <Skeleton className="ml-auto hidden h-3 w-20 sm:block" />
+        <Skeleton className="h-8 w-24" />
+      </div>
     ))}
   </div>
 );
@@ -164,14 +173,16 @@ export const EmptyState: React.FC<{
   action?: React.ReactNode;
   className?: string;
 }> = ({ icon, title, description, action, className }) => (
-  <div className={cn('flex flex-col items-center px-6 py-14 text-center', className)}>
+  <div className={cn('flex flex-col items-center px-6 py-16 text-center', className)}>
     {icon && (
-      <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600 [&>svg]:h-6 [&>svg]:w-6">
+      <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-100 bg-teal-50 text-teal-600 [&>svg]:h-6 [&>svg]:w-6">
         {icon}
       </span>
     )}
-    <h3 className="text-lg font-semibold text-oat-900">{title}</h3>
-    {description && <p className="mt-1.5 max-w-sm text-base text-oat-600">{description}</p>}
-    {action && <div className="mt-5">{action}</div>}
+    <h3 className="text-lg font-semibold text-teal-800">{title}</h3>
+    {description && (
+      <p className="mt-1.5 max-w-sm text-base leading-6 text-oat-600">{description}</p>
+    )}
+    {action && <div className="mt-6">{action}</div>}
   </div>
 );

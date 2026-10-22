@@ -45,8 +45,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
     <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Financial Management Needs */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <CreditCard className="h-5 w-5 mr-2 text-blue-600" />
             Financial Management Needs
           </h4>
@@ -69,8 +69,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
         </div>
 
         {/* Equality, Diversity, Inclusion (EDI) Considerations */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <Users className="h-5 w-5 mr-2 text-blue-600" />
             Equality, Diversity, Inclusion (EDI) Considerations
           </h4>
@@ -93,8 +93,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
         </div>
 
         {/* Assistive Technology / Equipment */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <Monitor className="h-5 w-5 mr-2 text-blue-600" />
             Assistive Technology / Equipment
           </h4>
@@ -117,8 +117,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
         </div>
 
         {/* Legal Orders or Restrictions */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <Shield className="h-5 w-5 mr-2 text-blue-600" />
             Legal Orders or Restrictions
           </h4>
@@ -141,8 +141,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
         </div>
 
         {/* Sexuality and Relationships */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <Heart className="h-5 w-5 mr-2 text-blue-600" />
             Sexuality and Relationships
           </h4>
@@ -165,8 +165,8 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
         </div>
 
         {/* Access to Advocacy Services */}
-        <div className="border-t pt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <UserCheck className="h-5 w-5 mr-2 text-blue-600" />
             Access to Advocacy Services
           </h4>
@@ -188,10 +188,6 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
           </div>
         </div>
 
-        {!isReadOnly && (
-          <div className="flex justify-end space-x-3 pt-6 border-t">
-          </div>
-        )}
       </form>
     </div>
   );

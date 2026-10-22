@@ -52,8 +52,8 @@ export const Section5RisksSafeguarding: React.FC<Section5RisksSafeguardingProps>
     icon: React.ReactNode;
     notesPlaceholder: string;
   }> = ({ title, riskField, notesField, icon, notesPlaceholder }) => (
-    <div className="border rounded-lg p-4">
-      <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+    <div className="cf-group">
+      <h4 className="cf-group-title">
         {icon}
         <span className="ml-2">{title}</span>
       </h4>
@@ -133,8 +133,8 @@ export const Section5RisksSafeguarding: React.FC<Section5RisksSafeguardingProps>
           icon={<Shield className="h-5 w-5 text-teal-600" />}
           notesPlaceholder="No concerns"
         />
-        <div className="border rounded-lg p-4">
-          <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+        <div className="cf-group">
+          <h4 className="cf-group-title">
             <FileText className="h-5 w-5 text-gray-600" />
             <span className="ml-2">Mental Capacity / DoLS</span>
           </h4>
@@ -198,8 +198,8 @@ export const Section5RisksSafeguarding: React.FC<Section5RisksSafeguardingProps>
         notesPlaceholder="No – engages well with carers"
       />
 
-      <div className="border rounded-lg p-4">
-        <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+      <div className="cf-group">
+        <h4 className="cf-group-title">
           <Pill className="h-5 w-5 text-teal-600" />
           <span className="ml-2">Medication Risk Assessment</span>
         </h4>
@@ -227,8 +227,8 @@ export const Section5RisksSafeguarding: React.FC<Section5RisksSafeguardingProps>
         notesPlaceholder="No concerns"
       />
 
-      <div className="border rounded-lg p-4">
-        <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
+      <div className="cf-group">
+        <h4 className="cf-group-title">
           <FileText className="h-5 w-5 text-gray-600" />
           <span className="ml-2">Mental Capacity / DoLS</span>
         </h4>

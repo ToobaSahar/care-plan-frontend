@@ -18,7 +18,7 @@ export interface PersonHeaderProps {
 }
 
 /**
- * Who this record is about, set on the shell's own dark ground.
+ * Who this record is about — the white band across the top of the workspace.
  *
  * This is the page's one moment of scale. An assessor should never have to
  * navigate to remember whose details they are typing, and the name is the
@@ -46,43 +46,37 @@ export const PersonHeader: React.FC<PersonHeaderProps> = ({
   ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (
-    <header className={cn('px-5 pb-5 pt-4 sm:px-7', className)}>
+    <header className={cn('border-b border-oat-200 bg-white px-5 pb-5 pt-4 sm:px-8 lg:pt-5', className)}>
       {onBack && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onBack}
-          icon={<ArrowLeft />}
-          className="-ml-2 mb-2 text-teal-100/80 hover:bg-teal-700/50 hover:text-white"
-        >
-          Caseload
+        <Button variant="ghost" size="sm" onClick={onBack} icon={<ArrowLeft />} className="-ml-2.5 mb-2.5">
+          Service users
         </Button>
       )}
 
-      <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
-        <Avatar name={name} size="lg" className="mb-1 h-11 w-11 text-sm sm:h-12 sm:w-12 sm:text-base" />
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3.5">
+        <Avatar name={name} size="xl" className="ring-4 ring-mulberry-50" />
 
         <div className="min-w-[12rem] flex-1">
           {/* Never truncated: this is whose record it is. */}
-          <h1 className="text-xl font-semibold tracking-tight text-white [overflow-wrap:anywhere] sm:text-2xl lg:text-3xl">
+          <h1 className="text-xl font-semibold tracking-tight text-teal-900 [overflow-wrap:anywhere] sm:text-2xl lg:text-3xl">
             {name || 'New assessment'}
           </h1>
 
           {facts.length > 0 ? (
-            <dl className="mt-2 flex flex-wrap items-baseline gap-x-5 gap-y-1">
+            <dl className="mt-1.5 flex flex-wrap items-baseline gap-x-5 gap-y-1">
               {facts.map((f) => (
                 <div key={f.label} className="flex items-baseline gap-1.5">
-                  <dt className="text-2xs font-semibold uppercase text-teal-400">{f.label}</dt>
-                  <dd className="text-base text-teal-50">{f.value}</dd>
+                  <dt className="text-xs text-oat-500">{f.label}</dt>
+                  <dd className="text-base font-medium text-oat-800">{f.value}</dd>
                 </div>
               ))}
             </dl>
           ) : (
-            <p className="mt-2 text-base text-teal-100/70">Personal details not yet recorded</p>
+            <p className="mt-1.5 text-base text-oat-500">Personal details not yet recorded</p>
           )}
         </div>
 
-        <div className="flex basis-full flex-wrap items-center gap-2 pb-1 sm:basis-auto">
+        <div className="flex basis-full flex-wrap items-center gap-2 sm:basis-auto">
           {status && <StatusBadge status={status} />}
           <RiskBadge level={overallRisk} prefix="Risk" />
         </div>

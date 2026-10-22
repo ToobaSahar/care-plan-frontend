@@ -53,8 +53,8 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
     needsPlaceholder?: string;
     notesPlaceholder?: string;
   }> = ({ title, needsField, notesField, needsType = 'text', options, needsPlaceholder, notesPlaceholder }) => (
-    <div className="border rounded-lg p-4 bg-white">
-      <h4 className="text-md font-medium text-gray-900 mb-3">{title}</h4>
+    <div className="cf-group">
+      <h4 className="cf-group-title">{title}</h4>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div>
           <label className="cf-label">Needs</label>
@@ -98,7 +98,7 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
 
   if (isReadOnly) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         <Area 
           title="Mobility" 
           needsField="mobility" 
@@ -196,7 +196,7 @@ export const Section4DailyLiving: React.FC<Section4DailyLivingProps> = ({ isRead
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Area 
         title="Mobility" 
         needsField="mobility" 

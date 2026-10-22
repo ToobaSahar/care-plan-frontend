@@ -5,7 +5,7 @@ primary_target: "src/pages/AssessmentPage.tsx"
 related_targets: ["src/App.tsx","src/pages/CriticalInformationPage.tsx"]
 ---
 
-Scope: the CareFrame assessment workspace — the caseload list, the eleven-section
+Scope: the CareFrame assessment workspace — the service users list, the eleven-section
 assessment surface, and the Critical Information pack. Visitor mode: Operate.
 
 Audience: care assessors and social workers, mid-home-visit, often on a tablet, in

@@ -1,20 +1,28 @@
 import React, { useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { ClipboardList, FileText, Plus, Search, User } from 'lucide-react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom';
+import { Plus, Search, User } from 'lucide-react';
 import { AssessmentPage } from './pages/AssessmentPage';
 import { SignInPage } from './pages/SignInPage';
 import { TeamPage } from './pages/TeamPage';
 import { AuthProvider } from './auth/AuthProvider';
 import { RequireAuth } from './auth/RequireAuth';
 import { CriticalInformationPage } from './pages/CriticalInformationPage';
-import { formatDate } from './lib/format';
 import { cn } from './lib/cn';
 import { useServiceUsers } from './hooks/useServiceUsers';
+import { useServiceUserSignals } from './hooks/useServiceUserSignals';
 import { WorkspaceShell } from './components/layout/WorkspaceShell';
+import { ServiceUsersAtAGlance, NeedsAttention } from './components/serviceUsers/ServiceUsersOverview';
+import { SERVICE_USER_COLUMNS, ServiceUserListRow } from './components/serviceUsers/ServiceUserListRow';
 import {
   Alert,
-  Avatar,
   Button,
+  Card,
   EmptyState,
   Pagination,
   SkeletonRows,
@@ -24,13 +32,15 @@ import './index.css';
 const PAGE_SIZE = 12;
 
 /**
- * Caseload — the product's first screen.
+ * Service users — the product's first screen.
  *
  * It opens on who needs attention rather than on a blank form, so the first
  * thing anyone sees (assessor or otherwise) is the work, not an empty shell.
- * Paging and searching are both done in Postgres; see useServiceUsers.
+ * Paging and searching are both done in Postgres; see useServiceUsers. The
+ * signals beside each person are read separately and never block the list;
+ * see useServiceUserSignals.
  */
-const CaseloadPage: React.FC = () => {
+const ServiceUsersPage: React.FC = () => {
   const navigate = useNavigate();
   const listTopRef = useRef<HTMLDivElement>(null);
 
@@ -49,9 +59,13 @@ const CaseloadPage: React.FC = () => {
     retry,
   } = useServiceUsers({ pageSize: PAGE_SIZE });
 
+  const { overview, progress } = useServiceUserSignals(rows.map((r) => r.id));
+
   const handleViewCarePlan = (userId: string) => {
     navigate(`/critical-information?userId=${userId}`);
   };
+
+  const openAssessment = (userId: string) => navigate(`/assessment/${userId}`);
 
   // Changing page keeps the scroll position otherwise, which lands the reader
   // halfway down a list they have not seen the top of.
@@ -64,13 +78,14 @@ const CaseloadPage: React.FC = () => {
 
   return (
     <WorkspaceShell
-      title="Caseload"
+      title="Service users"
       description="Service users with an assessment or care plan on record."
+      wide
       actions={
         <>
-          <div className="relative">
+          <div className="relative w-full sm:w-72">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-teal-300"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-oat-500"
               aria-hidden="true"
             />
             <input
@@ -78,19 +93,19 @@ const CaseloadPage: React.FC = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name or id"
-              aria-label="Search caseload"
-              className="h-10 w-full rounded-md border border-teal-600 bg-teal-900/60 pl-9 pr-3 text-base text-white placeholder:text-teal-300/80 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40 sm:w-64"
+              aria-label="Search service users"
+              className="h-10 w-full rounded-md border border-oat-300 bg-white pl-10 pr-3 text-base text-oat-900 shadow-xs transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-oat-500 hover:border-oat-400 focus:border-teal-600 focus:shadow-focus focus:outline-none"
             />
           </div>
-          <Button variant="onDark" icon={<Plus />} onClick={() => navigate('/assessment')}>
+          <Button icon={<Plus />} onClick={() => navigate('/assessment')}>
             New assessment
           </Button>
         </>
       }
     >
-      <div ref={listTopRef} className="mx-auto flex w-full max-w-5xl flex-col gap-5">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
         {error && (
-          <Alert tone="error" title="The caseload could not be loaded">
+          <Alert tone="error" title="Service users could not be loaded">
             {error}
             <div className="mt-2.5">
               <Button variant="secondary" size="sm" onClick={retry}>
@@ -100,98 +115,112 @@ const CaseloadPage: React.FC = () => {
           </Alert>
         )}
 
-        <div className="flex items-baseline gap-2.5">
-          <h2 className="text-lg font-semibold text-oat-900">Service users</h2>
-          {!isInitialLoading && (
-            <span className="text-xs tabular-nums text-oat-600">
-              {total}
-              {isSearching ? ' matching' : ''}
-            </span>
-          )}
-        </div>
-
-        {isInitialLoading ? (
-          <SkeletonRows rows={6} />
-        ) : rows.length === 0 ? (
-          <div className="rounded-xl border border-oat-200 bg-white">
-            <EmptyState
-              icon={<User />}
-              title={isSearching ? 'Nothing matches that search' : 'No service users yet'}
-              description={
-                isSearching
-                  ? 'Try a different name, or clear the search to see the whole caseload.'
-                  : 'Once an assessment is started, the person it is about appears here with their care plan.'
-              }
-              action={
-                isSearching ? (
-                  <Button variant="secondary" onClick={() => setQuery('')}>
-                    Clear search
-                  </Button>
-                ) : (
-                  <Button icon={<Plus />} onClick={() => navigate('/assessment')}>
-                    Start an assessment
-                  </Button>
-                )
-              }
+        {/* The picture across all service users, set aside while searching so the
+            results lead. */}
+        {!isSearching && !error && (
+          <>
+            <ServiceUsersAtAGlance overview={overview} />
+            <NeedsAttention
+              overview={overview}
+              onOpenAssessment={openAssessment}
+              onOpenCarePlan={handleViewCarePlan}
             />
-          </div>
-        ) : (
-          <ul
-            className={cn(
-              'flex flex-col gap-2.5 transition-opacity duration-fast',
-              isFetching && 'opacity-60',
+          </>
+        )}
+
+        <section ref={listTopRef} aria-labelledby="service-users" className="flex scroll-mt-6 flex-col gap-4">
+          <div className="flex items-center gap-2.5">
+            <h2 id="service-users" className="text-lg font-semibold text-oat-900">
+              All service users
+            </h2>
+            {!isInitialLoading && (
+              <span className="rounded-full border border-oat-200 bg-white px-2 py-0.5 text-xs font-medium tabular-nums text-oat-600">
+                {total}
+                {isSearching ? ' matching' : ''}
+              </span>
             )}
-            aria-busy={isFetching}
-          >
-            {rows.map((user) => (
-              <li key={user.id}>
-                <article className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-oat-200 bg-white px-4 py-2.5 shadow-xs transition-shadow duration-fast ease-out hover:shadow-sm">
-                  <Avatar name={user.full_name ?? undefined} size="md" />
+          </div>
 
-                  <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-oat-900">
-                    {user.full_name || 'Unnamed service user'}
-                  </h3>
+          {isInitialLoading ? (
+            <SkeletonRows rows={6} />
+          ) : rows.length === 0 ? (
+            <Card flush>
+              <EmptyState
+                icon={<User />}
+                title={isSearching ? 'Nothing matches that search' : 'No service users yet'}
+                description={
+                  isSearching
+                    ? 'Try a different name, or clear the search to see all service users.'
+                    : 'Once an assessment is started, the person it is about appears here with their care plan.'
+                }
+                action={
+                  isSearching ? (
+                    <Button variant="secondary" onClick={() => setQuery('')}>
+                      Clear search
+                    </Button>
+                  ) : (
+                    <Button icon={<Plus />} onClick={() => navigate('/assessment')}>
+                      Start an assessment
+                    </Button>
+                  )
+                }
+              />
+            </Card>
+          ) : (
+            <Card
+              flush
+              className={cn('overflow-hidden transition-opacity duration-fast', isFetching && 'opacity-60')}
+            >
+              <div
+                aria-hidden="true"
+                className={`hidden items-center gap-x-4 border-b border-oat-200 bg-oat-100 px-5 py-2.5 text-xs font-medium text-oat-500 min-[1360px]:grid ${SERVICE_USER_COLUMNS}`}
+              >
+                <span />
+                <span>Service user</span>
+                <span>Sections saved</span>
+                <span>Highest risk</span>
+                <span>Care plan</span>
+                <span />
+              </div>
+              <ul className="divide-y divide-oat-100" aria-busy={isFetching}>
+                {rows.map((user) => (
+                  <li key={user.id}>
+                    <ServiceUserListRow
+                      user={user}
+                      saved={
+                        progress.status === 'ready'
+                          ? progress.data.get(user.id)
+                          : progress.status === 'loading'
+                          ? undefined
+                          : null
+                      }
+                      riskStatus={overview.status}
+                      risk={overview.status === 'ready' ? overview.data.risks.get(user.id) : undefined}
+                      planStatus={overview.status}
+                      planReady={
+                        overview.status === 'ready' && overview.data.carePlanIds.has(user.id)
+                      }
+                      onOpenAssessment={() => openAssessment(user.id)}
+                      onOpenCarePlan={() => handleViewCarePlan(user.id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
 
-                  <p className="hidden w-28 flex-none text-xs text-oat-600 sm:block">
-                    {formatDate(user.created_at)}
-                  </p>
-
-                  {/* Both of a person's destinations, offered from the person
-                      — which is the only context in which either makes sense. */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate(`/assessment/${user.id}`)}
-                    icon={<ClipboardList />}
-                  >
-                    Assessment
-                  </Button>
-
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleViewCarePlan(user.id)}
-                    icon={<FileText />}
-                  >
-                    Care plan
-                  </Button>
-                </article>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {!isInitialLoading && rows.length > 0 && (
-          <Pagination
-            page={page}
-            pageCount={pageCount}
-            total={total}
-            pageSize={pageSize}
-            onPageChange={handlePageChange}
-            busy={isFetching}
-            itemLabel="service users"
-          />
-        )}
+          {!isInitialLoading && rows.length > 0 && (
+            <Pagination
+              page={page}
+              pageCount={pageCount}
+              total={total}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              busy={isFetching}
+              itemLabel="service users"
+            />
+          )}
+        </section>
       </div>
     </WorkspaceShell>
   );
@@ -214,7 +243,7 @@ function App() {
           <Routes>
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/" element={<Navigate to="/assessments" replace />} />
-            <Route path="/assessments" element={guarded(<CaseloadPage />)} />
+            <Route path="/assessments" element={guarded(<ServiceUsersPage />)} />
             <Route path="/assessment" element={guarded(<AssessmentPage />)} />
             <Route path="/assessment/:id" element={guarded(<AssessmentPage />)} />
             <Route

@@ -19,8 +19,8 @@ import { Button, Logo } from '../components/ui';
  * reads as a fault. Only the pause long enough to notice gets a message.
  */
 const Restoring: React.FC = () => (
-  <div className="flex min-h-screen items-center justify-center bg-teal-800">
-    <p className="cf-arrive text-base text-teal-100/70" role="status">
+  <div className="flex min-h-screen items-center justify-center bg-oat-100">
+    <p className="cf-arrive text-base text-oat-600" role="status">
       Signing you in…
     </p>
   </div>
@@ -31,13 +31,15 @@ const NotAuthorised: React.FC = () => {
   const { staff, session, signOut } = useAuth();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-teal-800 px-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <Logo size="md" className="mb-7" />
+    <div className="flex min-h-screen items-center justify-center bg-oat-100 px-6">
+      <div className="cf-arrive w-full max-w-md rounded-2xl border border-oat-200 bg-white p-8 shadow-sheet">
+        <Logo size="md" className="mb-8" />
 
-        <ShieldAlert className="h-7 w-7 text-mulberry-600" aria-hidden="true" />
-        <h1 className="mt-3.5 text-xl font-semibold text-oat-900">
-          This account cannot open the caseload
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-teal-100 bg-teal-50 text-teal-700">
+          <ShieldAlert className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <h1 className="mt-4 text-xl font-semibold text-teal-800">
+          This account cannot open service user records
         </h1>
         <p className="mt-2 text-base leading-6 text-oat-700">
           {staff
@@ -51,7 +53,7 @@ const NotAuthorised: React.FC = () => {
           </p>
         )}
 
-        <Button variant="secondary" className="mt-5" onClick={() => void signOut()}>
+        <Button variant="secondary" className="mt-6" onClick={() => void signOut()}>
           Sign out
         </Button>
       </div>
@@ -67,7 +69,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
 
   if (status === 'signed-out') {
     // Carrying the attempted location means a deep link survives the detour
-    // through sign-in rather than dumping everyone on the caseload.
+    // through sign-in rather than dumping everyone on the service users list.
     return <Navigate to="/sign-in" replace state={{ from: location }} />;
   }
 

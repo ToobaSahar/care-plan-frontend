@@ -183,7 +183,7 @@ export function scopeEvidence(evidence: Evidence, sectionIndex: number) {
   };
 }
 
-/** How complete the record is, for the rail's progress and the caseload list. */
+/** How complete the record is, for the rail's progress and the service users list. */
 export function sectionCompletion(formData: any): boolean[] {
   const keys = [
     'personalDetails',
