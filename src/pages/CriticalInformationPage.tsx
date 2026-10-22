@@ -12,6 +12,12 @@ import {
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { formatDate, formatNhsNumber, formatPhone } from '../lib/format';
 import { supabase } from '../lib/supabase';
+import { fetchSection } from '../lib/assessmentSections';
+import {
+  deriveCriticalInformation,
+  type PackEntry,
+  type PackSections,
+} from '../lib/criticalInformation';
 import jsPDF from 'jspdf';
 import { Button } from '../components/ui';
 
@@ -27,6 +33,7 @@ export const CriticalInformationPage: React.FC = () => {
   const [environmentLifestyleCarePlan, setEnvironmentLifestyleCarePlan] = useState<any>(null);
   const [advancePreferencesCarePlan, setAdvancePreferencesCarePlan] = useState<any>(null);
   const [optionalAreasCarePlan, setOptionalAreasCarePlan] = useState<any>(null);
+  const [packSections, setPackSections] = useState<PackSections | null>(null);
   const [loading, setLoading] = useState(true);
   const [carePlansLoading, setCarePlansLoading] = useState(true);
 
@@ -61,32 +68,25 @@ export const CriticalInformationPage: React.FC = () => {
         if (serviceUserError) {
           console.error('Error fetching service user:', serviceUserError);
         } else {
-          // Fetch the most recently saved basic details from the database
-          const { data: basicDetailsData, error: basicDetailsError } = await supabase
-            .from('basic_details')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-
-          // Fetch the most recently saved health wellbeing from the database
-          const { data: healthWellbeingData, error: healthWellbeingError } = await supabase
-            .from('health_wellbeing')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+          // This person's own assessment sections. Each is keyed by the
+          // service user's id; reading the newest row of each table instead
+          // put whoever was assessed last onto this person's pack.
+          const [basicDetailsData, healthWellbeingData, dailyLivingData, risksSafeguardingData] =
+            await Promise.all([
+              fetchSection('basicDetails', serviceUserData.id),
+              fetchSection('healthWellbeing', serviceUserData.id),
+              fetchSection('dailyLiving', serviceUserData.id),
+              fetchSection('risksSafeguarding', serviceUserData.id),
+            ]);
 
           // Merge all the data
-          let mergedData = { ...serviceUserData };
-          
-          if (!basicDetailsError && basicDetailsData) {
-            mergedData = { ...mergedData, ...basicDetailsData };
-          }
-          
-          if (!healthWellbeingError && healthWellbeingData) {
-            mergedData = { ...mergedData, ...healthWellbeingData };
-          }
+          const mergedData = { ...serviceUserData, ...basicDetailsData, ...healthWellbeingData };
+
+          setPackSections({
+            healthWellbeing: healthWellbeingData,
+            dailyLiving: dailyLivingData,
+            risksSafeguarding: risksSafeguardingData,
+          });
 
           // Fetch the most recent health care plan
           let healthCarePlanData, healthCarePlanError;
@@ -479,41 +479,46 @@ export const CriticalInformationPage: React.FC = () => {
     doc.save(fileName);
   };
 
+  const { critical, emergency } = deriveCriticalInformation({
+    personal: serviceUser,
+    ...packSections,
+  });
+
   const criticalInfoCards = [
     {
       id: 'abilities',
       title: 'Abilities',
-      status: 'Assessment Not Yet Completed',
+      status: critical.abilities,
       icon: <Users className="h-[18px] w-[18px]" />,
     },
     {
       id: 'allergies',
       title: 'Allergies',
-      status: 'Assessment Not Yet Completed',
+      status: critical.allergies,
       icon: <AlertTriangle className="h-[18px] w-[18px]" />,
     },
     {
       id: 'diet',
       title: 'Diet',
-      status: 'Assessment Not Yet Completed',
+      status: critical.diet,
       icon: <Utensils className="h-[18px] w-[18px]" />,
     },
     {
       id: 'high-risk',
       title: 'High Risk',
-      status: 'None',
+      status: critical.highRisk,
       icon: <Shield className="h-[18px] w-[18px]" />,
     },
     {
       id: 'intolerance',
       title: 'Intolerance',
-      status: 'Assessment Not Yet Completed',
+      status: critical.intolerance,
       icon: <Activity className="h-[18px] w-[18px]" />,
     },
     {
       id: 'medical-conditions',
       title: 'Medical Conditions',
-      status: 'Assessment Not Yet Completed',
+      status: critical.medicalConditions,
       icon: <Heart className="h-[18px] w-[18px]" />,
     }
   ];
@@ -523,8 +528,6 @@ export const CriticalInformationPage: React.FC = () => {
      sheet, hairline-ruled fields, and each care plan area set once with all
      of its fields. The PDF is drawn separately by jsPDF, so this markup is
      free to be a screen document rather than an imitation of the printout. */
-
-  const PENDING = 'Assessment Not Yet Completed';
 
   const shown = (value: React.ReactNode, ellipsis = 'Loading…') => (loading ? ellipsis : value || '—');
 
@@ -563,9 +566,14 @@ export const CriticalInformationPage: React.FC = () => {
     </dl>
   );
 
-  const statusText = (status: string) => (
-    <span className={status === PENDING ? 'font-normal italic text-oat-500' : undefined}>{status}</span>
-  );
+  const statusText = (status: PackEntry) =>
+    loading ? (
+      'Loading…'
+    ) : (
+      <span className={status.placeholder ? 'font-normal italic text-oat-500' : 'whitespace-pre-line'}>
+        {status.text}
+      </span>
+    );
 
   const carePlans: Array<{ title: string; plan: any }> = [
     { title: 'Health & Wellbeing', plan: healthCarePlan },
@@ -694,12 +702,12 @@ export const CriticalInformationPage: React.FC = () => {
               {sectionHeading('Emergency Information')}
               <dl className="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-oat-200 bg-oat-200 sm:grid-cols-2 lg:grid-cols-3">
                 {[
-                  { title: 'Call ambulance 999', status: PENDING },
-                  { title: 'Emergency Situation', status: PENDING },
-                  { title: 'Rescue Medication', status: PENDING },
-                  { title: 'Emergency Contacts', status: PENDING },
-                  { title: 'Personal Emergency Evacuation Plan', status: PENDING },
-                  { title: 'Evacuation Equipment', status: PENDING },
+                  { title: 'Call ambulance 999', status: emergency.callAmbulance },
+                  { title: 'Emergency Situation', status: emergency.emergencySituation },
+                  { title: 'Rescue Medication', status: emergency.rescueMedication },
+                  { title: 'Emergency Contacts', status: emergency.emergencyContacts },
+                  { title: 'Personal Emergency Evacuation Plan', status: emergency.evacuationPlan },
+                  { title: 'Evacuation Equipment', status: emergency.evacuationEquipment },
                 ].map((item) => (
                   <div key={item.title} className="bg-white p-5">
                     <dt className="text-sm font-medium text-oat-700">{item.title}</dt>

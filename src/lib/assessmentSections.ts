@@ -61,7 +61,8 @@ function toFormData(row: Record<string, unknown> | null): SectionData {
   return out;
 }
 
-async function fetchSection(section: SectionName, assessmentId: string): Promise<SectionData> {
+/** One section of an assessment, as form data. Empty when unsaved or unreadable. */
+export async function fetchSection(section: SectionName, assessmentId: string): Promise<SectionData> {
   const table = SECTION_TABLES[section];
 
   // Personal details live on the service user, which shares the assessment id.
