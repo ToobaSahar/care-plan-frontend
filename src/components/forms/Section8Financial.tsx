@@ -34,11 +34,32 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
     updateData(formData);
   };
 
+  /* Free text commits on blur rather than per keystroke, so the record is
+     written once per field instead of once per character. */
   const handleChange = (field: string, value: any) => {
     setValue(field as any, value);
   };
 
   const handleBlur = (field: string, value: any) => {
+    updateData({ [field]: value } as any);
+  };
+
+  /**
+   * A yes/no choice commits the moment it is made.
+   *
+   * Deferring these to blur, as the free-text fields do, was wrong in both
+   * directions. A radio's blur event carries the `value` attribute of the
+   * input that lost focus, not the group's selection — so tabbing through an
+   * unanswered pair recorded whichever radio focus happened to land on. On
+   * this section that meant a DNACPR of "Yes" could be written into a care
+   * record by nothing more than passing over the field with the keyboard.
+   *
+   * There is also nothing to defer: a radio changes once per choice, so
+   * committing on change costs one write and loses nothing. It is what
+   * `SelectField` already does for the equivalent fields in Sections 4 and 5.
+   */
+  const handleChoice = (field: string, value: string) => {
+    setValue(field as any, value);
     updateData({ [field]: value } as any);
   };
 
@@ -61,8 +82,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
               type="radio"
               {...register(field)}
               value="yes"
-              onChange={(e) => handleChange(field, e.target.value)}
-              onBlur={(e) => handleBlur(field, e.target.value)}
+              onChange={(e) => handleChoice(field, e.target.value)}
               disabled={isReadOnly}
               className="cf-check"
             />
@@ -73,8 +93,7 @@ export const Section8AdvancePreferences: React.FC<Section8AdvancePreferencesProp
               type="radio"
               {...register(field)}
               value="no"
-              onChange={(e) => handleChange(field, e.target.value)}
-              onBlur={(e) => handleBlur(field, e.target.value)}
+              onChange={(e) => handleChoice(field, e.target.value)}
               disabled={isReadOnly}
               className="cf-check"
             />

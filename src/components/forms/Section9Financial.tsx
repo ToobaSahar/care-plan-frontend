@@ -16,12 +16,15 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(optionalAreasSchema),
     defaultValues: data || {},
   });
 
+  // Keep the form in step with the record when it is loaded or changed
+  // elsewhere. This only ever writes into react-hook-form; the store is
+  // written from the field handlers below, so the two cannot loop.
   useEffect(() => {
     if (data) {
       Object.entries(data).forEach(([key, value]) => {
@@ -34,12 +37,24 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
     updateData(formData);
   };
 
-  const handleInputChange = (field: keyof typeof data, value: any) => {
-    setValue(field, value);
-    if (isDirty) {
-      updateData({ [field]: value });
-    }
-  };
+  /**
+   * Every keystroke reaches the store, through react-hook-form's own change
+   * handler rather than an `onChange` prop that would replace it.
+   *
+   * Reaching the store is what makes an answer real: the store is what
+   * `saveSection` writes and what the section gate validates. An earlier
+   * version set the value on the form and forwarded it to the store only
+   * while the form reported itself dirty — but `setValue` does not mark a
+   * form dirty, so that never held and nothing typed here was recorded.
+   *
+   * The other sections register their handlers the same way; see Section 1
+   * and Section 3.
+   */
+  const fieldProps = (field: keyof typeof data) =>
+    register(field, {
+      onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+        updateData({ [field]: e.target.value }),
+    });
 
   return (
     <div className="space-y-6">
@@ -55,8 +70,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('financial_management_needs')}
-              onChange={(e) => handleInputChange('financial_management_needs', e.target.value)}
+              {...fieldProps('financial_management_needs')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any financial management needs or support required"
@@ -79,8 +93,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('equality_diversity_inclusion_edi_considerations')}
-              onChange={(e) => handleInputChange('equality_diversity_inclusion_edi_considerations', e.target.value)}
+              {...fieldProps('equality_diversity_inclusion_edi_considerations')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any EDI considerations or needs"
@@ -103,8 +116,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('assistive_technology_equipment')}
-              onChange={(e) => handleInputChange('assistive_technology_equipment', e.target.value)}
+              {...fieldProps('assistive_technology_equipment')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any assistive technology or equipment needs"
@@ -127,8 +139,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('legal_orders_or_restrictions')}
-              onChange={(e) => handleInputChange('legal_orders_or_restrictions', e.target.value)}
+              {...fieldProps('legal_orders_or_restrictions')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any legal restrictions or court orders"
@@ -151,8 +162,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('sexuality_and_relationships')}
-              onChange={(e) => handleInputChange('sexuality_and_relationships', e.target.value)}
+              {...fieldProps('sexuality_and_relationships')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any sexuality or relationship support needs"
@@ -175,8 +185,7 @@ export const Section9OptionalAreas: React.FC<Section9OptionalAreasProps> = ({ is
               Notes
             </label>
             <textarea
-              {...register('access_to_advocacy_services')}
-              onChange={(e) => handleInputChange('access_to_advocacy_services', e.target.value)}
+              {...fieldProps('access_to_advocacy_services')}
               disabled={isReadOnly}
               rows={3}
               placeholder="Describe any advocacy needs or services required"

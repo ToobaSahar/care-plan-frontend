@@ -21,280 +21,162 @@ import {
 import jsPDF from 'jspdf';
 import { Button } from '../components/ui';
 
+/* ──────────────────────────────────────────────────────────────────────────
+   The seven generated care plan areas, as their tables are named.
+
+   Declared once: each was previously fetched by its own copy of the same
+   twenty lines, and the copies had drifted — see `fetchLatestCarePlan`.
+   ────────────────────────────────────────────────────────────────────────── */
+const CARE_PLAN_TABLES = {
+  health: 'health_care_plan',
+  dailyLiving: 'daily_living_care_plan',
+  risksSafeguarding: 'risks_safeguarding_care_plan',
+  socialEmotional: 'social_emotional_care_plan',
+  environmentLifestyle: 'environment_lifestyle_care_plan',
+  advancePreferences: 'advance_preferences_care_plan',
+  optionalAreas: 'optional_areas_care_plan',
+} as const;
+
+type CarePlanArea = keyof typeof CARE_PLAN_TABLES;
+type CarePlans = Partial<Record<CarePlanArea, any>>;
+
+/**
+ * This person's latest plan for one area, or nothing.
+ *
+ * Always scoped to the assessment. Opened without `?userId=`, this page falls
+ * back to the most recently added service user — and each of these reads then
+ * used to drop its filter and take the newest row in the table instead. Those
+ * are not the same record: the newest `daily_living_care_plan` belongs to
+ * whoever was assessed last, who is generally someone else. The pack would
+ * present one person's name above another person's plan, which on an
+ * Emergency Admission Pack is the most consequential thing it could get wrong.
+ */
+async function fetchLatestCarePlan(table: string, assessmentId: string): Promise<any | null> {
+  const { data, error } = await supabase
+    .from(table)
+    .select('*')
+    .eq('assessment_id', assessmentId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    // One unreadable area must not empty the other six.
+    console.warn(`Could not load ${table}:`, error.message);
+    return null;
+  }
+  return data;
+}
+
 export const CriticalInformationPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const userId = searchParams.get('userId');
   const [serviceUser, setServiceUser] = useState<any>(null);
-  const [healthCarePlan, setHealthCarePlan] = useState<any>(null);
-  const [dailyLivingCarePlan, setDailyLivingCarePlan] = useState<any>(null);
-  const [risksSafeguardingCarePlan, setRisksSafeguardingCarePlan] = useState<any>(null);
-  const [socialEmotionalCarePlan, setSocialEmotionalCarePlan] = useState<any>(null);
-  const [environmentLifestyleCarePlan, setEnvironmentLifestyleCarePlan] = useState<any>(null);
-  const [advancePreferencesCarePlan, setAdvancePreferencesCarePlan] = useState<any>(null);
-  const [optionalAreasCarePlan, setOptionalAreasCarePlan] = useState<any>(null);
+  const [carePlanAreas, setCarePlanAreas] = useState<CarePlans>({});
   const [packSections, setPackSections] = useState<PackSections | null>(null);
   const [loading, setLoading] = useState(true);
   const [carePlansLoading, setCarePlansLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServiceUser = async () => {
+    // The pack is addressed by `?userId=`, so changing person must refetch.
+    // With an empty dependency list this ran once per mount, and moving
+    // between two people left the first person's pack on screen under the
+    // second one's URL.
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      setCarePlansLoading(true);
+      setServiceUser(null);
+      setCarePlanAreas({});
+      setPackSections(null);
+
       try {
-        let serviceUserData, serviceUserError;
-        
-        if (userId) {
-          // Fetch specific user by ID
-          const { data, error } = await supabase
-            .from('service_users')
-            .select('*')
-            .eq('id', userId)
-            .single();
-          serviceUserData = data;
-          serviceUserError = error;
-        } else {
-          // Fetch the most recently saved service user from the database
-          const { data, error } = await supabase
-            .from('service_users')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-          serviceUserData = data;
-          serviceUserError = error;
-        }
+        // Whose pack this is. Without an id, the most recently added record —
+        // the banner below says so, and everything after this point is scoped
+        // to whatever this resolves to.
+        const base = supabase.from('service_users').select('*');
+        const { data: serviceUserData, error: serviceUserError } = await (userId
+          ? base.eq('id', userId).maybeSingle()
+          : base.order('created_at', { ascending: false }).limit(1).maybeSingle());
 
-        console.log('🔍 CriticalInformationPage: Fetched service user data:', serviceUserData);
+        if (serviceUserError) throw serviceUserError;
+        if (cancelled) return;
+        if (!serviceUserData) return;
 
-        if (serviceUserError) {
-          console.error('Error fetching service user:', serviceUserError);
-        } else {
-          // This person's own assessment sections. Each is keyed by the
-          // service user's id; reading the newest row of each table instead
-          // put whoever was assessed last onto this person's pack.
-          const [basicDetailsData, healthWellbeingData, dailyLivingData, risksSafeguardingData] =
-            await Promise.all([
-              fetchSection('basicDetails', serviceUserData.id),
-              fetchSection('healthWellbeing', serviceUserData.id),
-              fetchSection('dailyLiving', serviceUserData.id),
-              fetchSection('risksSafeguarding', serviceUserData.id),
-            ]);
+        const assessmentId = serviceUserData.id as string;
 
-          // Merge all the data
-          const mergedData = { ...serviceUserData, ...basicDetailsData, ...healthWellbeingData };
+        // This person's own assessment sections and generated plans, every one
+        // of them keyed by this id. Reading the newest row of each table
+        // instead put whoever was assessed last onto this person's pack.
+        const [sections, plans] = await Promise.all([
+          Promise.all([
+            fetchSection('basicDetails', assessmentId),
+            fetchSection('healthWellbeing', assessmentId),
+            fetchSection('dailyLiving', assessmentId),
+            fetchSection('risksSafeguarding', assessmentId),
+          ]),
+          Promise.all(
+            (Object.entries(CARE_PLAN_TABLES) as Array<[CarePlanArea, string]>).map(
+              async ([area, table]) =>
+                [area, await fetchLatestCarePlan(table, assessmentId)] as const,
+            ),
+          ),
+        ]);
 
-          setPackSections({
-            healthWellbeing: healthWellbeingData,
-            dailyLiving: dailyLivingData,
-            risksSafeguarding: risksSafeguardingData,
-          });
+        if (cancelled) return;
 
-          // Fetch the most recent health care plan
-          let healthCarePlanData, healthCarePlanError;
-          if (userId) {
-            // Fetch care plan for specific user
-            const { data, error } = await supabase
-              .from('health_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            healthCarePlanData = data;
-            healthCarePlanError = error;
-          } else {
-            // Fetch the most recent health care plan
-            const { data, error } = await supabase
-              .from('health_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            healthCarePlanData = data;
-            healthCarePlanError = error;
-          }
+        const [basicDetailsData, healthWellbeingData, dailyLivingData, risksSafeguardingData] =
+          sections;
 
-          console.log('🔍 CriticalInformationPage: Fetched health care plan data:', healthCarePlanData);
+        setPackSections({
+          healthWellbeing: healthWellbeingData,
+          dailyLiving: dailyLivingData,
+          risksSafeguarding: risksSafeguardingData,
+        });
 
-          if (!healthCarePlanError && healthCarePlanData) {
-            setHealthCarePlan(healthCarePlanData);
-          }
+        // The flat view the "Basic Profile" and "Additional Info" grids read.
+        // Risks & Safeguarding belongs here too: without it the pack's
+        // Deprivation of Liberty Safeguards field was blank on every record,
+        // however carefully it had been assessed.
+        setServiceUser({
+          ...serviceUserData,
+          ...basicDetailsData,
+          ...healthWellbeingData,
+          ...risksSafeguardingData,
+        });
 
-          // Fetch the most recent daily living care plan
-          let dailyLivingCarePlanData, dailyLivingCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('daily_living_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            dailyLivingCarePlanData = data;
-            dailyLivingCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('daily_living_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            dailyLivingCarePlanData = data;
-            dailyLivingCarePlanError = error;
-          }
-
-          if (!dailyLivingCarePlanError && dailyLivingCarePlanData) {
-            setDailyLivingCarePlan(dailyLivingCarePlanData);
-          }
-
-          // Fetch the most recent risks & safeguarding care plan
-          let risksSafeguardingCarePlanData, risksSafeguardingCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('risks_safeguarding_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            risksSafeguardingCarePlanData = data;
-            risksSafeguardingCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('risks_safeguarding_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            risksSafeguardingCarePlanData = data;
-            risksSafeguardingCarePlanError = error;
-          }
-
-          if (!risksSafeguardingCarePlanError && risksSafeguardingCarePlanData) {
-            setRisksSafeguardingCarePlan(risksSafeguardingCarePlanData);
-          }
-
-          // Fetch the most recent social & emotional care plan
-          let socialEmotionalCarePlanData, socialEmotionalCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('social_emotional_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            socialEmotionalCarePlanData = data;
-            socialEmotionalCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('social_emotional_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            socialEmotionalCarePlanData = data;
-            socialEmotionalCarePlanError = error;
-          }
-
-          if (!socialEmotionalCarePlanError && socialEmotionalCarePlanData) {
-            setSocialEmotionalCarePlan(socialEmotionalCarePlanData);
-          }
-
-          // Fetch the most recent environment & lifestyle care plan
-          let environmentLifestyleCarePlanData, environmentLifestyleCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('environment_lifestyle_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            environmentLifestyleCarePlanData = data;
-            environmentLifestyleCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('environment_lifestyle_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            environmentLifestyleCarePlanData = data;
-            environmentLifestyleCarePlanError = error;
-          }
-
-          if (!environmentLifestyleCarePlanError && environmentLifestyleCarePlanData) {
-            setEnvironmentLifestyleCarePlan(environmentLifestyleCarePlanData);
-          }
-
-          // Fetch the most recent advance preferences care plan
-          let advancePreferencesCarePlanData, advancePreferencesCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('advance_preferences_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            advancePreferencesCarePlanData = data;
-            advancePreferencesCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('advance_preferences_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            advancePreferencesCarePlanData = data;
-            advancePreferencesCarePlanError = error;
-          }
-
-          if (!advancePreferencesCarePlanError && advancePreferencesCarePlanData) {
-            setAdvancePreferencesCarePlan(advancePreferencesCarePlanData);
-          }
-
-          // Fetch the most recent optional areas care plan
-          let optionalAreasCarePlanData, optionalAreasCarePlanError;
-          if (userId) {
-            const { data, error } = await supabase
-              .from('optional_areas_care_plan')
-              .select('*')
-              .eq('assessment_id', userId)
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            optionalAreasCarePlanData = data;
-            optionalAreasCarePlanError = error;
-          } else {
-            const { data, error } = await supabase
-              .from('optional_areas_care_plan')
-              .select('*')
-              .order('created_at', { ascending: false })
-              .limit(1)
-              .single();
-            optionalAreasCarePlanData = data;
-            optionalAreasCarePlanError = error;
-          }
-
-          if (!optionalAreasCarePlanError && optionalAreasCarePlanData) {
-            setOptionalAreasCarePlan(optionalAreasCarePlanData);
-          }
-
-          // Set care plans loading to false after all care plans are fetched
-          setCarePlansLoading(false);
-
-          setServiceUser(mergedData);
-        }
+        setCarePlanAreas(Object.fromEntries(plans) as CarePlans);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setLoading(false);
+        // Both flags, on every path. Left set on the failure path, the
+        // "Download PDF" button answered "data is still loading" for as long
+        // as the page stayed open.
+        if (!cancelled) {
+          setLoading(false);
+          setCarePlansLoading(false);
+        }
       }
     };
 
-    fetchServiceUser();
-  }, []);
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const {
+    health: healthCarePlan,
+    dailyLiving: dailyLivingCarePlan,
+    risksSafeguarding: risksSafeguardingCarePlan,
+    socialEmotional: socialEmotionalCarePlan,
+    environmentLifestyle: environmentLifestyleCarePlan,
+    advancePreferences: advancePreferencesCarePlan,
+    optionalAreas: optionalAreasCarePlan,
+  } = carePlanAreas;
 
   // Helper function to split full name into first and last name
   const splitFullName = (fullName: string) => {
@@ -671,7 +553,7 @@ export const CriticalInformationPage: React.FC = () => {
                 ['Local Authority Number', shown(serviceUser?.local_authority_number)],
                 ['NHS / CHI No.', loading ? 'Loading…' : formatNhsNumber(serviceUser?.nhs_number, '—')],
                 ['Contact Number', loading ? 'Loading…' : formatPhone(serviceUser?.phone_number, '—')],
-                ['Deprivation of Liberty Safeguards', shown(serviceUser?.safeguarding_concerns)],
+                ['Deprivation of Liberty Safeguards', shown(serviceUser?.mental_capacity_dols)],
                 ['Relationship to Service User', shown(serviceUser?.relationship_to_service_user)],
                 ['Emergency Contact Name', shown(serviceUser?.emergency_contact_name)],
                 [

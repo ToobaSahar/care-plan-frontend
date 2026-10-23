@@ -34,6 +34,16 @@ interface AssessmentState {
   generatePdf: () => Promise<string | null>;
 }
 
+/**
+ * The blank form: every section, every field it can hold.
+ *
+ * This is the shape, not just a starting value. `mergeFormData` overlays a
+ * loaded record onto it so an unanswered field arrives as an empty string
+ * rather than `undefined`, which is what keeps an input from flipping from
+ * controlled to uncontrolled mid-edit — so a field missing from here is a
+ * field with no default anywhere. Seven of Daily Living's notes fields were
+ * absent while the schema, the section and the table all carried them.
+ */
 const initialFormData: AssessmentData = {
   personalDetails: {
     full_name: '',
@@ -76,12 +86,19 @@ const initialFormData: AssessmentData = {
   },
   dailyLiving: {
     mobility: undefined,
+    mobility_notes: '',
     transfers: '',
+    transfers_notes: '',
     falls_risk: undefined,
+    falls_risk_notes: '',
     eating_drinking: '',
+    eating_drinking_notes: '',
     personal_care: undefined,
+    personal_care_notes: '',
     continence: undefined,
+    continence_notes: '',
     sleep_pattern: undefined,
+    sleep_pattern_notes: '',
     communication_mode: undefined,
     communication_notes: ''
   },
@@ -230,43 +247,31 @@ export const useAssessment = create<AssessmentState>()(
         if (!currentAssessment) return false;
 
         const sectionData = formData[sectionKey];
-        console.log(`🔍 saveSection: Saving ${sectionKey} with data:`, sectionData);
-        console.log(`🔍 saveSection: Current assessment ID:`, currentAssessment.id);
-        console.log(`🔍 saveSection: Section data keys:`, Object.keys(sectionData || {}));
-        console.log(`🔍 saveSection: Section data values:`, Object.values(sectionData || {}));
-        
-        // Only save if there's actual data in this section
-        if (!sectionData || Object.keys(sectionData).length === 0) {
-          console.log(`🔍 saveSection: No data in ${sectionKey}, skipping save`);
-          return true;
-        }
-        
-        // Filter out empty values to avoid creating rows with empty data
-        const filteredData = Object.fromEntries(
-          Object.entries(sectionData).filter(([_, value]) => 
-            value !== null && value !== undefined && value !== '' && value !== false
-          )
+        if (!sectionData || Object.keys(sectionData).length === 0) return true;
+
+        // Unanswered fields are left out so an untouched section does not
+        // create a row of empty strings. `false` is an answer, not an empty
+        // one: it is how an unticked attachment and an explicit "no" are
+        // recorded, and dropping it meant a box could be ticked and saved
+        // but never unticked again — the stored `true` simply stayed.
+        const answered = Object.fromEntries(
+          Object.entries(sectionData).filter(
+            ([, value]) => value !== null && value !== undefined && value !== '',
+          ),
         );
-        
-        console.log(`🔍 saveSection: Filtered data for ${sectionKey}:`, filteredData);
-        
-        // Only save if there's actual non-empty data after filtering
-        if (Object.keys(filteredData).length === 0) {
-          console.log(`🔍 saveSection: No non-empty data in ${sectionKey} after filtering, skipping save`);
-          return true;
-        }
-        
+
+        if (Object.keys(answered).length === 0) return true;
+
         const success = await assessmentApi.updateSection(
           currentAssessment.id,
           sectionKey,
-          filteredData
+          answered,
         );
 
         if (success) {
-          console.log(`✅ saveSection: Successfully saved ${sectionKey}`);
           set({ hasUnsavedChanges: false });
         } else {
-          console.error(`❌ saveSection: Failed to save ${sectionKey}`);
+          console.error(`Could not save "${sectionKey}".`);
         }
 
         return success;
@@ -355,24 +360,22 @@ export const useAssessment = create<AssessmentState>()(
               hasUnsavedChanges: false
             });
           } else {
-            // If no assessment is returned, create a mock one for development
-            const mockAssessment: Assessment = {
-              id: id,
-              service_user_id: 'default-service-user',
-              assessor_name: 'Care Assessor',
-              assessment_date: new Date().toISOString().split('T')[0],
-              created_by: 'system',
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              data: initialFormData,
-              section_progress: {}
-            } as any;
-            
-            set({ 
-              currentAssessment: mockAssessment,
+            /* `getById` opens the record or creates it, so nothing back means
+               the record could not be reached at all — a refused policy, a
+               malformed id in the URL, a dropped connection.
+
+               This used to substitute a fabricated assessment so the form
+               still rendered. The form then worked in every visible respect
+               while every save was refused, which is the one outcome a care
+               record must never produce. Say so instead; the page offers the
+               way back. */
+            set({
+              currentAssessment: null,
               formData: initialFormData,
               sectionProgress: {},
-              hasUnsavedChanges: false
+              hasUnsavedChanges: false,
+              error:
+                'This assessment could not be opened. Check the link, or go back and open it from the service users list.',
             });
           }
         } catch (error) {

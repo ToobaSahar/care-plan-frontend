@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, Loader2, Paperclip, X as XIcon } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, Loader2, Paperclip } from 'lucide-react';
 import { useAssessment } from '../../state/useAssessment';
 import { Message } from './Message';
 import type { AgentMessage } from './types';
@@ -16,8 +16,6 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAssessment } = useAssessment();
 
@@ -90,25 +88,6 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.type === 'audio/mpeg' || file.name.toLowerCase().endsWith('.mp3')) {
-        setSelectedFile(file);
-      } else {
-        alert('Please select only .mp3 files');
-        e.target.value = '';
-      }
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -174,22 +153,6 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
 
       {/* Input */}
       <div className="border-t border-oat-200 bg-white px-5 py-4">
-        {/* File Attachment Display */}
-        {selectedFile && (
-          <div className="mb-3 flex items-center justify-between rounded-lg border border-teal-200 bg-teal-50 px-3 py-2">
-            <div className="flex items-center space-x-2">
-              <Paperclip className="w-4 h-4 text-blue-600" />
-              <span className="text-sm text-blue-800 truncate">{selectedFile.name}</span>
-            </div>
-            <button
-              onClick={handleRemoveFile}
-              className="p-1 hover:bg-blue-100 rounded-md transition-colors"
-            >
-              <XIcon className="w-3 h-3 text-blue-600" />
-            </button>
-          </div>
-        )}
-
         <div className="flex gap-2">
           <input
             type="text"
@@ -201,21 +164,24 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
             disabled={isLoading}
           />
           
-          {/* File Attachment Button */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".mp3"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
+          {/* Attaching a recording is held closed until there is somewhere to
+              put one.
+
+              This accepted an .mp3, showed it attached, and then dropped it:
+              `handleSendMessage` never read the file, nothing uploaded it, and
+              it was not even cleared afterwards, so it sat there looking sent.
+              An assessor who recorded a visit and attached it here would have
+              believed it was on the record. A control that cannot keep what it
+              is given should not take it. */}
           <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading}
-            className="flex w-11 flex-none items-center justify-center rounded-md border border-oat-300 bg-white text-oat-600 transition-colors duration-fast hover:bg-oat-100 hover:text-oat-900 disabled:cursor-not-allowed disabled:opacity-50"
-            title="Attach MP3 file"
+            type="button"
+            disabled
+            aria-disabled="true"
+            className="flex w-11 flex-none cursor-not-allowed items-center justify-center rounded-md border border-oat-300 bg-white text-oat-600 opacity-50"
+            title="Attaching a recording is not available yet"
           >
             <Paperclip className="h-4 w-4" aria-hidden="true" />
+            <span className="sr-only">Attaching a recording is not available yet</span>
           </button>
           
           <button
@@ -234,7 +200,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ assessmentId, isOpen, onCl
         </div>
         
         <div className="mt-2.5 text-xs text-oat-500">
-          Press Enter to send, Shift+Enter for new line • Only .mp3 files allowed
+          Press Enter to send, Shift+Enter for new line
         </div>
       </div>
     </div>

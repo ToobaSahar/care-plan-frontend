@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signaturesSchema, optionalAttachmentsSchema } from '../../schema/assessment';
-import { useCurrentSectionData } from '../../state/useAssessment';
+import { useAssessment, useCurrentSectionData } from '../../state/useAssessment';
 import { User, CheckCircle, FileText, Shield, Pill, FileCheck, Users, MessageSquare, Info } from 'lucide-react';
 import type { Signatures, OptionalAttachments } from '../../schema/assessment';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,9 @@ interface Section10SummaryProps {
 
 export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = false, onCompleteAssessment }) => {
   const navigate = useNavigate();
+  // The pack is addressed by record. Without the id it falls back to the most
+  // recently added service user, who is not reliably the person on screen.
+  const assessmentId = useAssessment((state) => state.currentAssessment?.id);
   const { data: signaturesData, updateData: updateSignatures } = useCurrentSectionData<'signatures'>('signatures');
   const { data: attachmentsData, updateData: updateAttachments } = useCurrentSectionData<'optionalAttachments'>('optionalAttachments');
 
@@ -383,7 +386,13 @@ export const Section10Summary: React.FC<Section10SummaryProps> = ({ readOnly = f
               Complete Assessment & Generate Care Plan
             </button>
             <button
-              onClick={() => navigate('/critical-information')}
+              onClick={() =>
+                navigate(
+                  assessmentId
+                    ? `/critical-information?userId=${encodeURIComponent(assessmentId)}`
+                    : '/critical-information',
+                )
+              }
               className="cf-btn cf-btn-lg cf-btn-secondary"
             >
               <Info className="w-5 h-5 mr-2" />

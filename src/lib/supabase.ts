@@ -62,6 +62,28 @@ async function currentUserId(): Promise<string> {
   return data.session?.user.id ?? UNKNOWN_AUTHOR;
 }
 
+// ----------------------
+// Record identifiers
+// ----------------------
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Whether a string addresses a record.
+ *
+ * Every call below used to answer a malformed id by minting a fresh random
+ * UUID and carrying on. That is the worst available answer: a read created an
+ * unrelated empty record and returned it as though it were the one asked for,
+ * and a write landed on a row nobody would look at again — a different one
+ * per call, so an assessment's sections scattered across orphan rows under
+ * ids the URL never mentions. Refusing is recoverable; silently writing to
+ * the wrong record is not.
+ */
+function isRecordId(value: string): boolean {
+  return UUID_PATTERN.test(value);
+}
+
 // Database types for care schema
 export interface ServiceUser {
   id: string;
@@ -233,18 +255,13 @@ export interface OptionalAttachments {
 // ----------------------
 export const assessmentApi = {
   async getById(id: string): Promise<Assessment | null> {
+    if (!isRecordId(id)) {
+      console.error('Refusing to open an assessment: malformed id.');
+      return null;
+    }
+
     try {
-      // Generate a proper UUID if the ID is not a valid UUID
-      let assessmentId = id;
-      if (!id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-        // Generate a UUID v4
-        assessmentId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-        console.log('Generated UUID for assessment:', assessmentId);
-      }
+      const assessmentId = id;
 
       // Try to get existing assessment first
       const { data: assessmentData, error: assessmentError } = await supabase
@@ -340,18 +357,13 @@ export const assessmentApi = {
   },
 
   async createWithId(id: string, _serviceUserId: string, assessorName: string, assessmentDate: string): Promise<Assessment | null> {
+    if (!isRecordId(id)) {
+      console.error('Refusing to create an assessment: malformed id.');
+      return null;
+    }
+
     try {
-      // Ensure we have a valid UUID
-      let assessmentId = id;
-      if (!id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-        // Generate a UUID v4
-        assessmentId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-        console.log('Generated UUID for createWithId:', assessmentId);
-      }
+      const assessmentId = id;
 
       // Create the assessment (service user will be created when form data is saved)
       const { data, error } = await supabase
@@ -384,18 +396,13 @@ export const assessmentApi = {
     sectionKey: SectionKey,
     sectionData: any
   ): Promise<boolean> {
+    if (!isRecordId(assessmentId)) {
+      console.error(`Refusing to save "${sectionKey}": malformed assessment id.`);
+      return false;
+    }
+
     try {
-      // Ensure we have a valid UUID
-      let validAssessmentId = assessmentId;
-      if (!assessmentId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-        // Generate a UUID v4
-        validAssessmentId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-        console.log('Generated UUID for updateSection:', validAssessmentId);
-      }
+      const validAssessmentId = assessmentId;
 
       // Mapping lives in assessmentSections.ts so the read and the write
       // cannot drift apart.
@@ -408,10 +415,14 @@ export const assessmentApi = {
       let error;
       
       if (sectionKey === 'personalDetails') {
-        // For personal details, we need to create or update the service user
-        console.log('🔍 Debug: sectionData received:', sectionData);
-        console.log('🔍 Debug: relationship_to_service_user value:', sectionData.relationship_to_service_user);
-        
+        /* Personal details are the service user row itself, which shares the
+           assessment's id.
+
+           Nothing in here is logged. This is a person's name, address, NHS
+           number and next of kin; the browser console is not a place to put
+           them, and on a shared device it outlives the session. Failures are
+           reported by their cause, never by their contents. */
+
         // First try to find existing service user for this assessment
         const { data: existingUser, error: fetchError } = await supabase
           .from('service_users')
@@ -425,12 +436,6 @@ export const assessmentApi = {
         }
 
         if (existingUser) {
-          // Update existing service user
-          console.log('🔍 Debug: Updating existing service user with data:', sectionData);
-          console.log('🔍 Debug: All form fields being updated:');
-          Object.keys(sectionData).forEach(key => {
-            console.log(`  ${key}: "${sectionData[key]}"`);
-          });
           const { error: updateError } = await supabase
             .from('service_users')
             .update(sectionData)
@@ -455,50 +460,35 @@ export const assessmentApi = {
             relationship_to_service_user: sectionData.relationship_to_service_user,
             created_by: await currentUserId(),
           };
-          
-          console.log('🔍 Debug: Creating new service user with data:', serviceUserData);
-          console.log('🔍 Debug: All form fields being created:');
-          Object.keys(serviceUserData).forEach(key => {
-            if (key !== 'id' && key !== 'created_by') {
-              console.log(`  ${key}: "${(serviceUserData as any)[key]}"`);
-            }
-          });
-          
+
           const { error: insertError } = await supabase
             .from('service_users')
             .insert(serviceUserData);
           error = insertError;
         }
       } else {
-        // Update section data - only if there's actual data to save
-        if (sectionData && Object.keys(sectionData).length > 0) {
-          // Check if there's any non-empty data
-          const hasData = Object.values(sectionData).some(value => 
-            value !== null && value !== undefined && value !== ''
-          );
-          
-          if (hasData) {
-            console.log(`🔍 Debug: Saving ${sectionKey} data to ${tableName}:`, sectionData);
-            const { error: upsertError } = await supabase
-              .from(tableName)
-              .upsert({ assessment_id: validAssessmentId, ...sectionData });
-            error = upsertError;
-          } else {
-            console.log(`🔍 Debug: No data to save for ${sectionKey}, skipping database operation`);
-            return true; // Return true since there's nothing to save
-          }
-        } else {
-          console.log(`🔍 Debug: No sectionData provided for ${sectionKey}, skipping database operation`);
-          return true; // Return true since there's nothing to save
-        }
+        // An untouched section is not a failure, and writing a row of empty
+        // strings for it would make it read back as answered. `false` counts
+        // as an answer here, as it does in the store.
+        const hasAnswer = Object.values(sectionData ?? {}).some(
+          (value) => value !== null && value !== undefined && value !== '',
+        );
+
+        if (!hasAnswer) return true;
+
+        const { error: upsertError } = await supabase
+          .from(tableName)
+          .upsert({ assessment_id: validAssessmentId, ...sectionData });
+        error = upsertError;
       }
 
       if (error) {
-        console.error(`Error updating ${sectionKey}:`, error);
+        // The message names the cause — a refused policy, a missing column, a
+        // dropped connection — without repeating the record's contents.
+        console.error(`Could not save "${sectionKey}": ${error.message}`);
         return false;
       }
 
-      console.log(`✅ Successfully updated ${sectionKey} for assessment ${validAssessmentId}`);
       return true;
     } catch (error) {
       console.error('Unexpected error in updateSection:', error);
@@ -524,17 +514,12 @@ export const assessmentApi = {
 
 export const serviceUserApi = {
   async getById(id: string): Promise<ServiceUser | null> {
-    // Ensure we have a valid UUID
-    let validId = id;
-    if (!id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-      // Generate a UUID v4
-      validId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-      console.log('Generated UUID for serviceUserApi.getById:', validId);
+    if (!isRecordId(id)) {
+      console.error('Refusing to read a service user: malformed id.');
+      return null;
     }
+
+    const validId = id;
 
     const { data, error } = await supabase
       .from('service_users')

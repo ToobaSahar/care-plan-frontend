@@ -30,7 +30,12 @@ import { RAIL_DOCK, useRailLayout } from '../hooks/useRailLayout';
 import { useAssessment } from '../state/useAssessment';
 import { carePlanAPI } from '../lib/carePlanApi';
 import { useAuth } from '../auth/AuthProvider';
+import { PERMISSIONS, can } from '../auth/permissions';
 import { primeRecent, rememberRecent } from '../lib/recentRecords';
+
+/** What a refused write means to the person who asked for it. */
+const SAVE_FAILED =
+  'This section could not be saved, so nothing has been recorded. Check your connection and try again — your answers are still on screen.';
 
 export const AssessmentPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +44,10 @@ export const AssessmentPage: React.FC = () => {
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  /* A refused save. Held separately from the store's `error`, which is about
+     opening the record: this one is about the attempt just made, and must be
+     visible, because the alternative is a primary button that does nothing. */
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [isGeneratingCarePlan, setIsGeneratingCarePlan] = useState(false);
   
   const {
@@ -63,6 +72,11 @@ export const AssessmentPage: React.FC = () => {
   // per open; the name stays in memory, kept current as it is edited.
   const { staff } = useAuth();
   const staffId = staff?.id;
+
+  /* A viewer may read every record and change none of them — the database
+     enforces that on its own. Without asking here, the form opened fully
+     editable for them and each save was refused after the typing was done. */
+  const canWrite = can(staff, PERMISSIONS.recordsWrite);
   const openedId = currentAssessment?.id === id ? id : undefined;
   const openedName = formData.personalDetails?.full_name;
   const openedNhs = formData.personalDetails?.nhs_number;
@@ -242,14 +256,21 @@ export const AssessmentPage: React.FC = () => {
     return errors.length === 0;
   };
 
+  /* The pack for the record in hand. Naming the person is the difference
+     between showing this assessment's pack and showing whichever service
+     user happens to have been added to the system most recently — which, with
+     two assessors working at once, is routinely somebody else. */
+  const packPath = currentAssessment?.id
+    ? `/critical-information?userId=${encodeURIComponent(currentAssessment.id)}`
+    : '/critical-information';
+
   // Handle section navigation
   const handleNextSection = async () => {
+    setSaveError(null);
+
     try {
       // Validate current section before proceeding
-      if (!validateCurrentSection()) {
-        console.log('❌ Validation failed:', validationErrors);
-        return; // Don't proceed if validation fails
-      }
+      if (!validateCurrentSection()) return;
       
       if (currentSection === 10) {
         // For Section 10, save both signatures and optionalAttachments data
@@ -258,18 +279,16 @@ export const AssessmentPage: React.FC = () => {
         // Save signatures data
         const signaturesSuccess = await saveSection('signatures');
         if (!signaturesSuccess) {
-          console.error('❌ Failed to save signatures data');
+          setSaveError(SAVE_FAILED);
           return;
         }
-        
+
         // Save optionalAttachments data
         const attachmentsSuccess = await saveSection('optionalAttachments');
         if (!attachmentsSuccess) {
-          console.error('❌ Failed to save optionalAttachments data');
+          setSaveError(SAVE_FAILED);
           return;
         }
-        
-        console.log('✅ Successfully saved Section 10 data');
         
         // Update assessment status to completed
         const statusSuccess = await updateAssessmentStatus('completed');
@@ -295,7 +314,7 @@ export const AssessmentPage: React.FC = () => {
               setIsGeneratingCarePlan(false);
               // Add a small delay to ensure data is fully saved
               setTimeout(() => {
-                navigate('/critical-information');
+                navigate(packPath);
               }, 1000);
             }, 3000);
           } else {
@@ -306,7 +325,7 @@ export const AssessmentPage: React.FC = () => {
               setIsGeneratingCarePlan(false);
               // Add a small delay to ensure data is fully saved
               setTimeout(() => {
-                navigate('/critical-information');
+                navigate(packPath);
               }, 1000);
             }, 3000);
           }
@@ -318,7 +337,7 @@ export const AssessmentPage: React.FC = () => {
             setIsGeneratingCarePlan(false);
             // Add a small delay to ensure data is fully saved
             setTimeout(() => {
-              navigate('/critical-information');
+              navigate(packPath);
             }, 1000);
           }, 3000);
         }
@@ -339,24 +358,22 @@ export const AssessmentPage: React.FC = () => {
         ];
         
         const currentSectionKey = sectionKeys[currentSection - 1] as any;
-        console.log(`🔍 handleNextSection: Saving section ${currentSection} (${currentSectionKey}) data only`);
-        console.log(`🔍 handleNextSection: Current section: ${currentSection}, Section key: ${currentSectionKey}`);
-        
-        // Save the current section data to Supabase
+
+        // Save the current section data to Supabase. The section only advances
+        // on a confirmed write, so "Save & continue" cannot carry someone past
+        // work that was not recorded.
         const success = await saveSection(currentSectionKey);
-        
+
         if (success) {
-          console.log(`✅ Successfully saved section ${currentSection}`);
           setCurrentSection(currentSection + 1);
           setValidationErrors([]); // Clear validation errors when moving to next section
         } else {
-          console.error(`❌ Failed to save section ${currentSection}`);
-          // You might want to show an error message to the user here
+          setSaveError(SAVE_FAILED);
         }
       }
     } catch (error) {
       console.error('Error saving section:', error);
-      // You might want to show an error message to the user here
+      setSaveError(SAVE_FAILED);
     }
   };
 
@@ -364,6 +381,7 @@ export const AssessmentPage: React.FC = () => {
     if (currentSection > 1) {
       setCurrentSection(currentSection - 1);
       setValidationErrors([]); // Clear validation errors when going back
+      setSaveError(null);
     }
   };
 
@@ -383,7 +401,7 @@ export const AssessmentPage: React.FC = () => {
 
   // Render current section
   const renderCurrentSection = () => {
-    const isReadOnly = currentAssessment?.status === 'locked';
+    const isReadOnly = currentAssessment?.status === 'locked' || !canWrite;
 
     switch (currentSection) {
       case 1:
@@ -508,6 +526,7 @@ export const AssessmentPage: React.FC = () => {
   const openSection = (n: number) => {
     setCurrentSection(n);
     setValidationErrors([]);
+    setSaveError(null);
   };
 
   const goToServiceUsers = () => navigate('/assessments');
@@ -622,6 +641,19 @@ export const AssessmentPage: React.FC = () => {
                   </Alert>
                 )}
 
+                {!canWrite && (
+                  <Alert tone="info" title="You are reading this record">
+                    This account can open assessments but not change them. Ask an administrator
+                    if you need to record answers.
+                  </Alert>
+                )}
+
+                {saveError && (
+                  <Alert tone="error" title="This section was not saved">
+                    {saveError}
+                  </Alert>
+                )}
+
                 {validationErrors.length > 0 && (
                   <Alert tone="error" title="Some required answers are still missing">
                     <ul className="mt-1 list-inside list-disc space-y-0.5">
@@ -658,6 +690,7 @@ export const AssessmentPage: React.FC = () => {
                 <Button
                   onClick={handleNextSection}
                   loading={isGeneratingCarePlan}
+                  disabled={!canWrite}
                   iconRight={!isFinalSection ? <ChevronRight /> : undefined}
                   className="min-w-0 flex-1 sm:flex-none"
                 >
