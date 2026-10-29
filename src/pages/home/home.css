@@ -1,0 +1,347 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   CareFrame home page — motion and the few things Tailwind cannot express.
+
+   Scoped to `.cf-home` throughout: nothing here reaches the workspace, whose
+   motion stays state-only as DESIGN.md sets out. This page is the one surface
+   with authored motion, because its job is to show the product working.
+
+   Two rules hold everywhere:
+     · Nothing a visitor needs to read is ever hidden waiting for a trigger.
+       Motion settles things into place, draws marks on them, or plays the
+       product's own reading; the content is there from the first frame.
+     · Every starting state sits inside `prefers-reduced-motion:
+       no-preference`, or behind `.is-motion`, which script adds only after it
+       has checked the same preference.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.cf-home {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* The three reading passes. Teal only: mulberry is people, never a step. */
+  --read-a: 120 189 181; /* Sea Mist — Assessment Analyser */
+  --read-p: 44 110 107; /* Deep Sea — Care Plan Specialist */
+  --read-r: 31 74 76; /* Slate Teal — Quality Assurance Reviewer */
+}
+
+/* Anchored sections clear the sticky bar. */
+.cf-home section[id] {
+  scroll-margin-top: 64px;
+}
+
+/* ── The load: headline lines rise from behind their own baseline ─────────
+   The page's one load sequence, settled by about a second. */
+
+.cf-home .cfh-line {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.cf-home .cfh-line > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cf-home .cfh-line > span {
+    animation: cfh-line-up 900ms var(--ease-expo) both;
+    animation-delay: calc(120ms + var(--i, 0) * 110ms);
+  }
+  .cf-home .cfh-load {
+    animation: cfh-rise 640ms var(--ease-out) both;
+    animation-delay: var(--d, 420ms);
+  }
+}
+
+@keyframes cfh-line-up {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+@keyframes cfh-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── The hero's reading: typed answer, three passes, initialled margin ──
+   Pure CSS on a fixed timeline, so Replay is a remount and nothing waits on
+   script. Start times, in ms from first paint:
+     typing 450 · Analyser 1700 · Planner 2950 · Reviewer 4200 · verdict 5400 */
+
+.cf-home .cfh-track {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.cf-home .cfh-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 76px;
+  opacity: 0;
+  border-radius: 8px;
+  background: rgb(var(--c) / 0.16);
+  box-shadow: inset 0 -2px 0 rgb(var(--c) / 0.9);
+}
+
+.cf-home .cfh-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgb(var(--c));
+  box-shadow: inset 0 0 0 1px rgb(var(--c));
+}
+
+/* A note's slot says its reader is still reading until the note lands.
+   Without motion there is no slot: the finished note is simply there. */
+.cf-home .cfh-slot {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cf-home .cfh-type {
+    animation: cfh-type 1150ms steps(var(--chars, 40), end) 450ms both;
+  }
+  .cf-home .cfh-typing {
+    animation: cfh-focus 1350ms linear 380ms both;
+  }
+  .cf-home .cfh-band {
+    animation: cfh-sweep 1150ms var(--ease-in-out) var(--start) both;
+  }
+  .cf-home .cfh-dot {
+    animation: cfh-initial 320ms var(--ease-out) both;
+    animation-delay: calc(var(--start) + 160ms + var(--i, 0) * 190ms);
+  }
+  .cf-home .cfh-settle {
+    animation: cfh-settle 560ms var(--ease-expo) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .cf-home .cfh-slot {
+    display: block;
+    animation: cfh-slot-out 240ms var(--ease-out) var(--d, 0ms) both;
+  }
+  .cf-home .cfh-tick path {
+    stroke-dasharray: 1;
+    animation: cfh-draw 520ms var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+
+@keyframes cfh-type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes cfh-focus {
+  0%, 100% { border-color: #d4ccbd; box-shadow: none; }
+  6%, 90% { border-color: #2c6e6b; box-shadow: 0 0 0 3px rgb(44 110 107 / 0.2); }
+}
+@keyframes cfh-sweep {
+  0% { opacity: 0; transform: translateY(-100%); }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(100cqh); }
+}
+@keyframes cfh-initial {
+  from { background: transparent; box-shadow: inset 0 0 0 1px #d4ccbd; transform: scale(0.6); }
+  to { transform: none; }
+}
+@keyframes cfh-settle {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes cfh-slot-out {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+@keyframes cfh-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Marks that play once as they arrive ─────────────────────────────────
+   One observer adds `.is-in`. Every starting state below is visible. */
+
+/* The pack is put down on the table: it arrives a little turned and settles flat. */
+.cf-home.is-motion [data-reveal='land'] {
+  transition: transform 1300ms var(--ease-expo);
+}
+.cf-home.is-motion [data-reveal='land']:not(.is-in) {
+  transform: translateY(48px) rotate(-3deg);
+}
+
+/* Signatures write themselves in. */
+.cf-home.is-motion [data-reveal='write'] path {
+  stroke-dasharray: 1;
+  transition: stroke-dashoffset 1400ms var(--ease-in-out);
+  transition-delay: var(--d, 0ms);
+}
+.cf-home.is-motion [data-reveal='write']:not(.is-in) path {
+  stroke-dashoffset: 1;
+}
+
+/* A resolved problem is struck through, in the rail's own "struck" mark. */
+.cf-home .cfh-strike {
+  transform-origin: left center;
+}
+.cf-home.is-motion [data-reveal='strike'] .cfh-strike {
+  transition: transform 700ms var(--ease-in-out);
+  transition-delay: var(--d, 0ms);
+}
+.cf-home.is-motion [data-reveal='strike']:not(.is-in) .cfh-strike {
+  transform: scaleX(0);
+}
+
+/* ── Scroll-linked progress ──────────────────────────────────────────────
+   Custom properties written by script once per frame; nothing here
+   re-renders React. Each defaults to its finished value. */
+
+.cf-home .cfh-how-fill {
+  transform-origin: left center;
+  transform: scaleX(var(--how, 1));
+}
+
+/* A step not yet reached is the rail's resting mark: a hairline ring. */
+.cf-home .cfh-step-mark {
+  transition:
+    background-color 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+.cf-home .cfh-step-mark svg {
+  transition: opacity 220ms var(--ease-out);
+}
+.cf-home .cfh-step[data-reached='false'] .cfh-step-mark {
+  background-color: #f3efe8;
+  box-shadow: inset 0 0 0 1.5px #a9d7d1, 0 0 0 4px #f3efe8;
+}
+.cf-home .cfh-step[data-reached='false'] .cfh-step-mark svg {
+  opacity: 0;
+}
+
+.cf-home .cfh-stage-track {
+  position: absolute;
+  inset: 0 -12px;
+  container-type: size;
+  pointer-events: none;
+}
+
+.cf-home .cfh-stage-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 64px;
+  border-radius: 10px;
+  background: rgb(var(--c) / 0.14);
+  box-shadow: inset 0 -2px 0 rgb(var(--c) / 0.85);
+  transform: translateY(calc(var(--band, 0) * (100cqh - 64px)));
+  will-change: transform;
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+
+.cf-home .cfh-out {
+  transition:
+    opacity 360ms var(--ease-out),
+    transform 480ms var(--ease-expo);
+}
+.cf-home .cfh-out[data-on='false'] {
+  opacity: 0.22;
+  transform: translateY(6px);
+}
+
+.cf-home .cfh-mark {
+  transition:
+    background-color 220ms var(--ease-out),
+    border-color 220ms var(--ease-out),
+    color 220ms var(--ease-out),
+    transform 320ms var(--ease-expo);
+}
+.cf-home .cfh-mark[data-done='true'] {
+  transform: scale(1.06);
+}
+
+/* Reader panels in the stage share one place and hand over. */
+.cf-home .cfh-swap {
+  transition:
+    opacity 380ms var(--ease-out),
+    transform 520ms var(--ease-expo),
+    visibility 0s linear 0s;
+}
+/* Faded, then removed from hit-testing, the accessibility tree and any
+   reading of what sits on top of what. */
+.cf-home .cfh-swap[data-active='false'] {
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  transition:
+    opacity 380ms var(--ease-out),
+    transform 520ms var(--ease-expo),
+    visibility 0s linear 380ms;
+}
+
+/* ── Feedback under the hand ─────────────────────────────────────────── */
+
+/* The question a "Raised in" link leads to is marked, then the mark fades.
+   An outline rather than a shadow: it sits an even 8px clear of the whole
+   question, label included, and needs no spacer colour matched to the sheet. */
+.cf-home .cfh-flash {
+  border-radius: 10px;
+  outline: 2px solid transparent;
+  outline-offset: 8px;
+  animation: cfh-flash 1600ms var(--ease-out) both;
+}
+@keyframes cfh-flash {
+  0%, 35% { outline-color: #78bdb5; }
+  100% { outline-color: transparent; }
+}
+
+/* Evidence entries and changed answers arrive rather than snap. */
+@media (prefers-reduced-motion: no-preference) {
+  .cf-home .cfh-arrive {
+    animation: cfh-settle 420ms var(--ease-expo) both;
+  }
+  .cf-home details[open] > .cfh-answer {
+    animation: cfh-settle 320ms var(--ease-expo) both;
+  }
+}
+
+.cf-home summary {
+  list-style: none;
+}
+.cf-home summary::-webkit-details-marker {
+  display: none;
+}
+.cf-home .cfh-chevron {
+  transition: transform 220ms var(--ease-out);
+}
+.cf-home details[open] .cfh-chevron {
+  transform: rotate(180deg);
+}
+
+/* Buttons give on press. This restates the button's own colour transition,
+   which the rule would otherwise replace, and adds the press. */
+.cf-home .cfh-press {
+  transition:
+    transform 140ms var(--ease-out),
+    color 150ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out),
+    box-shadow 150ms var(--ease-out);
+}
+.cf-home .cfh-press:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-home .cfh-stage-band,
+  .cf-home .cfh-out,
+  .cf-home .cfh-swap,
+  .cf-home .cfh-mark,
+  .cf-home .cfh-chevron,
+  .cf-home .cfh-press {
+    transition: none;
+  }
+}

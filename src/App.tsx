@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { Plus, Search, User } from 'lucide-react';
 import { AssessmentPage } from './pages/AssessmentPage';
+import { HomePage } from './pages/HomePage';
 import { SignInPage } from './pages/SignInPage';
 import { TeamPage } from './pages/TeamPage';
 import { AuthProvider } from './auth/AuthProvider';
@@ -242,7 +243,9 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/" element={<Navigate to="/assessments" replace />} />
+            {/* The home page is public: it shows sample data only and reads no
+                records. Signed-in staff are offered their workspace from it. */}
+            <Route path="/" element={<HomePage />} />
             <Route path="/assessments" element={guarded(<ServiceUsersPage />)} />
             <Route path="/assessment" element={guarded(<AssessmentPage />)} />
             <Route path="/assessment/:id" element={guarded(<AssessmentPage />)} />
