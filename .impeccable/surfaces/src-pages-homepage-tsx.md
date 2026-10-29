@@ -19,7 +19,7 @@ Unresolved: a demo-request destination for prospects without an account (recomme
 
 THESIS: One sample record is read three times on screen, analyser, planner, reviewer, so the mechanism is visible beside the benefit. Refuses the split hero with a static screenshot and a row of feature cards beneath.
 
-OWN-WORLD: CentiCare's case file on oat: white 14px sheets with hairline groups, sections ruled off by hairlines, Public Sans alone, Deep Sea actions, reading passes in Sea Mist, Deep Sea and Slate Teal, mulberry only on named people; one full Slate Teal field carries the reading stage.
+OWN-WORLD: CentiCare's case file on oat: white 14px sheets with hairline groups, sections ruled off by hairlines, Public Sans alone, Deep Sea actions, reading passes in Sea Mist, Deep Sea and Slate Teal, mulberry only on named people; one full Slate Teal field carries the reading stage, and the footer closes the page on the same field (lockup, the page as a link directory, the small print).
 
 STORY: A manager sees the outcome with the product working, recognises the week it ends, learns the three steps, watches each one, changes an answer and sees evidence, plan and pack follow, sees the problems resolved, reads why it is safe, has objections answered, and starts an assessment.
 

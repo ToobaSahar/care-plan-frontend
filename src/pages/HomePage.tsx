@@ -110,7 +110,7 @@ export const HomePage: React.FC = () => {
         <StartSection signedIn={signedIn} reducedMotion={reducedMotion} />
       </main>
 
-      <HomeFooter reducedMotion={reducedMotion} />
+      <HomeFooter signedIn={signedIn} reducedMotion={reducedMotion} />
     </div>
   );
 };

@@ -1,0 +1,119 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Sign in — the brand panel's one moment, and the things Tailwind cannot
+   express.
+
+   Scoped to `.cf-sign-in`. The form itself keeps the workspace's state-only
+   motion; the panel's sample record plays its plan's path once on arrival.
+
+   Every mark, line and badge below is styled in its final state. The
+   starting states live only inside `prefers-reduced-motion: no-preference`,
+   so with reduced motion the path is simply complete, and nothing a visitor
+   needs to read is ever held back: the notes are there from the first frame.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.cf-sign-in {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* The home page's reading channels. Teal only: mulberry is people. */
+  --read-a: 120 189 181; /* Sea Mist — Assessment Analyser */
+  --read-p: 44 110 107; /* Deep Sea — Care Plan Specialist */
+  --read-r: 31 74 76; /* Slate Teal — Quality Assurance Reviewer */
+  --read-done: 70 145 140; /* teal-500, the product's own "done" mark */
+}
+
+/* On the Slate Teal field the product's one focus ring keeps its shape and
+   takes the light end of its own ramp; Deep Sea would vanish into the field. */
+.cf-sign-in .csi-on-teal :focus-visible {
+  outline-color: #c0e0dc;
+}
+
+/* A sheet resting on teal: the product's sheet shadow, in the field's own
+   tint, a step stronger so the contact still reads on the darker ground. */
+.cf-sign-in .csi-sheet {
+  box-shadow:
+    0 1px 2px rgb(17 40 41 / 0.25),
+    0 4px 16px -6px rgb(17 40 41 / 0.35);
+}
+
+/* ── The plan's path ───────────────────────────────────────────────────── */
+
+.cf-sign-in .csi-mark {
+  background-color: rgb(var(--c));
+  border: 1.5px solid rgb(var(--c));
+  color: #fff;
+}
+.cf-sign-in .csi-mark path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* The hairline between two marks, filling in the colour of the next. */
+.cf-sign-in .csi-line-fill {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(var(--n));
+  transform-origin: top;
+}
+
+/* "In progress" gives way to "Complete" as the last mark fills. */
+.cf-sign-in .csi-status > * {
+  grid-area: 1 / 1;
+  justify-self: end;
+}
+.cf-sign-in .csi-status-from {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cf-sign-in .csi-mark {
+    animation: csi-fill 420ms var(--ease-out) var(--d) both;
+  }
+  .cf-sign-in .csi-mark path {
+    animation: csi-draw 340ms var(--ease-out) calc(var(--d) + 160ms) both;
+  }
+  .cf-sign-in .csi-line-fill {
+    animation: csi-grow 440ms var(--ease-in-out) calc(var(--d) + 120ms) both;
+  }
+  .cf-sign-in .csi-status-from {
+    animation: csi-hand-over 220ms var(--ease-out) var(--done) both;
+  }
+  .cf-sign-in .csi-status-to {
+    animation: csi-settle 420ms var(--ease-out) var(--done) both;
+  }
+}
+
+@keyframes csi-fill {
+  from {
+    background-color: #fff;
+    border-color: #d4ccbd;
+    transform: scale(0.86);
+  }
+}
+
+@keyframes csi-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes csi-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes csi-hand-over {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@keyframes csi-settle {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}

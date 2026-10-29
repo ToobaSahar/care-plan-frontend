@@ -30,6 +30,12 @@
   scroll-margin-top: 64px;
 }
 
+/* On a Slate Teal field the product's one focus ring keeps its shape and
+   takes the light end of its own ramp; Deep Sea would vanish into the field. */
+.cf-home .cfh-on-teal :focus-visible {
+  outline-color: #c0e0dc;
+}
+
 /* ── The load: headline lines rise from behind their own baseline ─────────
    The page's one load sequence, settled by about a second. */
 

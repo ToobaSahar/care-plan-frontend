@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowUp } from 'lucide-react';
 import { Button, Logo } from '../../components/ui';
 import { cn } from '../../lib/cn';
 import {
@@ -8,13 +9,13 @@ import {
   LEDE,
   RULED,
   RULED_SECTION,
+  START_ASSESSMENT_PATH,
   START_LABEL,
   WORKSPACE_PATH,
   goToSection,
   sectionHeadingProps,
   useStartAssessment,
 } from './layout';
-import { NAV_LINKS } from './HomeNav';
 import { PERSON, signatures } from './sample';
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -107,41 +108,133 @@ export const StartSection: React.FC<StartSectionProps> = ({ signedIn, reducedMot
   );
 };
 
-export const HomeFooter: React.FC<{ reducedMotion: boolean }> = ({ reducedMotion }) => (
-  <footer className="border-t border-oat-200 pb-10 pt-14">
-    <Container>
-      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-[34rem]">
-          <Logo size="md" />
-          <p className="mt-4 text-md leading-relaxed text-oat-800">
-            Universal Care Needs Assessment, for home care in the UK.
-          </p>
-        </div>
-        <nav aria-label="Footer">
-          <ul className="grid grid-cols-2 gap-x-10 gap-y-3 sm:flex sm:gap-8">
-            {NAV_LINKS.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
-                  onClick={(e) => {
-                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-                    e.preventDefault();
-                    goToSection(link.id, reducedMotion);
-                  }}
-                  className="rounded-sm text-base text-oat-700 underline decoration-transparent underline-offset-[5px] transition-[color,text-decoration-color] duration-fast hover:text-teal-800 hover:decoration-teal-400"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+/* ── The footer ─────────────────────────────────────────────────────────────
+   The page ends on the same Slate Teal field that carries the reading stage,
+   so the close of the page is unmistakable: the lockup, the page as a
+   directory, then the small print. Every link in the top bar is here too; on
+   a phone the bar carries none of them. */
 
-      <p className="mt-12 max-w-[68ch] border-t border-oat-200 pt-6 text-sm leading-relaxed text-oat-600">
-        Everyone named on this page is fictional. The record, plan and emergency pack shown here are sample
-        data, and the NHS and phone numbers are from ranges reserved for testing and fiction.
-      </p>
-    </Container>
-  </footer>
-);
+const FOOTER_GROUPS = [
+  {
+    title: 'The platform',
+    links: [
+      { id: 'how', label: 'How it works' },
+      { id: 'visit', label: 'The assessment' },
+      { id: 'readers', label: 'The three readers' },
+      { id: 'plan', label: 'The plan' },
+      { id: 'pack', label: 'Emergency Admission Pack' },
+    ],
+  },
+  {
+    title: 'See it working',
+    links: [
+      { id: 'record', label: 'Try the record' },
+      { id: 'outcomes', label: 'What changes' },
+      { id: 'trust', label: 'Safety and access' },
+      { id: 'questions', label: 'Questions' },
+    ],
+  },
+] as const;
+
+const FOOTER_LINK =
+  'rounded-sm text-base text-teal-100 underline decoration-transparent underline-offset-[5px] transition-[color,text-decoration-color] duration-fast hover:text-white hover:decoration-teal-400';
+
+const FOOTER_HEADING = 'text-base font-semibold text-white';
+
+interface HomeFooterProps {
+  signedIn: boolean;
+  reducedMotion: boolean;
+}
+
+export const HomeFooter: React.FC<HomeFooterProps> = ({ signedIn, reducedMotion }) => {
+  const onSectionLink = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    // Modified clicks keep their browser meaning (new tab, copy link).
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    goToSection(id, reducedMotion);
+    // The hero's heading is not one of the anchored section headings, so
+    // focus is taken there by hand: a keyboard user going back to the top
+    // should not be left at the foot of the page.
+    if (id === 'top') {
+      const heading = document.getElementById('home-title');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus({ preventScroll: true });
+    }
+  };
+
+  return (
+    <footer className="cfh-on-teal bg-teal-800">
+      <Container className="pb-8 pt-[clamp(56px,6vw,88px)]">
+        <div className="grid gap-x-12 gap-y-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <a
+              href="#top"
+              onClick={(e) => onSectionLink(e, 'top')}
+              className="inline-flex rounded-md"
+              aria-label="CentiCare, back to the top"
+            >
+              <Logo size="md" onDark />
+            </a>
+            <p className="mt-5 max-w-[22rem] text-md leading-relaxed text-teal-100">
+              Universal Care Needs Assessment, for home care in the UK.
+            </p>
+          </div>
+
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:col-span-8">
+            {FOOTER_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h2 className={FOOTER_HEADING}>{group.title}</h2>
+                <ul className="mt-4 flex flex-col gap-3">
+                  {group.links.map((link) => (
+                    <li key={link.id}>
+                      <a href={`#${link.id}`} onClick={(e) => onSectionLink(e, link.id)} className={FOOTER_LINK}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            <div>
+              <h2 className={FOOTER_HEADING}>Get started</h2>
+              <ul className="mt-4 flex flex-col gap-3">
+                <li>
+                  <Link to={START_ASSESSMENT_PATH} className={FOOTER_LINK}>
+                    {START_LABEL}
+                  </Link>
+                </li>
+                {signedIn && (
+                  <li>
+                    <Link to={WORKSPACE_PATH} className={FOOTER_LINK}>
+                      Open workspace
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </nav>
+        </div>
+
+        <div className="mt-16 grid gap-5 border-t border-teal-700 pt-7 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-start md:gap-12">
+          <p className="text-sm text-teal-200">© {new Date().getFullYear()} CentiCare</p>
+          <p className="max-w-[68ch] text-sm leading-relaxed text-teal-200">
+            Everyone named on this page is fictional. The record, plan and emergency pack shown here are sample
+            data, and the NHS and phone numbers are from ranges reserved for testing and fiction.
+          </p>
+          <a
+            href="#top"
+            onClick={(e) => onSectionLink(e, 'top')}
+            className="group inline-flex items-center gap-2 self-start justify-self-start rounded-sm text-sm font-medium text-teal-100 transition-colors duration-fast hover:text-white"
+          >
+            Back to top
+            <ArrowUp
+              className="h-4 w-4 transition-transform duration-fast ease-out group-hover:-translate-y-0.5"
+              aria-hidden="true"
+            />
+          </a>
+        </div>
+      </Container>
+    </footer>
+  );
+};
