@@ -513,7 +513,7 @@ export const CriticalInformationPage: React.FC = () => {
           <header className="border-b border-oat-200 px-5 pb-8 pt-6 sm:px-10 sm:pb-10 sm:pt-8">
             <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
               <div className="flex items-center gap-3">
-                <img src="/brand/careframe-mark.png" alt="CareFrame" className="h-9 w-9 flex-none" />
+                <img src="/brand/centicare-mark.png" alt="CentiCare" className="h-9 w-9 flex-none" />
                 <div>
                   <p className="text-base font-semibold leading-5 text-teal-800">
                     Integrative Supported Living Care

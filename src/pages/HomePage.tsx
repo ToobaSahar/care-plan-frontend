@@ -19,7 +19,7 @@ import { INITIAL_RISKS, personalDetails, risksSection, signatures, type Answer, 
 import './home/home.css';
 
 /* ──────────────────────────────────────────────────────────────────────────
-   CareFrame's home page.
+   CentiCare's home page.
 
    Public, and written for the person who decides whether a care provider
    adopts it. The sections run in the order that decision is made:
@@ -40,7 +40,7 @@ import './home/home.css';
    "Start an assessment", goes through the existing sign-in gate.
    ────────────────────────────────────────────────────────────────────────── */
 
-const TITLE = 'CareFrame — Universal Care Needs Assessment';
+const TITLE = 'CentiCare — Universal Care Needs Assessment';
 
 export const HomePage: React.FC = () => {
   const rootRef = useRef<HTMLDivElement>(null);

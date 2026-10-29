@@ -112,7 +112,7 @@ fi
 # ---------------------------------------------------------------------------
 if (( FULL )); then
   echo
-  EMAIL="rls-probe-$(date +%s)@careframe.invalid"
+  EMAIL="rls-probe-$(date +%s)@centicare.invalid"
   PW="Pr0be-$(openssl rand -hex 8)"
   SVC=(-H "apikey: $SERVICE_KEY" -H "Authorization: Bearer $SERVICE_KEY")
 

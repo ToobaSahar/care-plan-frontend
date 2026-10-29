@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '../../lib/cn';
 
 export interface LogoProps {
-  /** `mark` is the symbol alone; `lockup` adds the CareFrame wordmark beside it. */
+  /** `mark` is the symbol alone; `lockup` adds the CentiCare wordmark beside it. */
   variant?: 'mark' | 'lockup';
   size?: 'sm' | 'md' | 'lg';
   /** Renders the wordmark light, for the teal rail. */
@@ -23,7 +23,7 @@ const WORD_SIZE = {
 };
 
 /**
- * The CareFrame mark. Uses the transparent symbol rather than the full lockup
+ * The CentiCare mark. Uses the transparent symbol rather than the full lockup
  * PNG, which carries a baked-in white background and would show as a white
  * block on the oat ground.
  */
@@ -38,8 +38,8 @@ export const Logo: React.FC<LogoProps> = ({
         sits on — so a dark-ground variant with a pale frame is used there.
         Both files are transparent; neither carries a background plate. */}
     <img
-      src={onDark ? '/brand/careframe-mark-light.png' : '/brand/careframe-mark.png'}
-      alt={variant === 'mark' ? 'CareFrame' : ''}
+      src={onDark ? '/brand/centicare-mark-light.png' : '/brand/centicare-mark.png'}
+      alt={variant === 'mark' ? 'CentiCare' : ''}
       aria-hidden={variant === 'lockup' ? true : undefined}
       className={cn(MARK_SIZE[size], 'flex-none select-none')}
       draggable={false}
@@ -52,7 +52,7 @@ export const Logo: React.FC<LogoProps> = ({
           onDark ? 'text-white' : 'text-teal-800',
         )}
       >
-        CareFrame
+        CentiCare
       </span>
     )}
   </span>

@@ -1,5 +1,5 @@
 /**
- * CareFrame design system.
+ * CentiCare design system.
  *
  * Every surface imports from here. A control built inline in a page instead of
  * coming from this file is drift — if it is needed twice, it belongs here.

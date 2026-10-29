@@ -5,7 +5,7 @@ primary_target: "src/pages/AssessmentPage.tsx"
 related_targets: ["src/App.tsx","src/pages/CriticalInformationPage.tsx"]
 ---
 
-Scope: the CareFrame assessment workspace — the service users list, the eleven-section
+Scope: the CentiCare assessment workspace — the service users list, the eleven-section
 assessment surface, and the Critical Information pack. Visitor mode: Operate.
 
 Audience: care assessors and social workers, mid-home-visit, often on a tablet, in
@@ -39,7 +39,7 @@ work down one column of fields. As they answer, the right column accumulates wha
 answers raised. They finish a section knowing what it cost the person, not just that it
 is ticked.
 
-FIRST VIEWPORT: Slate-teal rail 232px at the left, CareFrame mark at its top, eleven
+FIRST VIEWPORT: Slate-teal rail 232px at the left, CentiCare mark at its top, eleven
 sections beneath as a hairline-marked list, progress pinned to its foot. Across the
 remaining width, a white person header 72px tall: avatar in mulberry, name at 18px/600,
 NHS number and locality beneath, live risk flags right-aligned. Below it the work area

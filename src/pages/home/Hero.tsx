@@ -200,7 +200,7 @@ export const Hero: React.FC<HeroProps> = ({ reducedMotion }) => {
           </h1>
 
           <p className={cn(LEDE, 'cfh-load mt-7 max-w-[32rem]')} style={vars({ '--d': '420ms' })}>
-            CareFrame turns one home assessment into a care plan that three AI agents analyse, write and
+            CentiCare turns one home assessment into a care plan that three AI agents analyse, write and
             check, so your assessors spend the visit with the person, not the paperwork.
           </p>
 

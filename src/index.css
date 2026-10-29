@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ──────────────────────────────────────────────────────────────────────────
-   CareFrame base layer.
+   CentiCare base layer.
    Tokens live in tailwind.config.js; this file themes the surfaces Tailwind
    does not reach — selection, caret, scrollbars, focus rings, numerals — and
    sets the page ground. Light-only by decision: the use scene is daytime home

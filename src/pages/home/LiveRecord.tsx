@@ -79,7 +79,7 @@ export const LiveRecord: React.FC<LiveRecordProps> = ({ answers, evidence, onAns
             </h2>
             <p className={cn(LEDE, 'mt-6 max-w-[38rem]')}>
               Answer as an assessor would. Each risk appears beside the question that raised it, by the same
-              rules CareFrame applies to every assessment.
+              rules CentiCare applies to every assessment.
             </p>
           </div>
           <p className="text-md leading-relaxed text-oat-700 lg:col-span-4 lg:col-start-9">

@@ -1,5 +1,5 @@
 -- ============================================================================
--- CareFrame — staff management groundwork.
+-- CentiCare — staff management groundwork.
 --
 -- The first migration established who may reach records. This one makes the
 -- roster something an administrator can run from inside the product, and

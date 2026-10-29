@@ -1,5 +1,5 @@
 -- ============================================================================
--- CareFrame — close the open database.
+-- CentiCare — close the open database.
 --
 -- Before this migration every table in `public` was readable AND writable by
 -- anyone holding the anon key, which ships in the browser bundle. That is the

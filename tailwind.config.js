@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-// CareFrame design tokens.
+// CentiCare design tokens.
 //
 // Two things live here at once, on purpose:
 //

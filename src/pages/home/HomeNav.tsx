@@ -19,7 +19,7 @@ interface HomeNavProps {
 
 /**
  * A plain bar: the lockup, a few links into the page, the platform's main
- * action. On the oat ground throughout, as every top bar in CareFrame is; a
+ * action. On the oat ground throughout, as every top bar in CentiCare is; a
  * hairline appears once the page moves under it.
  *
  * On a phone the bar carries the lockup and the action only. The links are
@@ -82,7 +82,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({ signedIn, reducedMotion }) => 
             window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
           }}
           className="flex-none rounded-md"
-          aria-label="CareFrame, back to the top"
+          aria-label="CentiCare, back to the top"
         >
           <Logo size="md" />
         </a>

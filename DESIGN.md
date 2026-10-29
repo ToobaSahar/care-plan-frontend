@@ -1,5 +1,5 @@
 ---
-name: CareFrame
+name: CentiCare
 description: A warm-neutral clinical workspace where every recorded claim sits beside the thing that evidences it.
 colors:
   sea-mist: "#78BDB5"
@@ -184,13 +184,13 @@ components:
     size: "56px"
 ---
 
-# Design System: CareFrame
+# Design System: CentiCare
 
 ## Overview
 
 **Creative North Star: "The Open Case File"**
 
-CareFrame is a workspace that behaves like a well-kept paper case file opened flat on a kitchen table: a warm oat ground, white working sheets laid on it, hairline rules instead of boxes, and a tab edge down the left that tells you where you are in the record. Nothing is glossy, nothing floats, nothing asks for attention it has not earned. The register is clinical but domestic — this is at-home care, not a hospital console — which is why the neutral channel is warm oat rather than grey, and why the brand teal is a full-height field of colour on the rail rather than a decorative accent dropped on a white dashboard. Everything to the right of the rail is daylight: oat ground, white sheets, hairline rules. The rail is the one full-height field of colour on any screen, which is what lets it say CareFrame on its own.
+CentiCare is a workspace that behaves like a well-kept paper case file opened flat on a kitchen table: a warm oat ground, white working sheets laid on it, hairline rules instead of boxes, and a tab edge down the left that tells you where you are in the record. Nothing is glossy, nothing floats, nothing asks for attention it has not earned. The register is clinical but domestic — this is at-home care, not a hospital console — which is why the neutral channel is warm oat rather than grey, and why the brand teal is a full-height field of colour on the rail rather than a decorative accent dropped on a white dashboard. Everything to the right of the rail is daylight: oat ground, white sheets, hairline rules. The rail is the one full-height field of colour on any screen, which is what lets it say CentiCare on its own.
 
 The organising conviction is evidential. The three-column shell — Sea Mist tint rail (248px), a white section sheet in a 760px field column on the oat ground, oat-recessed evidence column (340px) — exists so that what the record raises sits physically beside the field that raised it. Risk is a layer riding over the terrain in one reserved ink; it never recolours the fields beneath it. People are marked in Dusty Mulberry and nowhere else. Section state is a printed mark on a hairline — hairline at rest, filled when done, struck when skipped — because a list of marks reads as a record and a row of pills reads as a dashboard.
 

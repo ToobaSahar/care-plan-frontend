@@ -35,7 +35,7 @@ export const supabase = createClient(supabaseUrl as string, supabaseAnonKey as s
     detectSessionInUrl: true,
   },
   global: {
-    headers: { 'x-application-name': 'careframe-web' },
+    headers: { 'x-application-name': 'centicare-web' },
   },
 });
 

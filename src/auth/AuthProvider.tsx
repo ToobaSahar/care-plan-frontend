@@ -11,7 +11,7 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Who is using CareFrame.
+   Who is using CentiCare.
 
    Two questions, not one. Supabase answers "is this a real account?"; the
    `staff` table answers "is this account allowed near service-user records?".

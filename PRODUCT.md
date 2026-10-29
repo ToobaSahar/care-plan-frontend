@@ -1,4 +1,4 @@
-# CareFrame
+# CentiCare
 
 ## What it is
 
@@ -54,7 +54,7 @@ Admission Pack rather than the form.
 
 Locked by the user before this work started, and not open for redesign:
 
-- **Name and logo:** CareFrame. The mark is an abstract "E"/frame built from stacked leaves
+- **Name and logo:** CentiCare. The mark is an abstract "E"/frame built from stacked leaves
   in the brand teals plus one mulberry leaf. Files live in `public/brand/`.
 - **Palette:** Sea Mist `#78BDB5`, Deep Sea `#2C6E6B`, Slate Teal `#1F4A4C`, Dusty Mulberry
   `#8F5C72`, Soft Charcoal `#2E2C28`, on warm oat neutrals.
